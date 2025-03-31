@@ -1,28 +1,27 @@
-// models/StudyCard.js
+// models/Order.js
 const { Model, DataTypes } = require('sequelize')
 
 module.exports = (sequelize) => {
-	class StudyCard extends Model {
+	class Order extends Model {
 		static associate(models) {
 			// Определяем связи между моделями
-			StudyCard.belongsTo(models.Category, {
-				foreignKey: 'category_id',
-				as: 'category',
-			})
+			if (models.User) {
+				Order.belongsTo(models.User, {
+					foreignKey: 'user_id',
+					as: 'user',
+				})
+			}
 
-			StudyCard.hasMany(models.OrderItem, {
-				foreignKey: 'study_card_id',
-				as: 'orderItems',
-			})
-
-			StudyCard.hasMany(models.Review, {
-				foreignKey: 'study_card_id',
-				as: 'reviews',
-			})
+			if (models.OrderItem) {
+				Order.hasMany(models.OrderItem, {
+					foreignKey: 'order_id',
+					as: 'orderItems',
+				})
+			}
 		}
 	}
 
-	StudyCard.init(
+	Order.init(
 		{
 			id: {
 				type: DataTypes.INTEGER,
@@ -30,54 +29,34 @@ module.exports = (sequelize) => {
 				autoIncrement: true,
 				allowNull: false,
 			},
-			title: {
-				type: DataTypes.STRING,
-				allowNull: false,
-			},
-			description: {
-				type: DataTypes.TEXT,
-				allowNull: true,
-			},
-			price: {
-				type: DataTypes.DECIMAL(10, 2),
-				allowNull: false,
-			},
-			quantity: {
-				type: DataTypes.INTEGER,
-				allowNull: false,
-				defaultValue: 0,
-			},
-			image_url: {
-				type: DataTypes.STRING,
-				allowNull: true,
-			},
-			subject: {
-				type: DataTypes.STRING,
-				allowNull: true,
-			},
-			school_grades: {
-				type: DataTypes.ARRAY(DataTypes.INTEGER),
-				allowNull: true,
-			},
-			card_type: {
-				type: DataTypes.STRING,
-				allowNull: true,
-			},
-			number_of_cards: {
-				type: DataTypes.INTEGER,
-				allowNull: true,
-			},
-			category_id: {
+			user_id: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 				references: {
-					model: 'categories',
+					model: 'users',
 					key: 'id',
 				},
 			},
-			is_active: {
-				type: DataTypes.BOOLEAN,
-				defaultValue: true,
+			total_amount: {
+				type: DataTypes.DECIMAL(10, 2),
+				allowNull: false,
+			},
+			status: {
+				type: DataTypes.STRING,
+				allowNull: false,
+				defaultValue: 'pending',
+			},
+			shipping_address: {
+				type: DataTypes.TEXT,
+				allowNull: false,
+			},
+			payment_method: {
+				type: DataTypes.STRING,
+				allowNull: false,
+			},
+			shipping_method: {
+				type: DataTypes.STRING,
+				allowNull: false,
 			},
 			created_at: {
 				type: DataTypes.DATE,
@@ -92,8 +71,8 @@ module.exports = (sequelize) => {
 		},
 		{
 			sequelize,
-			modelName: 'StudyCard',
-			tableName: 'study_cards',
+			modelName: 'Order',
+			tableName: 'orders',
 			underscored: true,
 			timestamps: true,
 			createdAt: 'created_at',
@@ -101,5 +80,5 @@ module.exports = (sequelize) => {
 		}
 	)
 
-	return StudyCard
+	return Order
 }

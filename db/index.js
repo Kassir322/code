@@ -1,28 +1,35 @@
 // db/index.js
 const { Sequelize } = require('sequelize')
-const config = require('../config/database') // Предполагаем, что у вас есть файл с настройками БД
+const config = require('../config/database')
 const fs = require('fs')
 const path = require('path')
 
+// Получаем конфигурацию в зависимости от окружения
+const env = process.env.NODE_ENV || 'development'
+const dbConfig = config[env]
+
+// Создаем экземпляр Sequelize
 const sequelize = new Sequelize(
-	config.database,
-	config.username,
-	config.password,
+	dbConfig.database,
+	dbConfig.username,
+	dbConfig.password,
 	{
-		host: config.host,
-		port: config.port,
-		dialect: 'postgres',
-		logging: config.logging ? console.log : false,
+		host: dbConfig.host,
+		port: dbConfig.port,
+		dialect: dbConfig.dialect || 'postgres',
+		logging: dbConfig.logging || false,
 		define: {
 			underscored: true,
 			timestamps: true,
+			createdAt: 'created_at',
+			updatedAt: 'updated_at',
 		},
 	}
 )
 
 const db = {}
 
-// Динамическая загрузка всех моделей из директории models
+// Динамически загружаем все модели
 const modelsDir = path.join(__dirname, '../models')
 fs.readdirSync(modelsDir)
 	.filter((file) => {
@@ -35,7 +42,8 @@ fs.readdirSync(modelsDir)
 		db[model.name] = model
 	})
 
-// Настраиваем ассоциации между моделями
+// Устанавливаем ассоциации между моделями
+// Этот шаг нужно выполнять после того, как все модели загружены
 Object.keys(db).forEach((modelName) => {
 	if (db[modelName].associate) {
 		db[modelName].associate(db)
