@@ -29,11 +29,11 @@ describe('StudyCardController', () => {
 	})
 
 	// После всех тестов удаляем тестовые данные
-	afterAll(async () => {
-		await StudyCard.destroy({ where: {} })
-		await Category.destroy({ where: {} })
-		await User.destroy({ where: {} })
-	})
+	// afterAll(async () => {
+	// 	await StudyCard.destroy({ where: {} })
+	// 	await Category.destroy({ where: {} })
+	// 	await User.destroy({ where: {} })
+	// })
 
 	// Тест на создание карточки через модель (эмуляция функции контроллера)
 	test('должен создать новую учебную карточку', async () => {
@@ -57,9 +57,6 @@ describe('StudyCardController', () => {
 		expect(studyCard).toBeDefined()
 		expect(studyCard.id).toBeDefined()
 		expect(studyCard.title).toBe(studyCardData.title)
-
-		console.log('Карточка создана. Проверьте базу данных.')
-		await new Promise((resolve) => setTimeout(resolve, 30000)) // 30-секундная пауза
 	})
 
 	// Дополнительные тесты можно добавить здесь
