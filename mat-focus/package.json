@@ -1,0 +1,43 @@
+{
+	"name": "mat-focus",
+	"version": "1.0.0",
+	"main": "app.js",
+	"scripts": {
+		"start": "node app.js",
+		"dev": "nodemon app.js",
+		"test": "jest",
+		"migrate": "sequelize-cli db:migrate",
+		"migrate:undo": "sequelize-cli db:migrate:undo",
+		"seed": "sequelize-cli db:seed:all",
+		"seed:undo": "sequelize-cli db:seed:undo:all"
+	},
+	"keywords": [
+		"node",
+		"express",
+		"sequelize",
+		"postgresql",
+		"ecommerce",
+		"mvc"
+	],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"bcrypt": "^5.1.1",
+		"cors": "^2.8.5",
+		"dotenv": "^16.4.7",
+		"express": "^4.21.2",
+		"helmet": "^8.1.0",
+		"jsonwebtoken": "^9.0.2",
+		"morgan": "^1.10.0",
+		"pg": "^8.14.1",
+		"pg-hstore": "^2.3.4",
+		"sequelize": "^6.37.7"
+	},
+	"devDependencies": {
+		"jest": "^29.7.0",
+		"nodemon": "^3.1.9",
+		"sequelize-cli": "^6.6.2",
+		"supertest": "^7.1.0"
+	}
+}
