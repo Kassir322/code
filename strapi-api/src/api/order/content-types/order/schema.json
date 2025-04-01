@@ -1,0 +1,33 @@
+{
+  "kind": "collectionType",
+  "collectionName": "orders",
+  "info": {
+    "singularName": "order",
+    "pluralName": "orders",
+    "displayName": "Order"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "total_amount": {
+      "type": "decimal",
+      "required": true
+    },
+    "order_status": {
+      "type": "string",
+      "default": "pending"
+    },
+    "payment_method": {
+      "type": "string"
+    },
+    "shipping_method": {
+      "type": "string"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}
