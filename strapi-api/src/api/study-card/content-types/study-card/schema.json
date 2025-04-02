@@ -4,10 +4,11 @@
   "info": {
     "singularName": "study-card",
     "pluralName": "study-cards",
-    "displayName": "StudyCard"
+    "displayName": "StudyCard",
+    "description": ""
   },
   "options": {
-    "draftAndPublish": true
+    "draftAndPublish": false
   },
   "attributes": {
     "title": {
@@ -28,13 +29,14 @@
       "type": "integer"
     },
     "image": {
+      "type": "media",
+      "multiple": true,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos"
-      ],
-      "type": "media",
-      "multiple": true
+      ]
     },
     "subject": {
       "type": "string"
