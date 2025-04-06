@@ -1,6 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import MyButton from '../ui/MyButton'
+import LinkButton from '@/components/ui/LinkButton'
 
 export default function HeroSection() {
 	return (
@@ -15,16 +15,8 @@ export default function HeroSection() {
 						процесс обучения более эффективным. Идеальное решение для подготовки
 						к экзаменам и освоения новых предметов.
 					</p>
-					<Link
-						href="/catalog"
-						className="inline-block bg-primary hover:bg-primary-dark text-white font-medium text-lg py-3 px-8 rounded-md transition-colors shadow-sm"
-					>
-						Перейти в каталог
-					</Link>
-					<MyButton>Перейти в каталог</MyButton>
-					<button className="bg-dark dark:bg-dark-2 border-dark dark:border-dark-2 border rounded-full inline-flex items-center justify-center py-3 px-7 text-center text-base font-medium text-white hover:bg-body-color hover:border-body-color disabled:bg-gray-3 disabled:border-gray-3 disabled:text-dark-5">
-						Get Started
-					</button>
+
+					<LinkButton href="/catalog">Перейти в каталог</LinkButton>
 				</div>
 			</div>
 		</section>

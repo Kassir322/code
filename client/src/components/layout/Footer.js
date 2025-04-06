@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import MyButton from '../ui/MyButton'
+import MyButton from '../ui/LinkButton'
 export default function Footer() {
 	return (
 		<footer className="bg-primary pt-12 pb-8 border-t border-gray-200">

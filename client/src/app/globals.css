@@ -15,6 +15,9 @@
 	--color-neutral-05: #343839;
 	--color-neutral-06: #232627;
 	--color-neutral-07: #141718;
+	--color-dark: #000;
+	--color-body-color: #363738;
+	--color-test-bg: #eae7dc;
 }
 
 /* :root {
