@@ -10,7 +10,7 @@ export default function NavLink({ children, href }) {
 	return (
 		<Link
 			href={href}
-			className={`sm:font-medium sm:text-xl hover:text-primary ${
+			className={`sm:font-medium sm:text-xl hover:text-primary transition-colors ${
 				pathname == href && 'text-secondary-blue'
 			}`}
 		>

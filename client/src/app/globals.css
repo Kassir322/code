@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @theme {
+	--default-transition-duration: 400ms;
 	--color-primary: #000;
 	--color-secondary-blue: #377dff;
 	--color-secondary-green: #38cb89;
@@ -17,7 +18,6 @@
 	--color-neutral-07: #141718;
 	--color-dark: #000;
 	--color-body-color: #363738;
-	--color-test-bg: #eae7dc;
 }
 
 /* :root {
