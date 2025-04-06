@@ -1,26 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 @import 'tailwindcss';
-
-@tailwind base;
-@tailwind components;
 @tailwind utilities;
 
-:root {
-	--primary-color: #4caf50; /* Заменил зеленый цвет логотипа как основной цвет */
-	--secondary-color: #2e7d32;
+@theme {
+	--color-primary: #000;
+	--color-secondary-blue: #377dff;
+	--color-secondary-green: #38cb89;
+	--color-secondary-orange: #ffab00;
+	--color-secondary-red: #ff5630;
+	--color-neutral-01: #fefefe;
+	--color-neutral-02: #f3f5f7;
+	--color-neutral-03: #e8ecef;
+	--color-neutral-04: #6c7275;
+	--color-neutral-05: #343839;
+	--color-neutral-06: #232627;
+	--color-neutral-07: #141718;
+}
+
+/* :root {
+	font-family: ;
 }
 
 @layer base {
-	body {
-		@apply bg-white text-gray-900;
+	@font-face {
+		font-family: Roboto;
+		font-style: normal;
+		src: url(https://fonts.googleapis.com/css2?family=Roboto&display=swap);
 	}
-}
-
-@layer components {
-	.text-primary {
-		color: var(--primary-color);
-	}
-
-	.hover-text-primary:hover {
-		color: var(--primary-color);
-	}
-}
+} */

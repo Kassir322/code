@@ -4,15 +4,18 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
+import { usePathname } from 'next/navigation'
+import MyButton from '../ui/MyButton'
 
 export default function Header() {
 	const [categoriesOpen, setCategoriesOpen] = useState(false)
 	const [productsOpen, setProductsOpen] = useState(false)
 	const [blogOpen, setBlogOpen] = useState(false)
 	const [pagesOpen, setPagesOpen] = useState(false)
+	const pathname = usePathname()
 
 	return (
-		<header className="w-full border-b border-gray-200">
+		<header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-neutral-01">
 			<div className="container mx-auto px-4 py-4 flex items-center justify-between">
 				{/* Логотип */}
 				<Link href="/" className="flex items-center">
@@ -29,53 +32,32 @@ export default function Header() {
 				</Link>
 
 				{/* Навигация */}
-				<nav className="hidden md:flex space-x-6">
-					<Link href="/" className="font-medium hover:text-primary">
-						Home
+				<nav className=" md:flex space-x-6">
+					<Link
+						href="/"
+						className={`font-medium hover:text-primary ${
+							pathname == '/' && 'text-primary'
+						}`}
+					>
+						Главная
 					</Link>
 
-					<div className="relative group">
-						<button
-							className="flex items-center font-medium hover:text-primary"
-							onClick={() => setCategoriesOpen(!categoriesOpen)}
-						>
-							Categories <ChevronDown className="ml-1 h-4 w-4" />
-						</button>
-						{/* Выпадающее меню для Categories */}
-					</div>
+					<Link
+						href="/catalog"
+						className={`font-medium hover:text-primary ${
+							pathname == '/catalog' && 'text-primary'
+						}`}
+					>
+						Каталог
+					</Link>
 
-					<div className="relative group">
-						<button
-							className="flex items-center font-medium hover:text-primary"
-							onClick={() => setProductsOpen(!productsOpen)}
-						>
-							Products <ChevronDown className="ml-1 h-4 w-4" />
-						</button>
-						{/* Выпадающее меню для Products */}
-					</div>
-
-					<div className="relative group">
-						<button
-							className="flex items-center font-medium hover:text-primary"
-							onClick={() => setBlogOpen(!blogOpen)}
-						>
-							Blog <ChevronDown className="ml-1 h-4 w-4" />
-						</button>
-						{/* Выпадающее меню для Blog */}
-					</div>
-
-					<div className="relative group">
-						<button
-							className="flex items-center font-medium hover:text-primary"
-							onClick={() => setPagesOpen(!pagesOpen)}
-						>
-							Pages <ChevronDown className="ml-1 h-4 w-4" />
-						</button>
-						{/* Выпадающее меню для Pages */}
-					</div>
-
-					<Link href="/offers" className="font-medium hover:text-primary">
-						Offers
+					<Link
+						href="/contact"
+						className={`font-medium hover:text-primary ${
+							pathname == '/contact' && 'text-primary'
+						}`}
+					>
+						Контакты
 					</Link>
 				</nav>
 
@@ -83,23 +65,23 @@ export default function Header() {
 				<div className="flex items-center space-x-4">
 					<div className="flex flex-col items-end">
 						<Link href="/account" className="flex items-center text-sm">
-							<span className="hidden md:inline text-sm">Account</span>
+							<span className="hidden md:inline text-sm">Аккаунт</span>
 						</Link>
-						<span className="text-xs text-gray-500">LOGIN</span>
+						<span className="text-xs text-gray-500">Войти</span>
 					</div>
 
 					<div className="flex flex-col items-end">
 						<Link href="/wishlist" className="flex items-center">
-							<span className="hidden md:inline text-sm">Wishlist</span>
+							<span className="hidden md:inline text-sm ">Желаемое</span>
 						</Link>
-						<span className="text-xs">3-ITEMS</span>
+						<span className="text-xs text-gray-500">3-позиции</span>
 					</div>
 
 					<div className="flex flex-col items-end">
 						<Link href="/cart" className="flex items-center">
-							<span className="hidden md:inline text-sm">Cart</span>
+							<span className="hidden md:inline text-sm">Корзина</span>
 						</Link>
-						<span className="text-xs">3-ITEMS</span>
+						<span className="text-xs text-gray-500">4-позиции</span>
 					</div>
 				</div>
 

@@ -1,11 +1,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
-
+import MyButton from '../ui/MyButton'
 export default function Footer() {
 	return (
-		<footer className="bg-gray-50 pt-12 pb-8 border-t border-gray-200">
+		<footer className="bg-primary pt-12 pb-8 border-t border-gray-200">
 			<div className="container mx-auto px-4">
-				<div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+				<div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-neutral-03">
 					{/* Колонка 1: Логотип и описание */}
 					<div>
 						<Link href="/" className="flex items-center mb-4">
@@ -20,7 +20,7 @@ export default function Footer() {
 							</div>
 							<span className="text-xl font-bold">MatFocus</span>
 						</Link>
-						<p className="text-gray-600 mb-4">
+						<p className=" mb-4">
 							Mat-Focus — это магазин учебных карточек для эффективного
 							обучения. Получите необходимые материалы для обучения из нашего
 							магазина.
@@ -33,9 +33,9 @@ export default function Footer() {
 								<input
 									type="email"
 									placeholder="Ваш email"
-									className="px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-1 focus:ring-primary w-full"
+									className="px-3 py-2 border border-neutral-01 rounded-l-md focus:outline-none focus:ring-1 focus:ring-primary w-full"
 								/>
-								<button className="bg-primary text-white px-4 py-2 rounded-r-md hover:bg-secondary transition-colors">
+								<button className="bg-white text-black px-4 py-2 rounded-r-full    hover:bg-neutral-500 transition-colors">
 									Подписаться
 								</button>
 							</div>
@@ -44,7 +44,7 @@ export default function Footer() {
 
 					{/* Колонка 2: Компания */}
 					<div>
-						<h3 className="font-bold text-lg mb-4">Компания</h3>
+						<h3 className="font-bold text-lg mb-4 ">Компания</h3>
 						<ul className="space-y-2">
 							<li>
 								<Link
