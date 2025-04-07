@@ -32,7 +32,7 @@ export default function ProductCard({ product }) {
 	}
 
 	return (
-		<div className="mx-4 md:mx-6 lg:mx-0 group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow flex flex-col">
+		<div className="mx-4 md:mx-6 lg:mx-0 group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow flex flex-col aspect-[calc(993/1347)]">
 			{/* Лейбл (если есть) */}
 			{label && (
 				<div
@@ -49,19 +49,21 @@ export default function ProductCard({ product }) {
 			)}
 
 			{/* Изображение товара */}
-			<Link
-				href={`/product/${id}`}
-				className="block aspect-[calc(993/1347)] overflow-hidden shadow-sm "
-			>
-				{/* <div className="h-full w-full relative overflow-hidden border-b border-gray-300 ">
-					<Image
-						src="/images/products/card_example.png"
-						alt={name}
-						fill
-						className="object-cover group-hover:scale-105 transition-transform duration-300"
-					/>
-				</div> */}
-			</Link>
+			<div className="h-full max-h-[345px]">
+				<Link
+					href={`/product/${id}`}
+					className="block h-full w-full overflow-hidden  "
+				>
+					<div className="h-full w-full relative overflow-hidden  ">
+						<Image
+							src="/images/products/card_example2.png"
+							alt={name}
+							fill
+							className="object-contain group-hover:scale-105 transition-transform duration-300"
+						/>
+					</div>
+				</Link>
+			</div>
 
 			{/* Информация о товаре */}
 			<div className="flex flex-col gap-1 pt-4 mx-1">
