@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Star } from 'lucide-react'
 import MyButton from './ui/MyButton'
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, variant = 'default' }) {
 	const { id, name, price, oldPrice, rating, reviewCount, imageSrc, label } =
 		product
 
@@ -32,7 +32,7 @@ export default function ProductCard({ product }) {
 	}
 
 	return (
-		<div className="mx-4 md:mx-6 lg:mx-0 group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow flex flex-col aspect-[calc(993/1347)]">
+		<div className="mx-auto sm:mx-4 md:mx-6 lg:mx-0 group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow flex flex-col aspect-[calc(993/1347)] max-h-[570px]">
 			{/* Лейбл (если есть) */}
 			{label && (
 				<div
@@ -68,17 +68,31 @@ export default function ProductCard({ product }) {
 			{/* Информация о товаре */}
 			<div className="flex flex-col gap-1 pt-4 mx-1">
 				<Link href={`/product/${id}`} className="block">
-					<h3 className=" text-xl text-center font-medium text-gray-900 hover:text-primary transition-colors mb-1 line-clamp-2 h-14">
+					<h3
+						className={`${
+							variant == 'catalog' ? 'text-lg' : 'text-xl'
+						}  text-center font-medium text-gray-900 hover:text-primary transition-colors mb-1 line-clamp-2 h-14 max-w-[290px]`}
+					>
 						{name}
 					</h3>
 				</Link>
 
 				{/* Кнопка добавления в корзину */}
-				<MyButton className="w-fit text-xl px-4 mx-auto">В корзину</MyButton>
+				<MyButton
+					className={`${
+						variant == 'catalog' ? 'text-sm' : 'text-xl'
+					} w-fit  px-4 mx-auto`}
+				>
+					В корзину
+				</MyButton>
 
 				<div className="flex flex-col items-center justify-center px-8 py-2 gap-1">
 					{/* Цена */}
-					<div className="flex items-center gap-1 text-2xl">
+					<div
+						className={`${
+							variant == 'catalog' ? 'text-base' : 'text-2xl'
+						} flex items-center gap-1 text-2xl`}
+					>
 						{oldPrice ? (
 							<>
 								<span className="font-bold text-gray-900">{price} ₽</span>
