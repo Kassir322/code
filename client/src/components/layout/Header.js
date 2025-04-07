@@ -6,7 +6,7 @@ import NavLink from '../ui/NavLink'
 
 export default function Header() {
 	return (
-		<header className="sticky top-0 z-50 w-full border-b border-gray-300 bg-neutral-01 px-2 sm:px-4 py-4">
+		<header className="fixed top-0 z-50 w-full border-b border-gray-300 bg-neutral-01 px-2 sm:px-4 py-4">
 			<div className="lg:container mx-auto  flex items-center justify-between">
 				{/* Логотип */}
 				<Link href="/" className="flex items-center">
