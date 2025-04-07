@@ -1,19 +1,16 @@
-'use client'
-
-import React from 'react'
-import Link from 'next/link'
 import HeroSection from '@/components/sections/HeroSection'
 import BenefitsSection from '@/components/sections/BenefitsSection'
 import HowItWorks from '@/components/sections/HowItWorks'
 import ProductCards from '@/components/sections/ProductCards'
 import TestimonialsSlider from '@/components/sections/TestimonialsSlider'
 import NewsletterSection from '@/components/sections/NewsletterSection'
+import LinkButton from '@/components/ui/LinkButton'
 
 // Примеры товаров для главной страницы
 const featuredProducts = [
 	{
 		id: 1,
-		name: 'Карточки по математике "Алгебра 8-9 класс"',
+		name: 'Карточки по биологии 5-11 класс',
 		price: 890,
 		oldPrice: 1190,
 		rating: 4.8,
@@ -23,7 +20,7 @@ const featuredProducts = [
 	},
 	{
 		id: 2,
-		name: 'Карточки по физике "Механика 10 класс"',
+		name: 'Карточки по физике ОГЭ и ЕГЭ',
 		price: 950,
 		oldPrice: null,
 		rating: 4.5,
@@ -33,7 +30,7 @@ const featuredProducts = [
 	},
 	{
 		id: 3,
-		name: 'Карточки по русскому языку "Орфография 5-6 класс"',
+		name: 'Карточки по русскому языку ОГЭ и ЕГЭ',
 		price: 790,
 		oldPrice: 990,
 		rating: 4.7,
@@ -68,7 +65,7 @@ const testimonials = [
 	},
 ]
 
-export default function Home() {
+export default function Page() {
 	return (
 		<div className="flex flex-col min-h-screen">
 			<main className="flex-grow">
@@ -86,12 +83,9 @@ export default function Home() {
 						</h2>
 						<ProductCards products={featuredProducts} />
 						<div className="text-center mt-8">
-							<Link
-								href="/catalog"
-								className="inline-block bg-primary text-white font-medium py-3 px-6 rounded-md hover:bg-primary-dark transition-colors"
-							>
+							<LinkButton className="text-lg" href="/catalog">
 								Посмотреть все товары
-							</Link>
+							</LinkButton>
 						</div>
 					</div>
 				</section>

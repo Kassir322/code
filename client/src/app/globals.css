@@ -5,6 +5,7 @@
 @theme {
 	--default-transition-duration: 400ms;
 	--color-primary: #000;
+	--color-hover: #6ca4ff;
 	--color-secondary-blue: #377dff;
 	--color-secondary-green: #38cb89;
 	--color-secondary-orange: #ffab00;

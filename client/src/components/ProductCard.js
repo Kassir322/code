@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Star } from 'lucide-react'
+import MyButton from './ui/MyButton'
 
 export default function ProductCard({ product }) {
 	const { id, name, price, oldPrice, rating, reviewCount, imageSrc, label } =
@@ -31,7 +32,7 @@ export default function ProductCard({ product }) {
 	}
 
 	return (
-		<div className="group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+		<div className="group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow">
 			{/* Лейбл (если есть) */}
 			{label && (
 				<div
@@ -50,11 +51,11 @@ export default function ProductCard({ product }) {
 			{/* Изображение товара */}
 			<Link
 				href={`/product/${id}`}
-				className="block aspect-square overflow-hidden"
+				className="block aspect-[calc(993/1347)] overflow-hidden shadow-sm"
 			>
-				<div className="h-48 w-full relative overflow-hidden">
+				<div className="h-full w-full relative overflow-hidden border-b border-gray-300 ">
 					<Image
-						src={imageSrc}
+						src="/images/products/card_example.png"
 						alt={name}
 						fill
 						className="object-cover group-hover:scale-105 transition-transform duration-300"
@@ -63,34 +64,34 @@ export default function ProductCard({ product }) {
 			</Link>
 
 			{/* Информация о товаре */}
-			<div className="p-4">
+			<div className="flex flex-col gap-1 pt-4">
 				<Link href={`/product/${id}`} className="block">
-					<h3 className="text-sm font-medium text-gray-900 hover:text-primary transition-colors mb-1 line-clamp-2 h-10">
+					<h3 className="h-fit text-xl text-center font-medium text-gray-900 hover:text-primary transition-colors mb-1 line-clamp-2 h-10">
 						{name}
 					</h3>
 				</Link>
 
-				{/* Рейтинг */}
-				<div className="mb-2">{renderRating(rating)}</div>
-
-				{/* Цена */}
-				<div className="flex items-center">
-					{oldPrice ? (
-						<>
-							<span className="text-lg font-bold text-gray-900">{price} ₽</span>
-							<span className="ml-2 text-sm text-gray-500 line-through">
-								{oldPrice} ₽
-							</span>
-						</>
-					) : (
-						<span className="text-lg font-bold text-gray-900">{price} ₽</span>
-					)}
-				</div>
-
 				{/* Кнопка добавления в корзину */}
-				<button className="mt-4 w-full bg-primary text-white py-2 px-4 rounded-md hover:bg-primary-dark transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50">
-					В корзину
-				</button>
+				<MyButton className="w-fit text-xl px-4 mx-auto">В корзину</MyButton>
+
+				<div className="flex flex-col items-center justify-center px-8 py-2 gap-1">
+					{/* Цена */}
+					<div className="flex items-center gap-1 text-2xl">
+						{oldPrice ? (
+							<>
+								<span className="font-bold text-gray-900">{price} ₽</span>
+								<span className="ml-2 text-sm text-gray-500 line-through">
+									{oldPrice} ₽
+								</span>
+							</>
+						) : (
+							<span className="font-bold text-gray-900">{price} ₽</span>
+						)}
+					</div>
+
+					{/* Рейтинг */}
+					<div className="mb-2">{renderRating(rating)}</div>
+				</div>
 			</div>
 		</div>
 	)

@@ -16,7 +16,9 @@ export default function HeroSection() {
 						к экзаменам и освоения новых предметов.
 					</p>
 
-					<LinkButton href="/catalog">Перейти в каталог</LinkButton>
+					<LinkButton className="text-lg" href="/catalog">
+						Перейти в каталог
+					</LinkButton>
 				</div>
 			</div>
 		</section>
