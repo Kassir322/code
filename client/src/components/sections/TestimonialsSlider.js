@@ -123,7 +123,7 @@ export default function TestimonialsSlider({ testimonials }) {
 					style={{ transform: `translateX(-${activeIndex * 100}%)` }}
 				>
 					{testimonials.map((testimonial, index) => (
-						<div key={testimonial.id} className="min-w-full px-4">
+						<div key={testimonial.id} className="min-w-full px-8">
 							<div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
 								{renderRating(testimonial.rating)}
 								<p className="text-gray-600 italic mb-4">
@@ -143,7 +143,7 @@ export default function TestimonialsSlider({ testimonials }) {
 
 			{/* Навигационные кнопки */}
 			<button
-				className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-6 bg-white rounded-full p-2 shadow-md z-10 hover:bg-gray-100 transition-colors"
+				className="absolute top-1/2 -left-3 -translate-y-10  bg-white rounded-full p-2 shadow-md z-10 hover:bg-gray-100 transition-colors"
 				onClick={prevSlide}
 				aria-label="Предыдущий отзыв"
 			>
@@ -151,7 +151,7 @@ export default function TestimonialsSlider({ testimonials }) {
 			</button>
 
 			<button
-				className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-6 bg-white rounded-full p-2 shadow-md z-10 hover:bg-gray-100 transition-colors"
+				className="absolute top-1/2 -right-3 -translate-y-10 bg-white rounded-full p-2 shadow-md z-10 hover:bg-gray-100 transition-colors"
 				onClick={nextSlide}
 				aria-label="Следующий отзыв"
 			>
@@ -165,8 +165,8 @@ export default function TestimonialsSlider({ testimonials }) {
 						key={index}
 						className={`w-3 h-3 rounded-full transition-colors ${
 							index === activeIndex
-								? 'bg-primary'
-								: 'bg-gray-300 hover:bg-gray-400'
+								? 'bg-secondary-blue'
+								: 'bg-neutral-300 hover:bg-neutral-500'
 						}`}
 						onClick={() => goToSlide(index)}
 						aria-label={`Перейти к отзыву ${index + 1}`}

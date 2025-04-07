@@ -4,7 +4,7 @@ import LinkButton from '@/components/ui/LinkButton'
 
 export default function HeroSection() {
 	return (
-		<section className="py-16 md:py-24 bg-neutral-01">
+		<section className="py-20 md:py-24 bg-neutral-01">
 			<div className="container mx-auto px-4 max-w-5xl">
 				<div className="text-center">
 					<h1 className=" text-4xl md:text-5xl font-bold text-gray-900 mb-4">
