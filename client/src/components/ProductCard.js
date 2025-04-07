@@ -30,9 +30,9 @@ export default function ProductCard({ product, variant = 'default' }) {
 			</div>
 		)
 	}
-
+	// sm:mx-4 md:mx-6 lg:mx-0
 	return (
-		<div className="mx-auto sm:mx-4 md:mx-6 lg:mx-0 group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow flex flex-col aspect-[calc(993/1347)] max-h-[570px]">
+		<div className="mx-auto lg:mx-0 group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow flex flex-col aspect-[calc(993/1347)] max-h-[570px] min-h-[390px] md:min-h-0">
 			{/* Лейбл (если есть) */}
 			{label && (
 				<div
@@ -71,7 +71,7 @@ export default function ProductCard({ product, variant = 'default' }) {
 					<h3
 						className={`${
 							variant == 'catalog' ? 'text-lg' : 'text-xl'
-						}  text-center font-medium text-gray-900 hover:text-primary transition-colors mb-1 line-clamp-2 h-14 max-w-[290px]`}
+						} mx-auto text-center font-medium text-gray-900 hover:text-primary transition-colors mb-1 line-clamp-2 h-14 w-fit max-w-[290px]`}
 					>
 						{name}
 					</h3>

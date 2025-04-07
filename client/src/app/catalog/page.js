@@ -388,7 +388,7 @@ export default function CatalogPage() {
 						showMobileFilter ? 'block' : 'hidden'
 					}`}
 				>
-					<div className="bg-white md:rounded-lg p-4 shadow-sm md:sticky md:top-24">
+					<div className="bg-white md:rounded-lg p-4 shadow-sm  md:top-24">
 						{/* Мобильная шапка фильтра */}
 						<div className="flex justify-between items-center mb-4 md:hidden">
 							<h3 className="font-semibold text-lg">Фильтры</h3>
@@ -522,7 +522,7 @@ export default function CatalogPage() {
 				{/* Основной контент */}
 				<div className="md:w-3/4 lg:w-4/5">
 					{/* Верхняя панель с сортировкой и информацией */}
-					<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 bg-white p-4 rounded-lg shadow-sm">
+					<div className="flex flex-col sm:flex-row sm:justify-between justify-center items-center sm:items-center mb-6 bg-white p-4 rounded-lg shadow-sm">
 						<div className="mb-3 sm:mb-0">
 							<p className="text-neutral-04">
 								Найдено:{' '}
@@ -531,7 +531,7 @@ export default function CatalogPage() {
 							</p>
 						</div>
 
-						<div className="flex items-center space-x-2 self-end sm:self-auto">
+						<div className="flex items-center space-x-2  sm:self-auto">
 							<span className="text-neutral-05">Сортировка:</span>
 							<div className="relative">
 								<select
@@ -548,76 +548,6 @@ export default function CatalogPage() {
 								<div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
 									<ChevronDown className="h-4 w-4" />
 								</div>
-							</div>
-
-							{/* Иконки вида отображения - просто для оформления */}
-							<div className="hidden sm:flex space-x-2 ml-4">
-								<button className="p-1 border rounded bg-neutral-02">
-									<svg
-										className="w-5 h-5"
-										viewBox="0 0 24 24"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<rect
-											x="3"
-											y="3"
-											width="7"
-											height="7"
-											rx="1"
-											fill="currentColor"
-										/>
-										<rect
-											x="14"
-											y="3"
-											width="7"
-											height="7"
-											rx="1"
-											fill="currentColor"
-										/>
-										<rect
-											x="3"
-											y="14"
-											width="7"
-											height="7"
-											rx="1"
-											fill="currentColor"
-										/>
-										<rect
-											x="14"
-											y="14"
-											width="7"
-											height="7"
-											rx="1"
-											fill="currentColor"
-										/>
-									</svg>
-								</button>
-								<button className="p-1 border rounded">
-									<svg
-										className="w-5 h-5"
-										viewBox="0 0 24 24"
-										fill="none"
-										xmlns="http://www.w3.org/2000/svg"
-									>
-										<rect
-											x="3"
-											y="3"
-											width="18"
-											height="7"
-											rx="1"
-											fill="currentColor"
-										/>
-										<rect
-											x="3"
-											y="14"
-											width="18"
-											height="7"
-											rx="1"
-											fill="currentColor"
-										/>
-									</svg>
-								</button>
 							</div>
 						</div>
 					</div>
