@@ -5,7 +5,7 @@ import { ChevronDown, Filter, X } from 'lucide-react'
 import ProductCard from '@/components/ProductCard'
 import MyButton from '@/components/ui/MyButton'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 // Временные моковые данные для демонстрации
 const productMockData = [
@@ -216,11 +216,74 @@ const sortOptions = [
 	{ value: 'newest', label: 'Сначала новинки' },
 ]
 
-export default function Page({ params }) {
-	const path = usePathname().split('/')
-	const subject = path[path.length - 1]
+// Функция для генерации SEO-текстов в зависимости от категории
+function getSeoText(categorySlug) {
+	const seoTexts = {
+		catalog: {
+			h1: 'Каталог учебных карточек и материалов',
+			intro: `Наш каталог учебных карточек содержит материалы для учеников разных классов и по различным предметам. 
+              Каждый набор разработан опытными педагогами и методистами для максимально эффективного усвоения материала.`,
+		},
+		mathematics: {
+			h1: 'Учебные карточки по математике',
+			intro: `Учебные карточки по математике помогут структурировать знания и отработать ключевые навыки решения задач. 
+              Идеально подходят для подготовки к контрольным работам, ОГЭ и ЕГЭ.`,
+		},
+		physics: {
+			h1: 'Учебные карточки по физике',
+			intro: `Наши карточки по физике содержат основные формулы, законы и примеры решения задач. 
+              Помогут систематизировать знания и подготовиться к экзаменам.`,
+		},
+		// Добавьте тексты для остальных категорий
+	}
 
-	const activeSubject = subjects.find((item) => item.slug === subject)
+	return seoTexts[categorySlug] || seoTexts['catalog']
+}
+
+function generateCatalogSchema(products, categoryName) {
+	return {
+		'@context': 'https://schema.org',
+		'@type': 'ItemList',
+		name: `Каталог учебных карточек${categoryName ? ` - ${categoryName}` : ''}`,
+		itemListOrder: 'https://schema.org/ItemListUnordered',
+		numberOfItems: products.length,
+		itemListElement: products.map((product, index) => ({
+			'@type': 'ListItem',
+			position: index + 1,
+			item: {
+				'@type': 'Product',
+				name: product.name,
+				url: `https://mat-focus.ru/product/${product.id}`,
+				image: product.imageSrc,
+				description: `Учебные карточки ${product.name}`,
+				offers: {
+					'@type': 'Offer',
+					price: product.price,
+					priceCurrency: 'RUB',
+					availability: product.inStock
+						? 'https://schema.org/InStock'
+						: 'https://schema.org/OutOfStock',
+				},
+			},
+		})),
+	}
+}
+
+export default function Page({ params }) {
+	const pathname = usePathname()
+	const router = useRouter()
+	const searchParams = useSearchParams()
+
+	const path = pathname.split('/')
+	const categorySlug =
+		path[path.length - 1] === 'catalog' ? 'catalog' : path[path.length - 1]
+
+	// Находим активную категорию
+	const activeSubject =
+		subjects.find((item) => item.slug === categorySlug) || subjects[0]
+
+	// Получаем SEO-тексты для текущей категории
+	const seoText = getSeoText(categorySlug)
 
 	// Состояния для фильтров
 	const [selectedSubject, setSelectedSubject] = useState(activeSubject.name)
@@ -231,6 +294,18 @@ export default function Page({ params }) {
 	const [sortBy, setSortBy] = useState('popular')
 	const [currentPage, setCurrentPage] = useState(1)
 	const [showMobileFilter, setShowMobileFilter] = useState(false)
+	const breadcrumbItems = [
+		{ name: 'Главная', url: '/' },
+		{ name: 'Каталог', url: '/catalog' },
+	]
+
+	if (categorySlug !== 'catalog') {
+		breadcrumbItems.push({
+			name: activeSubject.name,
+			url: `/catalog/${activeSubject.slug}`,
+		})
+	}
+
 	// Количество продуктов на странице
 	const productsPerPage = 9
 
@@ -372,9 +447,20 @@ export default function Page({ params }) {
 		sortBy,
 	])
 
+	const catalogSchema = generateCatalogSchema(
+		currentProducts,
+		activeSubject.name
+	)
+
 	return (
 		<div className="container mx-auto px-4 mt-24 mb-16">
-			<h1 className="text-3xl font-bold mb-6">Каталог учебных карточек</h1>
+			{/* SEO блок с заголовком и описанием */}
+			<section className="mb-8">
+				<h1 className="text-3xl font-bold mb-4">{seoText.h1}</h1>
+				<div className="bg-white p-6 rounded-lg shadow-sm">
+					<p className="text-gray-700">{seoText.intro}</p>
+				</div>
+			</section>
 
 			{/* Мобильная кнопка фильтра */}
 			<div className="md:hidden mb-4">

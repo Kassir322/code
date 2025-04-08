@@ -1,12 +1,35 @@
-import React from 'react'
+'use client'
+
+import React, { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Star } from 'lucide-react'
+import { Star, Heart, ShoppingCart, Zap } from 'lucide-react'
 import MyButton from './ui/MyButton'
 
 export default function ProductCard({ product, variant = 'default' }) {
-	const { id, name, price, oldPrice, rating, reviewCount, imageSrc, label } =
-		product
+	const {
+		id,
+		name,
+		price,
+		oldPrice,
+		rating,
+		reviewCount,
+		imageSrc,
+		label,
+		quantity = 5, // По умолчанию считаем, что есть 5 штук в наличии
+	} = product
+
+	const getStockStatus = (quantity) => {
+		if (quantity <= 0)
+			return { label: 'Нет в наличии', className: 'text-red-500' }
+		if (quantity < 3)
+			return { label: 'Скоро закончится', className: 'text-orange-500' }
+		if (quantity < 10)
+			return { label: 'В наличии', className: 'text-green-500' }
+		return { label: 'В наличии', className: 'text-green-500' }
+	}
+
+	const stockStatus = getStockStatus(quantity)
 
 	// Функция для отображения рейтинга в виде звездочек
 	const renderRating = (rating) => {
@@ -30,9 +53,11 @@ export default function ProductCard({ product, variant = 'default' }) {
 			</div>
 		)
 	}
-	// sm:mx-4 md:mx-6 lg:mx-0
+
+	const [wished, setWished] = useState(false)
+
 	return (
-		<div className="mx-auto lg:mx-0 group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow flex flex-col aspect-[calc(993/1347)] max-h-[570px] min-h-[390px] md:min-h-0">
+		<div className="mx-auto group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow flex flex-col aspect-[calc(993/1347)] max-h-[570px] min-h-[390px] max-w-[420px] w-full">
 			{/* Лейбл (если есть) */}
 			{label && (
 				<div
@@ -48,13 +73,33 @@ export default function ProductCard({ product, variant = 'default' }) {
 				</div>
 			)}
 
+			{/* Кнопка добавления в закладки */}
+			<button
+				className={`absolute top-2 left-2 z-10 m-1 p-2 rounded-full    cursor-pointer hover:scale-120 transition-all ${
+					!wished && 'hover:bg-red-300'
+				} `}
+				aria-label="Добавить в закладки"
+				onClick={(e) => {
+					e.preventDefault()
+					setWished(!wished)
+					// Логика добавления в закладки
+				}}
+			>
+				<Heart
+					strokeWidth={3}
+					fill={`${wished ? '#ff1212' : '#fff'}`}
+					color={`${wished ? '#ff1212' : '#000'}`}
+					className="h-5 w-5 text-gray-600 m-auto"
+				/>
+			</button>
+
 			{/* Изображение товара */}
-			<div className="h-full max-h-[345px]">
+			<div className="h-full flex">
 				<Link
 					href={`/product/${id}`}
-					className="block h-full w-full overflow-hidden  "
+					className="flex h-full w-full overflow-hidden items-stretch"
 				>
-					<div className="h-full w-full relative overflow-hidden  ">
+					<div className="h-full w-full relative overflow-hidden">
 						<Image
 							src="/images/products/card_example2.png"
 							alt={name}
@@ -77,16 +122,27 @@ export default function ProductCard({ product, variant = 'default' }) {
 					</h3>
 				</Link>
 
-				{/* Кнопка добавления в корзину */}
-				<MyButton
-					className={`${
-						variant == 'catalog' ? 'text-sm' : 'text-xl'
-					} w-fit  px-4 mx-auto`}
-				>
-					В корзину
-				</MyButton>
+				{/* Кнопки действий */}
+				<div className="flex justify-center gap-2 mt-2 xl:flex-row flex-col">
+					<MyButton
+						className={`w-fit mx-auto ${
+							variant == 'catalog' ? 'text-sm' : 'text-base'
+						} px-4`}
+					>
+						<ShoppingCart className="h-4 w-4 mr-1" />В корзину
+					</MyButton>
 
-				<div className="flex flex-col items-center justify-center px-8 py-2 gap-1">
+					<MyButton
+						className={`w-fit mx-auto ${
+							variant == 'catalog' ? 'text-sm' : 'text-base'
+						} px-4 bg-secondary-blue`}
+					>
+						<Zap className="h-4 w-4 mr-1" />
+						Купить сейчас
+					</MyButton>
+				</div>
+
+				<div className="flex flex-col items-center justify-center px-2 py-2 gap-1">
 					{/* Цена */}
 					<div
 						className={`${
@@ -103,6 +159,12 @@ export default function ProductCard({ product, variant = 'default' }) {
 						) : (
 							<span className="font-bold text-gray-900">{price} ₽</span>
 						)}
+						{/* Статус наличия */}
+						<p
+							className={`ml-4 text-center text-sm font-medium ${stockStatus.className}`}
+						>
+							{stockStatus.label}
+						</p>
 					</div>
 
 					{/* Рейтинг */}
