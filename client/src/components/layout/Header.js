@@ -7,19 +7,19 @@ import NavLink from '../ui/NavLink'
 export default function Header() {
 	return (
 		<header className="fixed top-0 z-50 w-full border-b border-gray-300 bg-neutral-01 px-2 sm:px-4 py-4">
-			<div className="lg:container mx-auto  flex items-center justify-between">
+			<div className="lg:container mx-auto  flex items-center justify-between ">
 				{/* Логотип */}
-				<Link href="/" className="flex items-center">
+				<Link href="/" className="flex items-center group">
 					<div className="hidden sm:inline mr-2">
 						<Image
 							src="/images/logo.svg"
 							alt="Mat-Focus Logo"
 							width={40}
 							height={40}
-							className="w-10 h-10"
+							className="w-10 h-10 group-hover:rotate-x-25 group-hover:rotate-z-15 transform-3d transition-all duration-700"
 						/>
 					</div>
-					<span className="text-base sm:text-2xl font-bold hover:text-hover transition-colors">
+					<span className="text-base sm:text-2xl font-bold group-hover:text-hover transition-colors ">
 						MatFocus
 					</span>
 				</Link>

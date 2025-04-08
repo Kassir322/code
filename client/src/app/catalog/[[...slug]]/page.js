@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react'
 import { ChevronDown, Filter, X } from 'lucide-react'
 import ProductCard from '@/components/ProductCard'
 import MyButton from '@/components/ui/MyButton'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
 
 // Временные моковые данные для демонстрации
 const productMockData = [
@@ -167,19 +169,19 @@ const productMockData = [
 
 // Категории предметов
 const subjects = [
-	'Все предметы',
-	'Математика',
-	'Русский язык',
-	'Физика',
-	'Химия',
-	'Биология',
-	'История',
-	'Обществознание',
-	'Английский язык',
-	'Литература',
-	'География',
-	'Информатика',
-	'Геометрия',
+	{ name: 'Все предметы', slug: 'catalog' },
+	{ name: 'Математика', slug: 'mathematics' },
+	{ name: 'Русский язык', slug: 'russian-language' },
+	{ name: 'Физика', slug: 'physics' },
+	{ name: 'Химия', slug: 'chemistry' },
+	{ name: 'Биология', slug: 'biology' },
+	{ name: 'История', slug: 'history' },
+	{ name: 'Обществознание', slug: 'social-science' },
+	{ name: 'Английский язык', slug: 'english-language' },
+	{ name: 'Литература', slug: 'literature' },
+	{ name: 'География', slug: 'geography' },
+	{ name: 'Информатика', slug: 'informatics' },
+	{ name: 'Геометрия', slug: 'geometry' },
 ]
 
 // Классы
@@ -214,9 +216,14 @@ const sortOptions = [
 	{ value: 'newest', label: 'Сначала новинки' },
 ]
 
-export default function CatalogPage() {
+export default function Page({ params }) {
+	const path = usePathname().split('/')
+	const subject = path[path.length - 1]
+
+	const activeSubject = subjects.find((item) => item.slug === subject)
+
 	// Состояния для фильтров
-	const [selectedSubject, setSelectedSubject] = useState('Все предметы')
+	const [selectedSubject, setSelectedSubject] = useState(activeSubject.name)
 	const [selectedGrade, setSelectedGrade] = useState('Все классы')
 	const [selectedCardType, setSelectedCardType] = useState('Все типы')
 	const [selectedPriceRange, setSelectedPriceRange] = useState('all')
@@ -224,7 +231,6 @@ export default function CatalogPage() {
 	const [sortBy, setSortBy] = useState('popular')
 	const [currentPage, setCurrentPage] = useState(1)
 	const [showMobileFilter, setShowMobileFilter] = useState(false)
-
 	// Количество продуктов на странице
 	const productsPerPage = 9
 
@@ -401,6 +407,36 @@ export default function CatalogPage() {
 						</div>
 
 						<div className="flex justify-between items-center mb-4">
+							<h2 className="font-semibold text-xl">Категории</h2>
+						</div>
+
+						{/* Фильтр по предмету */}
+						<div className="mb-6">
+							<ul className="space-y-2 ">
+								{subjects.map((subject) => (
+									<li key={subject.name}>
+										<label className="flex items-center cursor-pointer">
+											<Link href={`/catalog/${subject.slug}`}>
+												<input
+													type="radio"
+													name="subject"
+													checked={selectedSubject === subject.name}
+													onChange={() => {
+														setSelectedSubject(subject.name)
+													}}
+													className="mr-2 accent-secondary-blue "
+												/>
+												<span className="text-neutral-05 hover:text-secondary-blue">
+													{subject.name}
+												</span>
+											</Link>
+										</label>
+									</li>
+								))}
+							</ul>
+						</div>
+
+						<div className="flex justify-between items-center mb-4">
 							<h3 className="font-semibold text-lg">Фильтры</h3>
 							<button
 								onClick={resetFilters}
@@ -408,27 +444,6 @@ export default function CatalogPage() {
 							>
 								Сбросить
 							</button>
-						</div>
-
-						{/* Фильтр по предмету */}
-						<div className="mb-6">
-							<h4 className="font-medium mb-2">Предмет</h4>
-							<ul className="space-y-2">
-								{subjects.map((subject) => (
-									<li key={subject}>
-										<label className="flex items-center cursor-pointer">
-											<input
-												type="radio"
-												name="subject"
-												checked={selectedSubject === subject}
-												onChange={() => setSelectedSubject(subject)}
-												className="mr-2 accent-secondary-blue"
-											/>
-											<span className="text-neutral-05">{subject}</span>
-										</label>
-									</li>
-								))}
-							</ul>
 						</div>
 
 						{/* Фильтр по классу */}
@@ -445,7 +460,9 @@ export default function CatalogPage() {
 												onChange={() => setSelectedGrade(grade)}
 												className="mr-2 accent-secondary-blue"
 											/>
-											<span className="text-neutral-05">{grade}</span>
+											<span className="text-neutral-05 hover:text-secondary-blue">
+												{grade}
+											</span>
 										</label>
 									</li>
 								))}
@@ -466,7 +483,9 @@ export default function CatalogPage() {
 												onChange={() => setSelectedCardType(type)}
 												className="mr-2 accent-secondary-blue"
 											/>
-											<span className="text-neutral-05">{type}</span>
+											<span className="text-neutral-05 hover:text-secondary-blue">
+												{type}
+											</span>
 										</label>
 									</li>
 								))}
@@ -487,7 +506,9 @@ export default function CatalogPage() {
 												onChange={() => setSelectedPriceRange(range.id)}
 												className="mr-2 accent-secondary-blue"
 											/>
-											<span className="text-neutral-05">{range.label}</span>
+											<span className="text-neutral-05 hover:text-secondary-blue">
+												{range.label}
+											</span>
 										</label>
 									</li>
 								))}
