@@ -6,6 +6,7 @@ import ProductCard from '@/components/ProductCard'
 import MyButton from '@/components/ui/MyButton'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import Breadcrumbs from '@/components/Breadcrumbs'
 
 // Временные моковые данные для демонстрации
 const productMockData = [
@@ -461,6 +462,9 @@ export default function Page({ params }) {
 					<p className="text-gray-700">{seoText.intro}</p>
 				</div>
 			</section>
+
+			{/* Хлебные крошки */}
+			<Breadcrumbs items={breadcrumbItems} />
 
 			{/* Мобильная кнопка фильтра */}
 			<div className="md:hidden mb-4">
