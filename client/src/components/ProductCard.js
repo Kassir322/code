@@ -21,6 +21,7 @@ import {
 } from '@/store/slices/wishlistSlice'
 import { useRouter } from 'next/navigation'
 import CartNotification from './ui/CartNotification'
+import WishlistNotification from './ui/WishlistNotification'
 
 export default function ProductCard({ product, variant = 'default' }) {
 	const {
@@ -37,7 +38,10 @@ export default function ProductCard({ product, variant = 'default' }) {
 
 	const [isAddingToCart, setIsAddingToCart] = useState(false)
 	const [isQuickBuying, setIsQuickBuying] = useState(false)
-	const [showNotification, setShowNotification] = useState(false)
+	const [showCartNotification, setShowCartNotification] = useState(false)
+	const [showWishlistNotification, setShowWishlistNotification] =
+		useState(false)
+	const [isWishlistActionAdd, setIsWishlistActionAdd] = useState(true)
 	const [wishlistAnimation, setWishlistAnimation] = useState(false)
 	const router = useRouter()
 
@@ -124,7 +128,7 @@ export default function ProductCard({ product, variant = 'default' }) {
 		dispatch(addToCart(product))
 
 		// Показываем уведомление о добавлении
-		setShowNotification(true)
+		setShowCartNotification(true)
 
 		// Показываем подтверждение добавления на короткое время
 		setTimeout(() => {
@@ -154,13 +158,23 @@ export default function ProductCard({ product, variant = 'default' }) {
 		// Запускаем анимацию
 		setWishlistAnimation(true)
 
+		// Определяем, добавляем или удаляем из избранного
+		setIsWishlistActionAdd(!isInWishlist)
+
 		// Переключаем товар в списке избранного
 		dispatch(toggleWishlistItem({ product }))
+
+		// Показываем уведомление
+		setShowWishlistNotification(true)
 	}
 
-	// Закрытие уведомления
-	const handleCloseNotification = () => {
-		setShowNotification(false)
+	// Закрытие уведомлений
+	const handleCloseCartNotification = () => {
+		setShowCartNotification(false)
+	}
+
+	const handleCloseWishlistNotification = () => {
+		setShowWishlistNotification(false)
 	}
 
 	return (
@@ -328,12 +342,21 @@ export default function ProductCard({ product, variant = 'default' }) {
 				</div>
 			</div>
 
-			{/* Уведомление о добавлении в корзину */}
-			{showNotification && (
+			{/* Уведомления */}
+			{showCartNotification && (
 				<CartNotification
-					show={showNotification}
+					show={showCartNotification}
 					product={product}
-					onClose={handleCloseNotification}
+					onClose={handleCloseCartNotification}
+				/>
+			)}
+
+			{showWishlistNotification && (
+				<WishlistNotification
+					show={showWishlistNotification}
+					product={product}
+					isAdded={isWishlistActionAdd}
+					onClose={handleCloseWishlistNotification}
 				/>
 			)}
 		</>

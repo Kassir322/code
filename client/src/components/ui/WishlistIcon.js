@@ -1,7 +1,6 @@
 'use client'
 
 import { Heart } from 'lucide-react'
-import Link from 'next/link'
 import { useSelector } from 'react-redux'
 import { selectWishlistItemsCount } from '@/store/slices/wishlistSlice'
 import { useState, useEffect } from 'react'
@@ -27,7 +26,7 @@ export default function WishlistIcon() {
 	}, [itemsCount, prevCount])
 
 	return (
-		<Link href="/wishlist" className="relative inline-flex items-center">
+		<div className="relative inline-flex items-center">
 			<Heart
 				className={`h-6 w-6 text-gray-800 hover:text-red-500 transition-colors ${
 					animate ? 'scale-125 text-red-500' : ''
@@ -42,6 +41,6 @@ export default function WishlistIcon() {
 					{itemsCount}
 				</span>
 			)}
-		</Link>
+		</div>
 	)
 }

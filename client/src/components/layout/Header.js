@@ -85,11 +85,6 @@ export default function Header() {
 							<WishlistIcon />
 							<span className="hidden md:inline ml-2 text-base hover:text-hover transition-colors">
 								Избранное
-								{wishlistItemsCount > 0 && (
-									<span className="ml-1 text-red-500 font-medium">
-										({wishlistItemsCount})
-									</span>
-								)}
 							</span>
 						</Link>
 					</div>
