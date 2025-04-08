@@ -12,7 +12,7 @@ export default function Breadcrumbs({ items }) {
 			'@type': 'ListItem',
 			position: index + 1,
 			name: item.name,
-			item: item.url,
+			item: `https://mat-focus.ru${item.url}`,
 		})),
 	}
 

@@ -79,7 +79,7 @@ export default function NewsletterSection() {
 
 									<button
 										type="submit"
-										className={`px-6 py-3 rounded-md font-medium transition-colors ${
+										className={`cursor-pointer px-6 py-3 rounded-md font-medium transition-colors ${
 											status === 'success'
 												? 'bg-green-500 hover:bg-green-600 text-white'
 												: 'bg-primary hover:bg-primary-dark text-white'
