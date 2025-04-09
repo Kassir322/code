@@ -78,6 +78,7 @@ export const wishlistSlice = createSlice({
 			} else {
 				// Если товара еще нет, добавляем его
 				if (product) {
+					// Проверяем, что у нас есть объект товара
 					state.items.push(product)
 				}
 			}

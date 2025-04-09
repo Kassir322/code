@@ -37,11 +37,14 @@ export const cartSlice = createSlice({
 			)
 
 			if (existingItemIndex !== -1) {
-				// Если товар уже есть, увеличиваем количество
-				state.items[existingItemIndex].quantity += 1
+				// Если товар уже есть, увеличиваем количество на указанное в payload
+				// Важно! Учитываем quantity из payload, а не просто +1
+				state.items[existingItemIndex].quantity += product.quantity || 1
 			} else {
-				// Если товара нет, добавляем его с количеством 1
-				state.items.push({ ...product, quantity: 1 })
+				// Если товара нет, добавляем его с количеством из payload
+				// Убеждаемся, что quantity установлено (по умолчанию 1)
+				const quantityToAdd = product.quantity || 1
+				state.items.push({ ...product, quantity: quantityToAdd })
 			}
 
 			// Сохраняем в localStorage

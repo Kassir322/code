@@ -13,6 +13,8 @@ import {
 	generateOrganizationSchema,
 } from '@/lib/schema'
 import PopularProducts from '@/components/product/PopularProducts'
+import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 // Генерируем метаданные для страницы (для SEO)
 export async function generateMetadata({ params }) {
@@ -131,6 +133,16 @@ export default async function ProductPage({ params }) {
 			<main className="container mx-auto px-4 mt-24 mb-16">
 				{/* Хлебные крошки для навигации и SEO */}
 				<Breadcrumbs items={breadcrumbItems} />
+
+				<div className="flex justify-between items-center mb-4">
+					<Link
+						href="/catalog"
+						className="flex items-center text-secondary-blue hover:underline"
+					>
+						<ArrowLeft className="h-4 w-4 mr-1" />
+						<span>Назад в каталог</span>
+					</Link>
+				</div>
 
 				<div className="bg-white rounded-lg shadow-sm p-6 my-8">
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-8">

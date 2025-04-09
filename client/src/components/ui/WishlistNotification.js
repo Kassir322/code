@@ -1,5 +1,5 @@
 'use client'
-
+// src/components/ui/WishlistNotification.js
 import { useState, useEffect } from 'react'
 import { Heart, X } from 'lucide-react'
 import Link from 'next/link'
@@ -80,13 +80,14 @@ export default function WishlistNotification({
 						<button
 							onClick={handleClose}
 							className="text-gray-400 hover:text-gray-600 transition-colors"
+							aria-label="Закрыть уведомление"
 						>
 							<X className="h-5 w-5" />
 						</button>
 					</div>
 
 					<p className="text-sm text-gray-600 mt-1 line-clamp-1">
-						{product.name}
+						{product.name || product.title}
 					</p>
 
 					{isAdded && (

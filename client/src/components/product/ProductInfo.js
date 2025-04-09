@@ -113,6 +113,26 @@ export default function ProductInfo({ product }) {
 				<span>{stockStatus.label}</span>
 			</div>
 
+			{/* Уведомление, если товар не доступен */}
+			{quantity <= 0 && (
+				<div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+					<div className="flex">
+						<AlertCircle className="h-5 w-5 text-red-500 mt-0.5 mr-2 flex-shrink-0" />
+						<div>
+							<h3 className="text-sm font-medium text-red-800">
+								Товар временно отсутствует
+							</h3>
+							<p className="text-sm text-red-700 mt-1">
+								Вы можете подписаться на уведомление о поступлении этого товара.
+							</p>
+							<button className="mt-2 text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-md text-sm font-medium transition-colors">
+								Уведомить о поступлении
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
+
 			{/* Информация о доставке */}
 			<div className="bg-blue-50 p-4 rounded-md mb-4">
 				<div className="flex items-start">

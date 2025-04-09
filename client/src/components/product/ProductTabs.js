@@ -12,33 +12,52 @@ export default function ProductTabs({ product }) {
 	// Количество отзывов (в реальном приложении будет из API)
 	const reviewCount = product.reviewCount || 0
 
+	// Обработчик клика по вкладке с прокруткой страницы
+	const handleTabClick = (tabId) => {
+		setActiveTab(tabId)
+		// Плавная прокрутка к верхней части вкладок
+		window.scrollTo({
+			top: document.getElementById('product-tabs')?.offsetTop - 100 || 0,
+			behavior: 'smooth',
+		})
+	}
+
 	return (
-		<div className="bg-white rounded-lg shadow-sm p-6 my-8">
+		<div id="product-tabs" className="bg-white rounded-lg shadow-sm p-6 my-8">
 			<div className="border-b border-gray-200">
 				<div className="flex flex-wrap -mb-px">
 					<Tab
 						id="description"
 						label="Описание"
 						active={activeTab === 'description'}
-						onClick={() => setActiveTab('description')}
+						onClick={() => handleTabClick('description')}
 					/>
 					<Tab
 						id="details"
 						label="Характеристики"
 						active={activeTab === 'details'}
-						onClick={() => setActiveTab('details')}
+						onClick={() => handleTabClick('details')}
 					/>
 					<Tab
 						id="delivery"
 						label="Доставка и оплата"
 						active={activeTab === 'delivery'}
-						onClick={() => setActiveTab('delivery')}
+						onClick={() => handleTabClick('delivery')}
 					/>
 					<Tab
 						id="reviews"
-						label={`Отзывы${reviewCount > 0 ? ` (${reviewCount})` : ''}`}
+						label={
+							<span className="flex items-center">
+								Отзывы
+								{reviewCount > 0 && (
+									<span className="ml-1 bg-secondary-blue text-white rounded-full text-xs px-2 py-0.5">
+										{reviewCount}
+									</span>
+								)}
+							</span>
+						}
 						active={activeTab === 'reviews'}
-						onClick={() => setActiveTab('reviews')}
+						onClick={() => handleTabClick('reviews')}
 					/>
 				</div>
 			</div>

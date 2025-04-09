@@ -85,8 +85,14 @@ export default function ProductActions({ product }) {
 
 		setIsAddingToCart(true)
 
-		// Добавляем товар в корзину через Redux, учитывая выбранное количество
-		dispatch(addToCart({ ...product, quantity: productQuantity }))
+		// Создаем копию объекта товара и устанавливаем в нее выбранное количество
+		const productToAdd = {
+			...product,
+			quantity: productQuantity, // Это важно - используем productQuantity вместо значения по умолчанию
+		}
+
+		// Добавляем товар в корзину через Redux с указанным количеством
+		dispatch(addToCart(productToAdd))
 
 		// Показываем уведомление о добавлении
 		setShowCartNotification(true)
@@ -104,7 +110,12 @@ export default function ProductActions({ product }) {
 
 		// Если товар не в корзине, добавляем его
 		if (!productInCart) {
-			dispatch(addToCart({ ...product, quantity: productQuantity }))
+			// Создаем копию объекта товара и устанавливаем в нее выбранное количество
+			const productToAdd = {
+				...product,
+				quantity: productQuantity, // Используем выбранное пользователем количество
+			}
+			dispatch(addToCart(productToAdd))
 		}
 
 		// Переходим к оформлению заказа

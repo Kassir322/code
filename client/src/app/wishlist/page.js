@@ -63,6 +63,15 @@ export default function WishlistPage() {
 
 			{wishlistItems.length > 0 ? (
 				<div>
+					<div className="mb-6">
+						<Link
+							href="/catalog"
+							className="flex items-center text-secondary-blue hover:underline"
+						>
+							<ArrowLeft className="h-4 w-4 mr-1" />
+							<span>В каталог</span>
+						</Link>
+					</div>
 					{/* Заголовок с кнопкой очистки */}
 					<div className="flex justify-between items-center mb-6">
 						<h2 className="text-xl font-semibold">
@@ -89,16 +98,6 @@ export default function WishlistPage() {
 								isAddingToCart={itemsBeingAdded[item.id]}
 							/>
 						))}
-					</div>
-
-					<div className="mt-6">
-						<Link
-							href="/catalog"
-							className="flex items-center text-secondary-blue hover:underline"
-						>
-							<ArrowLeft className="h-4 w-4 mr-1" />
-							<span>В каталог</span>
-						</Link>
 					</div>
 				</div>
 			) : (
