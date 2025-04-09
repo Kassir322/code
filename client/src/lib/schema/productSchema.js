@@ -55,7 +55,7 @@ export function generateProductSchema(product) {
 			{
 				'@type': 'PropertyValue',
 				name: 'Количество карточек',
-				value: product.numberOfCards.toString(),
+				value: 70 || product.numberOfCards.toString(),
 			},
 			{
 				'@type': 'PropertyValue',

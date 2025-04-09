@@ -1,119 +1,164 @@
+// src/app/product/[id]/page.js
+import { getProductById } from '@/lib/api'
+import { notFound } from 'next/navigation'
+import ProductGallery from '@/components/product/ProductGallery'
+import ProductInfo from '@/components/product/ProductInfo'
+import ProductActions from '@/components/product/ProductActions'
+import ProductTabs from '@/components/product/ProductTabs'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import SchemaOrg from '@/components/SchemaOrg'
 import {
 	generateProductSchema,
 	generateBreadcrumbSchema,
 	generateOrganizationSchema,
 } from '@/lib/schema'
+import PopularProducts from '@/components/product/PopularProducts'
 
-// async function getProductData(slug) {
-// 	const apiUrl =
-// 		process.env.NEXT_PUBLIC_STRAPI_API_URL || 'http://localhost:1337'
-// 	const token =
-// 		process.env.STRAPI_API_TOKEN ||
-// 		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzQzNjA0NzkzLCJleHAiOjE3NDYxOTY3OTN9.Y5BR-mHw3UrEpMccjIt5ojW-EtxnEnVIfW1843hmA6k'
+// Генерируем метаданные для страницы (для SEO)
+export async function generateMetadata({ params }) {
+	const { id } = await params
 
-// 	// Запрос к API Strapi для получения данных о товаре
-// 	const response = await fetch(`${apiUrl}/api/study-cards/${slug}`, {
-// 		headers: {
-// 			Authorization: `Bearer ${token}`,
-// 			'Content-Type': 'application/json',
-// 		},
-// 	})
+	try {
+		const product = await getProductById(id)
 
-// 	const data = await response.json()
-// 	return data.data
-// }
+		if (!product) {
+			return {
+				title: 'Товар не найден | Mat-Focus',
+				description: 'К сожалению, запрашиваемый товар не найден.',
+			}
+		}
 
-// export async function generateMetadata({ params }) {
-// 	// В Next.js 15+ params не требует await
-// 	const { slug } = params
+		// Формируем оптимизированные метаданные для товара
+		return {
+			title: `${product.name} | Учебные карточки Mat-Focus`,
+			description:
+				product.description ||
+				`Учебные карточки ${product.name} от Mat-Focus для эффективного обучения`,
+			keywords: `учебные карточки, ${
+				product.subject?.toLowerCase() || 'обучение'
+			}, ${product.grade || ''}, Mat-Focus`,
+			// openGraph: {
+			// 	title: `${product.name} | Учебные карточки Mat-Focus`,
+			// 	description:
+			// 		product.description ||
+			// 		`Учебные карточки ${product.name} для эффективного обучения`,
+			// 	url: `https://mat-focus.ru/product/${id}`,
+			// 	images: [
+			// 		{
+			// 			url: product.imageSrc || '/images/products/card_example2.png',
+			// 			width: 993,
+			// 			height: 1347,
+			// 			alt: product.name,
+			// 		},
+			// 	],
+			// 	locale: 'ru_RU',
+			// 	type: 'product',
+			// },
+			// Добавляем канонический URL для избежания дублирования контента
+			alternates: {
+				canonical: `https://mat-focus.ru/product/${id}`,
+			},
+			// Указываем, что страница доступна для индексации
+			robots: {
+				index: true,
+				follow: true,
+			},
+		}
+	} catch (error) {
+		console.error('Ошибка при генерации метаданных:', error)
+		return {
+			title: 'Учебные карточки | Mat-Focus',
+			description: 'Учебные карточки для эффективного обучения',
+		}
+	}
+}
 
-// 	try {
-// 		const product = await getProductData(slug)
-// 		console.log(product)
+export default async function ProductPage({ params }) {
+	const { id } = await params
 
-// 		return {
-// 			title: `${product.title} - Учебные карточки | mat-focus`,
-// 			description: product.description || 'Учебные карточки от mat-focus',
-// 			openGraph: {
-// 				title: `${product.title} - Учебные карточки | mat-focus`,
-// 				description: product.description || 'Учебные карточки от mat-focus',
-// 				url: `https://mat-focus.ru/product/${slug}`,
-// 				images:
-// 					product.image?.data?.map((img) => ({
-// 						url: img.url,
-// 						width: img.width,
-// 						height: img.height,
-// 					})) || [],
-// 				locale: 'ru_RU',
-// 				type: 'website',
-// 			},
-// 		}
-// 	} catch (error) {
-// 		console.error('Error generating metadata:', error)
-// 		return {
-// 			title: 'Учебная карточка | mat-focus',
-// 			description: 'Учебные карточки от mat-focus',
-// 		}
-// 	}
-// }
+	try {
+		// Получаем данные о товаре
+		const product = await getProductById(id)
 
-// export default async function ProductPage({ params }) {
-// 	// В Next.js 15+ params не требует await
-// 	const { slug } = params
+		if (!product) {
+			notFound() // Вызываем 404 страницу если товар не найден
+		}
 
-// 	try {
-// 		const product = await getProductData(slug)
+		// Данные для отображения хлебных крошек
+		const breadcrumbItems = [
+			{ name: 'Главная', url: '/' },
+			{ name: 'Каталог', url: '/catalog' },
+		]
 
-// 		// Подготовка данных для схемы
-// 		const productData = {
-// 			id: product.id,
-// 			title: product.title,
-// 			description: product.description,
-// 			slug: slug,
-// 			price: product.price,
-// 			imageUrl: product.image?.data?.[0]?.attributes?.url,
-// 			quantity: product.quantity || 0,
-// 			schoolGrade: product.school_grades?.join(', '),
-// 			subject: product.subject,
-// 			numberOfCards: product.number_of_cards,
-// 			cardType: product.card_type,
-// 			publishDate: product.createdAt,
-// 		}
+		// Если есть информация о категории, добавляем её в хлебные крошки
+		if (product.subject) {
+			const categorySlug = product.subject
+				.toLowerCase()
+				.replace(/\s+/g, '-')
+				.replace(/[^\w\-]+/g, '')
+			breadcrumbItems.push({
+				name: product.subject,
+				url: `/catalog/${categorySlug}`,
+			})
+		}
 
-// 		// Категория (если есть)
-// 		const category = product.category?.data
-// 			? {
-// 					name: product.category.data.attributes.name,
-// 					slug: product.category.data.attributes.slug,
-// 			  }
-// 			: null
+		// Добавляем текущий товар в хлебные крошки
+		breadcrumbItems.push({
+			name: product.name,
+			url: `/product/${id}`,
+		})
 
-// 		// Создание схем Schema.org
-// 		const productSchema = generateProductSchema(productData)
-// 		const breadcrumbSchema = generateBreadcrumbSchema(productData, category)
-// 		const organizationSchema = generateOrganizationSchema()
+		// Создаем данные схемы для микроразметки Schema.org
+		const productSchema = generateProductSchema({
+			...product,
+			id,
+			slug: id,
+		})
 
-// 		// Все схемы для страницы
-// 		const schemas = [productSchema, breadcrumbSchema, organizationSchema]
+		const breadcrumbSchema = generateBreadcrumbSchema(
+			{ ...product, id, slug: id },
+			product.subject
+				? { name: product.subject, slug: product.subject.toLowerCase() }
+				: null
+		)
 
-// 		return (
-// 			<>
-// 				{/* Основной контент страницы */}
-// 				<h1>{product.title}</h1>
+		const organizationSchema = generateOrganizationSchema()
 
-// 				{/* Внедрение Schema.org */}
-// 				<SchemaOrg data={schemas} />
-// 			</>
-// 		)
-// 	} catch (error) {
-// 		console.error('Error rendering product page:', error)
-// 		return <div>Товар не найден или произошла ошибка при загрузке.</div>
-// 	}
-// }
+		// Создаем массив схем для страницы
+		const schemas = [productSchema, breadcrumbSchema, organizationSchema]
 
-export default function Page({ params }) {
-	return (
-		<div className="test-sm">Тут должна быть отдельная страница товара</div>
-	)
+		return (
+			<main className="container mx-auto px-4 mt-24 mb-16">
+				{/* Хлебные крошки для навигации и SEO */}
+				<Breadcrumbs items={breadcrumbItems} />
+
+				<div className="bg-white rounded-lg shadow-sm p-6 my-8">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+						{/* Галерея изображений */}
+						<ProductGallery product={product} />
+
+						<div className="flex flex-col">
+							{/* Информация о товаре */}
+							<ProductInfo product={product} />
+
+							{/* Кнопки действий (добавление в корзину и т.д.) */}
+							<ProductActions product={product} />
+						</div>
+					</div>
+				</div>
+
+				{/* Вкладки с дополнительной информацией и отзывами */}
+				<ProductTabs product={product} />
+
+				{/* Популярные товары */}
+				<PopularProducts currentProductId={id} />
+
+				{/* Schema.org микроразметка для SEO */}
+				<SchemaOrg data={schemas} />
+			</main>
+		)
+	} catch (error) {
+		console.error('Ошибка при отображении страницы товара:', error)
+		notFound()
+	}
 }

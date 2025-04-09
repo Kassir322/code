@@ -27,7 +27,7 @@ export default function CartIcon() {
 	}, [itemsCount, prevCount])
 
 	return (
-		<Link href="/cart" className="relative inline-flex items-center">
+		<div className="relative inline-flex items-center">
 			<ShoppingBag
 				className={`h-6 w-6 text-gray-800 hover:text-secondary-blue transition-colors `}
 				// ${
@@ -43,6 +43,6 @@ export default function CartIcon() {
 					{itemsCount}
 				</span>
 			)}
-		</Link>
+		</div>
 	)
 }
