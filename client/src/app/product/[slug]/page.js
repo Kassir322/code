@@ -178,7 +178,7 @@ export default async function ProductPage({ params }) {
 				<SimilarProducts currentProductSlug={slug} category={product.subject} />
 
 				{/* Популярные товары */}
-				<PopularProducts currentProductId={slug} />
+				<PopularProducts currentProductSlug={slug} />
 
 				{/* Schema.org микроразметка для SEO */}
 				<SchemaOrg data={schemas} />

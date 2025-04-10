@@ -1,5 +1,5 @@
 'use client'
-// src/components/product/PopularProducts.js (обновленная версия с поддержкой slug)
+// src/components/product/PopularProducts.js (обновленная версия)
 import { useState, useEffect } from 'react'
 import ProductCard from '@/components/ProductCard'
 
@@ -9,72 +9,13 @@ const fetchPopularProducts = async (currentProductSlug) => {
 	// const response = await fetch(`/api/products/popular?exclude=${currentProductSlug}`);
 	// return await response.json();
 
-	// Заглушка для демонстрации
-	const mockProducts = [
-		{
-			id: currentProductSlug === '1' ? '10' : '1',
-			name: 'Карточки по математике 5-6 класс',
-			price: 890,
-			oldPrice: 1190,
-			rating: 4.8,
-			reviewCount: 124,
-			imageSrc: '/images/products/math-cards.jpg',
-			subject: 'Математика',
-			grade: '5-6 класс',
-			card_type: 'Вопрос-ответ',
-			quantity: 15,
-			number_of_cards: 50,
-			label: 'Хит продаж',
-		},
-		{
-			id: currentProductSlug === '2' ? '11' : '2',
-			name: 'Карточки по физике ОГЭ',
-			price: 950,
-			oldPrice: null,
-			rating: 4.5,
-			reviewCount: 87,
-			imageSrc: '/images/products/physics-cards.jpg',
-			subject: 'Физика',
-			grade: '9 класс (ОГЭ)',
-			card_type: 'Шпаргалки',
-			quantity: 8,
-			number_of_cards: 40,
-			label: 'Новинка',
-		},
-		{
-			id: currentProductSlug === '3' ? '12' : '3',
-			name: 'Карточки по русскому языку ЕГЭ',
-			price: 790,
-			oldPrice: 990,
-			rating: 4.7,
-			reviewCount: 156,
-			imageSrc: '/images/products/russian-cards.jpg',
-			subject: 'Русский язык',
-			grade: '11 класс (ЕГЭ)',
-			card_type: 'Комбинированный',
-			quantity: 12,
-			number_of_cards: 60,
-			label: 'Скидка 20%',
-		},
-		{
-			id: currentProductSlug === '4' ? '13' : '4',
-			name: 'Карточки по биологии 7-8 класс',
-			price: 850,
-			oldPrice: 1050,
-			rating: 4.6,
-			reviewCount: 92,
-			imageSrc: '/images/products/biology-cards.jpg',
-			subject: 'Биология',
-			grade: '7-8 класс',
-			card_type: 'Вопрос-ответ',
-			quantity: 5,
-			number_of_cards: 45,
-			label: null,
-		},
-	]
+	// Импортируем моковые данные из общего файла
+	const productMockData = (await import('@/lib/mock-data')).default
 
-	// Фильтруем, чтобы исключить текущий товар
-	return mockProducts.filter((product) => product.slug !== currentProductSlug)
+	// Фильтруем, чтобы исключить текущий товар по slug
+	return productMockData
+		.filter((product) => product.slug !== currentProductSlug)
+		.slice(0, 4) // Только первые 4 товара для популярных
 }
 
 export default function PopularProducts({ currentProductSlug }) {
@@ -108,7 +49,8 @@ export default function PopularProducts({ currentProductSlug }) {
 		)
 	}
 
-	if (products.length === 0) {
+	// Проверяем количество товаров - если их меньше 2, не показываем раздел
+	if (products.length < 2) {
 		return null
 	}
 

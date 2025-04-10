@@ -10,42 +10,6 @@ import LinkButton from '@/components/ui/LinkButton'
 import productMockData from '@/lib/mock-data'
 
 // Обновленные примеры товаров для главной страницы с добавлением slug
-// const featuredProducts = [
-// 	{
-// 		id: 1,
-// 		name: 'Карточки по биологии 5-11 класс',
-// 		price: 890,
-// 		oldPrice: 1190,
-// 		rating: 4.8,
-// 		reviewCount: 124,
-// 		imageSrc: '/images/products/math-cards.jpg',
-// 		label: 'Хит продаж',
-// 		slug: 'kartochki-po-biologii-5-11-klass',
-// 	},
-// 	{
-// 		id: 2,
-// 		name: 'Карточки по физике ОГЭ и ЕГЭ',
-// 		price: 950,
-// 		oldPrice: null,
-// 		rating: 4.5,
-// 		reviewCount: 87,
-// 		imageSrc: '/images/products/physics-cards.jpg',
-// 		label: 'Новинка',
-// 		slug: 'kartochki-po-fizike-oge-i-ege',
-// 	},
-// 	{
-// 		id: 3,
-// 		name: 'Карточки по русскому языку ОГЭ и ЕГЭ',
-// 		price: 790,
-// 		oldPrice: 990,
-// 		rating: 4.7,
-// 		reviewCount: 156,
-// 		imageSrc: '/images/products/russian-cards.jpg',
-// 		label: 'Скидка 20%',
-// 		slug: 'kartochki-po-russkomu-yazyku-oge-i-ege',
-// 	},
-// ]
-
 const featuredProducts = [
 	productMockData[0],
 	productMockData[1],
