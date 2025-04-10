@@ -1,4 +1,4 @@
-// src/components/ProductListItem.js
+// src/components/ProductListItem.js (обновленная версия с поддержкой slug)
 'use client'
 
 import React, { useState } from 'react'
@@ -29,6 +29,7 @@ export default function ProductListItem({ product }) {
 		grade,
 		cardType,
 		description = 'Учебные карточки для эффективного изучения и закрепления материала',
+		slug, // Используем slug для ссылок
 	} = product
 
 	const [wished, setWished] = useState(false)
@@ -112,6 +113,9 @@ export default function ProductListItem({ product }) {
 		// Здесь должна быть логика добавления/удаления из закладок
 	}
 
+	// Используем slug для URL вместо id
+	const productUrl = `/product/${slug || id}`
+
 	return (
 		<div className="group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow w-full mb-4">
 			<div className="flex flex-col sm:flex-row">
@@ -149,7 +153,7 @@ export default function ProductListItem({ product }) {
 					</button>
 
 					<Link
-						href={`/product/${id}`}
+						href={productUrl}
 						className="block h-full bg-neutral-03 border-r-2 border-neutral-200"
 					>
 						<div className="h-48 sm:h-full relative">
@@ -165,7 +169,7 @@ export default function ProductListItem({ product }) {
 
 				{/* Правая часть с информацией */}
 				<div className="sm:w-3/4 p-4">
-					<Link href={`/product/${id}`} className="block">
+					<Link href={productUrl} className="block">
 						<h3 className="text-xl font-medium text-gray-900 hover:text-primary transition-colors mb-2">
 							{name}
 						</h3>
@@ -217,7 +221,7 @@ export default function ProductListItem({ product }) {
 							<button
 								onClick={handleAddToCart}
 								disabled={!stockStatus.available || isAddingToCart}
-								className={`px-4 rounded-md inline-flex items-center justify-center py-2 text-sm font-medium transition-colors ${
+								className={`px-4 rounded-md inline-flex items-center justify-center py-2 text-sm font-medium transition-colors cursor-pointer ${
 									!stockStatus.available
 										? 'bg-gray-300 text-gray-500 cursor-not-allowed'
 										: isAddingToCart
@@ -240,7 +244,7 @@ export default function ProductListItem({ product }) {
 							<button
 								onClick={handleQuickBuy}
 								disabled={!stockStatus.available || isQuickBuying}
-								className={`px-4 rounded-md inline-flex items-center justify-center py-2 text-sm font-medium transition-colors ${
+								className={`px-4 rounded-md inline-flex items-center justify-center py-2 text-sm font-medium transition-colors cursor-pointer ${
 									!stockStatus.available
 										? 'bg-gray-300 text-gray-500 cursor-not-allowed'
 										: isQuickBuying

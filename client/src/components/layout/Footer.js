@@ -82,14 +82,6 @@ export default function Footer() {
 						<ul className="space-y-2">
 							<li>
 								<Link
-									href="/legal"
-									className="text-gray-600 hover:text-primary transition-colors"
-								>
-									Правовая информация
-								</Link>
-							</li>
-							<li>
-								<Link
 									href="/contact"
 									className="text-gray-600 hover:text-primary transition-colors"
 								>

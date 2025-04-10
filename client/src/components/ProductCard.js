@@ -1,3 +1,4 @@
+// Обновленная версия src/components/ProductCard.js с использованием slug вместо id
 'use client'
 
 import React, { useState, useEffect } from 'react'
@@ -25,7 +26,7 @@ import WishlistNotification from './ui/WishlistNotification'
 
 export default function ProductCard({ product, variant = 'default' }) {
 	const {
-		id,
+		id, // Сохраняем id для идентификации в корзине и избранном
 		name,
 		price,
 		oldPrice,
@@ -35,6 +36,9 @@ export default function ProductCard({ product, variant = 'default' }) {
 		label,
 		quantity = 5, // По умолчанию считаем, что есть 5 штук в наличии
 	} = product
+
+	// Используем slug для построения URL
+	const productSlug = product.slug || id.toString()
 
 	const [isAddingToCart, setIsAddingToCart] = useState(false)
 	const [isQuickBuying, setIsQuickBuying] = useState(false)
@@ -221,7 +225,7 @@ export default function ProductCard({ product, variant = 'default' }) {
 				{/* Изображение товара */}
 				<div className="h-full flex">
 					<Link
-						href={`/product/${id}`}
+						href={`/product/${productSlug}`}
 						className="flex h-full w-full overflow-hidden items-stretch bg-neutral-03 border-r-2 border-neutral-200 shadow-sm"
 					>
 						<div className="h-full w-full relative overflow-hidden">
@@ -237,7 +241,7 @@ export default function ProductCard({ product, variant = 'default' }) {
 
 				{/* Информация о товаре */}
 				<div className="flex flex-col gap-1 pt-4 mx-1">
-					<Link href={`/product/${id}`} className="block">
+					<Link href={`/product/${productSlug}`} className="block">
 						<h3
 							className={`${
 								variant == 'catalog' ? 'text-lg' : 'text-xl'

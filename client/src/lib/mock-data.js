@@ -1,4 +1,4 @@
-// src/lib/mock-data.js
+// src/lib/mock-data.js (обновленная версия с добавлением поля slug)
 const productMockData = [
 	{
 		id: 1,
@@ -13,6 +13,7 @@ const productMockData = [
 		grade: '5-6 класс',
 		cardType: 'Вопрос-ответ',
 		quantity: 15,
+		slug: 'kartochki-po-matematike-5-6-klass',
 	},
 	{
 		id: 2,
@@ -27,6 +28,7 @@ const productMockData = [
 		grade: '9 класс (ОГЭ)',
 		cardType: 'Шпаргалки',
 		quantity: 8,
+		slug: 'kartochki-po-fizike-oge',
 	},
 	{
 		id: 3,
@@ -41,6 +43,7 @@ const productMockData = [
 		grade: '11 класс (ЕГЭ)',
 		cardType: 'Комбинированный',
 		quantity: 12,
+		slug: 'kartochki-po-russkomu-yazyku-ege',
 	},
 	{
 		id: 4,
@@ -55,6 +58,7 @@ const productMockData = [
 		grade: '7-8 класс',
 		cardType: 'Вопрос-ответ',
 		quantity: 5,
+		slug: 'kartochki-po-biologii-7-8-klass',
 	},
 	{
 		id: 5,
@@ -69,6 +73,7 @@ const productMockData = [
 		grade: '8-9 класс',
 		cardType: 'Шпаргалки',
 		quantity: 2,
+		slug: 'kartochki-po-khimii-8-9-klass',
 	},
 	{
 		id: 6,
@@ -83,6 +88,7 @@ const productMockData = [
 		grade: '11 класс (ЕГЭ)',
 		cardType: 'Комбинированный',
 		quantity: 0,
+		slug: 'kartochki-po-istorii-ege',
 	},
 	{
 		id: 7,
@@ -97,6 +103,7 @@ const productMockData = [
 		grade: '5-6 класс',
 		cardType: 'Вопрос-ответ',
 		quantity: 10,
+		slug: 'kartochki-po-angliyskomu-yazyku-5-7-klass',
 	},
 	{
 		id: 8,
@@ -111,6 +118,7 @@ const productMockData = [
 		grade: '10-11 класс',
 		cardType: 'Шпаргалки',
 		quantity: 7,
+		slug: 'kartochki-po-literature-10-11-klass',
 	},
 	{
 		id: 9,
@@ -125,6 +133,7 @@ const productMockData = [
 		grade: '7-8 класс',
 		cardType: 'Вопрос-ответ',
 		quantity: 4,
+		slug: 'kartochki-po-geografii-6-7-klass',
 	},
 	{
 		id: 10,
@@ -139,6 +148,7 @@ const productMockData = [
 		grade: '9 класс (ОГЭ)',
 		cardType: 'Комбинированный',
 		quantity: 9,
+		slug: 'kartochki-po-obshchestvoznaniyu-oge',
 	},
 	{
 		id: 11,
@@ -153,6 +163,7 @@ const productMockData = [
 		grade: '8-9 класс',
 		cardType: 'Шпаргалки',
 		quantity: 1,
+		slug: 'kartochki-po-informatike-8-9-klass',
 	},
 	{
 		id: 12,
@@ -167,6 +178,7 @@ const productMockData = [
 		grade: '8-9 класс',
 		cardType: 'Вопрос-ответ',
 		quantity: 0,
+		slug: 'kartochki-po-geometrii-7-9-klass',
 	},
 ]
 

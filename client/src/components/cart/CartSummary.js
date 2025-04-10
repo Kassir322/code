@@ -61,7 +61,7 @@ export default function CartSummary() {
 			<button
 				onClick={handleCheckout}
 				disabled={itemsCount === 0}
-				className={`w-full py-3 px-4 rounded-md font-medium text-center transition-colors ${
+				className={`cursor-pointer w-full py-3 px-4 rounded-md font-medium text-center transition-colors ${
 					itemsCount === 0
 						? 'bg-gray-300 text-gray-500 cursor-not-allowed'
 						: 'bg-secondary-blue text-white hover:bg-blue-700'

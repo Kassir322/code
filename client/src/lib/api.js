@@ -10,7 +10,7 @@ export async function getAllProducts() {
 	// const data = await res.json()
 	// return data.data
 
-	// Пока возвращаем моковые данные
+	// Возвращаем моковые данные (slug уже включены в данные)
 	return productMockData
 }
 
@@ -47,6 +47,7 @@ export async function getProductsByCategory(categorySlug) {
 
 /**
  * Получает информацию о товаре по ID
+ * @deprecated Используйте getProductBySlug вместо этого метода
  */
 export async function getProductById(productId) {
 	// В будущем здесь будет вызов API Strapi
@@ -58,4 +59,17 @@ export async function getProductById(productId) {
 	return productMockData.find(
 		(product) => product.id.toString() === productId.toString()
 	)
+}
+
+/**
+ * Получает информацию о товаре по Slug
+ */
+export async function getProductBySlug(slug) {
+	// В будущем здесь будет вызов API Strapi
+	// const res = await fetch(`${process.env.NEXT_PUBLIC_STRAPI_API_URL}/api/study-cards?filters[slug]=${slug}&populate=*`)
+	// const data = await res.json()
+	// return data.data[0] || null
+
+	// Находим по slug в моковых данных
+	return productMockData.find((product) => product.slug === slug)
 }

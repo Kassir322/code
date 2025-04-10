@@ -1,11 +1,13 @@
-// src/app/product/[id]/page.js
-import { getProductById } from '@/lib/api'
+// src/app/product/[slug]/page.js
+import { getAllProducts } from '@/lib/api'
 import { notFound } from 'next/navigation'
 import ProductGallery from '@/components/product/ProductGallery'
 import ProductInfo from '@/components/product/ProductInfo'
 import ProductActions from '@/components/product/ProductActions'
 import ProductTabs from '@/components/product/ProductTabs'
-import ProductTrustBlock from '@/components/product/ProductTrustBlock' // Импортируем новый компонент
+import ProductTrustBlock from '@/components/product/ProductTrustBlock'
+import ProductFAQ from '@/components/product/ProductFAQ' // Импортируем новый компонент FAQ
+import SimilarProducts from '@/components/product/SimilarProducts' // Импортируем новый компонент похожих товаров
 import Breadcrumbs from '@/components/Breadcrumbs'
 import SchemaOrg from '@/components/SchemaOrg'
 import {
@@ -17,12 +19,15 @@ import PopularProducts from '@/components/product/PopularProducts'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
+// Импортируем функцию для поиска товара по slug из API
+import { getProductBySlug } from '@/lib/api'
+
 // Генерируем метаданные для страницы (для SEO)
 export async function generateMetadata({ params }) {
-	const { id } = await params
+	const { slug } = await params
 
 	try {
-		const product = await getProductById(id)
+		const product = await getProductBySlug(slug)
 
 		if (!product) {
 			return {
@@ -36,16 +41,17 @@ export async function generateMetadata({ params }) {
 			title: `${product.name} | Учебные карточки Mat-Focus`,
 			description:
 				product.description ||
-				`Учебные карточки ${product.name} от Mat-Focus для эффективного обучения`,
+				`Учебные карточки ${product.name} от Mat-Focus для эффективного обучения и подготовки к экзаменам`,
 			keywords: `учебные карточки, ${
 				product.subject?.toLowerCase() || 'обучение'
-			}, ${product.grade || ''}, Mat-Focus`,
+			}, ${product.grade || ''}, Mat-Focus, образование`,
+			// OpenGraph для лучшего отображения при шеринге в соцсетях
 			// openGraph: {
 			// 	title: `${product.name} | Учебные карточки Mat-Focus`,
 			// 	description:
 			// 		product.description ||
-			// 		`Учебные карточки ${product.name} для эффективного обучения`,
-			// 	url: `https://mat-focus.ru/product/${id}`,
+			// 		`Учебные карточки ${product.name} для эффективного обучения и подготовки к экзаменам`,
+			// 	url: `https://mat-focus.ru/product/${slug}`,
 			// 	images: [
 			// 		{
 			// 			url: product.imageSrc || '/images/products/card_example2.png',
@@ -59,7 +65,7 @@ export async function generateMetadata({ params }) {
 			// },
 			// Добавляем канонический URL для избежания дублирования контента
 			alternates: {
-				canonical: `https://mat-focus.ru/product/${id}`,
+				canonical: `https://mat-focus.ru/product/${slug}`,
 			},
 			// Указываем, что страница доступна для индексации
 			robots: {
@@ -77,11 +83,11 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ProductPage({ params }) {
-	const { id } = await params
+	const { slug } = await params
 
 	try {
 		// Получаем данные о товаре
-		const product = await getProductById(id)
+		const product = await getProductBySlug(slug)
 
 		if (!product) {
 			notFound() // Вызываем 404 страницу если товар не найден
@@ -108,18 +114,17 @@ export default async function ProductPage({ params }) {
 		// Добавляем текущий товар в хлебные крошки
 		breadcrumbItems.push({
 			name: product.name,
-			url: `/product/${id}`,
+			url: `/product/${slug}`,
 		})
 
 		// Создаем данные схемы для микроразметки Schema.org
 		const productSchema = generateProductSchema({
 			...product,
-			id,
-			slug: id,
+			slug,
 		})
 
 		const breadcrumbSchema = generateBreadcrumbSchema(
-			{ ...product, id, slug: id },
+			{ ...product, slug },
 			product.subject
 				? { name: product.subject, slug: product.subject.toLowerCase() }
 				: null
@@ -160,14 +165,20 @@ export default async function ProductPage({ params }) {
 					</div>
 				</div>
 
-				{/* Добавляем блок "Почему стоит купить у нас" */}
+				{/* Блок "Почему стоит купить у нас" */}
 				<ProductTrustBlock />
 
 				{/* Вкладки с дополнительной информацией и отзывами */}
 				<ProductTabs product={product} />
 
+				{/* Новый раздел FAQ */}
+				<ProductFAQ />
+
+				{/* Похожие товары из той же категории */}
+				<SimilarProducts currentProductSlug={slug} category={product.subject} />
+
 				{/* Популярные товары */}
-				<PopularProducts currentProductId={id} />
+				<PopularProducts currentProductId={slug} />
 
 				{/* Schema.org микроразметка для SEO */}
 				<SchemaOrg data={schemas} />

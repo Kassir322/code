@@ -1,18 +1,18 @@
 'use client'
-// src/components/product/PopularProducts.js
+// src/components/product/PopularProducts.js (обновленная версия с поддержкой slug)
 import { useState, useEffect } from 'react'
 import ProductCard from '@/components/ProductCard'
 
 // Функция-заглушка для получения популярных товаров
-const fetchPopularProducts = async (currentProductId) => {
+const fetchPopularProducts = async (currentProductSlug) => {
 	// В реальном приложении здесь будет запрос к API
-	// const response = await fetch(`/api/products/popular?exclude=${currentProductId}`);
+	// const response = await fetch(`/api/products/popular?exclude=${currentProductSlug}`);
 	// return await response.json();
 
 	// Заглушка для демонстрации
 	const mockProducts = [
 		{
-			id: currentProductId === '1' ? '10' : '1',
+			id: currentProductSlug === '1' ? '10' : '1',
 			name: 'Карточки по математике 5-6 класс',
 			price: 890,
 			oldPrice: 1190,
@@ -27,7 +27,7 @@ const fetchPopularProducts = async (currentProductId) => {
 			label: 'Хит продаж',
 		},
 		{
-			id: currentProductId === '2' ? '11' : '2',
+			id: currentProductSlug === '2' ? '11' : '2',
 			name: 'Карточки по физике ОГЭ',
 			price: 950,
 			oldPrice: null,
@@ -42,7 +42,7 @@ const fetchPopularProducts = async (currentProductId) => {
 			label: 'Новинка',
 		},
 		{
-			id: currentProductId === '3' ? '12' : '3',
+			id: currentProductSlug === '3' ? '12' : '3',
 			name: 'Карточки по русскому языку ЕГЭ',
 			price: 790,
 			oldPrice: 990,
@@ -57,7 +57,7 @@ const fetchPopularProducts = async (currentProductId) => {
 			label: 'Скидка 20%',
 		},
 		{
-			id: currentProductId === '4' ? '13' : '4',
+			id: currentProductSlug === '4' ? '13' : '4',
 			name: 'Карточки по биологии 7-8 класс',
 			price: 850,
 			oldPrice: 1050,
@@ -74,10 +74,10 @@ const fetchPopularProducts = async (currentProductId) => {
 	]
 
 	// Фильтруем, чтобы исключить текущий товар
-	return mockProducts.filter((product) => product.id !== currentProductId)
+	return mockProducts.filter((product) => product.slug !== currentProductSlug)
 }
 
-export default function PopularProducts({ currentProductId }) {
+export default function PopularProducts({ currentProductSlug }) {
 	const [products, setProducts] = useState([])
 	const [loading, setLoading] = useState(true)
 
@@ -85,7 +85,7 @@ export default function PopularProducts({ currentProductId }) {
 		const loadProducts = async () => {
 			setLoading(true)
 			try {
-				const data = await fetchPopularProducts(currentProductId)
+				const data = await fetchPopularProducts(currentProductSlug)
 				setProducts(data)
 			} catch (error) {
 				console.error('Ошибка при загрузке популярных товаров:', error)
@@ -95,7 +95,7 @@ export default function PopularProducts({ currentProductId }) {
 		}
 
 		loadProducts()
-	}, [currentProductId])
+	}, [currentProductSlug])
 
 	if (loading) {
 		return (

@@ -1,5 +1,5 @@
 'use client'
-// src/components/product/ProductTabs.js
+// src/components/product/ProductTabs.js (обновленный)
 import { useState } from 'react'
 import Tab from '@/components/product/Tab'
 import ProductReviews from '@/components/product/ProductReviews'
@@ -43,6 +43,12 @@ export default function ProductTabs({ product }) {
 						label="Доставка и оплата"
 						active={activeTab === 'delivery'}
 						onClick={() => handleTabClick('delivery')}
+					/>
+					<Tab
+						id="faq"
+						label="Вопросы и ответы"
+						active={activeTab === 'faq'}
+						onClick={() => handleTabClick('faq')}
 					/>
 					<Tab
 						id="reviews"
@@ -171,6 +177,66 @@ export default function ProductTabs({ product }) {
 								</span>
 							</li>
 						</ul>
+					</div>
+				)}
+
+				{/* Новая вкладка FAQ */}
+				{activeTab === 'faq' && (
+					<div className="prose max-w-none">
+						<h3 className="text-xl font-semibold mb-4">
+							Часто задаваемые вопросы
+						</h3>
+
+						<div className="space-y-4">
+							<div className="border-b border-gray-200 pb-4">
+								<h4 className="font-medium">Из чего изготовлены карточки?</h4>
+								<p className="text-gray-700 mt-2">
+									Наши учебные карточки изготовлены из плотного картона
+									премиум-класса (300 г/м²), что обеспечивает их долговечность и
+									устойчивость к износу. Они покрыты ламинацией для защиты от
+									влаги и загрязнений.
+								</p>
+							</div>
+
+							<div className="border-b border-gray-200 pb-4">
+								<h4 className="font-medium">
+									Как быстро осуществляется доставка?
+								</h4>
+								<p className="text-gray-700 mt-2">
+									Отправка заказа происходит в течение 1-2 рабочих дней после
+									его оформления. Сроки доставки зависят от выбранного вами
+									способа: СДЭК – 2-7 дней, Почта России – 3-10 дней, Boxberry –
+									2-7 дней, 5Post – 3-7 дней.
+								</p>
+							</div>
+
+							<div className="border-b border-gray-200 pb-4">
+								<h4 className="font-medium">
+									Можно ли вернуть товар, если он не подошел?
+								</h4>
+								<p className="text-gray-700 mt-2">
+									Да, вы можете вернуть товар в течение 14 дней с момента
+									получения, если он сохранил товарный вид, потребительские
+									свойства и не имеет следов использования. Обратите внимание,
+									что по закону учебные материалы относятся к товарам
+									надлежащего качества, которые не подлежат возврату, если они
+									не имеют недостатков.
+								</p>
+							</div>
+
+							<div className="border-b border-gray-200 pb-4">
+								<h4 className="font-medium">
+									Как правильно заниматься с карточками?
+								</h4>
+								<p className="text-gray-700 mt-2">
+									Мы рекомендуем использовать метод интервального повторения:
+									изучите карточки, затем повторите их через 1 день, затем через
+									3 дня, затем через неделю. Также эффективен метод активного
+									вспоминания: просмотрите вопрос, попытайтесь вспомнить ответ,
+									а затем проверьте себя, перевернув карточку.
+								</p>
+							</div>
+						</div>
 					</div>
 				)}
 
