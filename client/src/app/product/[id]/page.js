@@ -5,6 +5,7 @@ import ProductGallery from '@/components/product/ProductGallery'
 import ProductInfo from '@/components/product/ProductInfo'
 import ProductActions from '@/components/product/ProductActions'
 import ProductTabs from '@/components/product/ProductTabs'
+import ProductTrustBlock from '@/components/product/ProductTrustBlock' // Импортируем новый компонент
 import Breadcrumbs from '@/components/Breadcrumbs'
 import SchemaOrg from '@/components/SchemaOrg'
 import {
@@ -158,6 +159,9 @@ export default async function ProductPage({ params }) {
 						</div>
 					</div>
 				</div>
+
+				{/* Добавляем блок "Почему стоит купить у нас" */}
+				<ProductTrustBlock />
 
 				{/* Вкладки с дополнительной информацией и отзывами */}
 				<ProductTabs product={product} />

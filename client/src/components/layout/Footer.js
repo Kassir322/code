@@ -97,10 +97,10 @@ export default function Footer() {
 							</li>
 							<li>
 								<Link
-									href="/gift-card"
+									href="/about"
 									className="text-gray-600 hover:text-primary transition-colors"
 								>
-									Подарочные карты
+									О компании
 								</Link>
 							</li>
 							<li>

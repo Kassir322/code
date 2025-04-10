@@ -548,6 +548,7 @@ export interface ApiStudyCardStudyCard extends Struct.CollectionTypeSchema {
     price: Schema.Attribute.Decimal & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     quantity: Schema.Attribute.Integer;
+    slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     subject: Schema.Attribute.String;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;

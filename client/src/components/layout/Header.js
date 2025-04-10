@@ -55,35 +55,26 @@ export default function Header() {
 							className="w-10 h-10 group-hover:rotate-x-25 group-hover:rotate-z-15 transform-3d transition-all duration-700"
 						/>
 					</div>
-					<span className="text-base sm:text-2xl font-bold group-hover:text-hover transition-colors">
+					<span className="text-lg sm:text-xl font-bold group-hover:text-hover transition-colors">
 						MatFocus
 					</span>
 				</Link>
 
 				{/* Навигация */}
-				<nav className="hidden md:flex lg:space-x-15 md:space-x-8 sm:space-x-4 space-x-2">
+				<nav className="hidden md:flex lg:space-x-15 md:space-x-6 sm:space-x-4 space-x-2">
 					<NavLink href="/">Главная</NavLink>
 					<NavLink href="/catalog">Каталог</NavLink>
 					<NavLink href="/contact">Контакты</NavLink>
+					<NavLink href="/about">О компании</NavLink>
 				</nav>
 
 				{/* Правая часть - Аккаунт, Вишлист, Корзина */}
 				<div className="hidden md:flex items-center space-x-6">
-					{/* Аккаунт */}
-					<div className="flex flex-col items-end">
-						<Link href="/account" className="flex items-center text-sm">
-							<User className="h-5 w-5 mr-1 md:mr-2" />
-							<span className="hidden md:inline text-base hover:text-hover transition-colors">
-								Аккаунт
-							</span>
-						</Link>
-					</div>
-
 					{/* Желаемое */}
 					<div className="flex flex-col items-end">
 						<Link href="/wishlist" className="flex items-center">
 							<WishlistIcon />
-							<span className="hidden md:inline ml-2 text-base hover:text-hover transition-colors">
+							<span className="hidden xl:inline ml-2 text-base hover:text-hover transition-colors">
 								Избранное
 							</span>
 						</Link>
@@ -93,7 +84,7 @@ export default function Header() {
 					<div className="flex flex-col items-end">
 						<Link href="/cart" className="flex items-center relative">
 							<CartIcon />
-							<span className="hidden md:inline ml-2 text-base hover:text-hover transition-colors">
+							<span className="hidden xl:inline ml-2 text-base hover:text-hover transition-colors">
 								Корзина
 								{cartItems.length > 0 && (
 									<span className="ml-1 text-secondary-blue font-medium">
@@ -107,15 +98,29 @@ export default function Header() {
 							</span>
 						</Link>
 					</div>
+
+					{/* Аккаунт */}
+					<div className="flex flex-col items-end">
+						<Link href="/account" className="flex items-center text-sm">
+							<User className="h-5 w-5 mr-1 md:mr-2" />
+							<span className="hidden min-[900px]:inline text-base hover:text-hover transition-colors">
+								Аккаунт
+							</span>
+						</Link>
+					</div>
 				</div>
 
 				{/* Мобильные иконки */}
 				<div className="flex md:hidden items-center space-x-4">
 					{/* Избранное на мобильном */}
-					<WishlistIcon />
+					<Link href="/wishlist" className="flex items-center">
+						<WishlistIcon />
+					</Link>
 
 					{/* Корзина на мобильном */}
-					<CartIcon />
+					<Link href="/cart" className="flex items-center">
+						<CartIcon />
+					</Link>
 
 					{/* Мобильное меню (кнопка бургер) */}
 					<button

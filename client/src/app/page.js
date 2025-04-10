@@ -1,9 +1,11 @@
+// src/app/page.js
 import HeroSection from '@/components/sections/HeroSection'
 import BenefitsSection from '@/components/sections/BenefitsSection'
 import HowItWorks from '@/components/sections/HowItWorks'
 import ProductCards from '@/components/sections/ProductCards'
 import TestimonialsSlider from '@/components/sections/TestimonialsSlider'
 import NewsletterSection from '@/components/sections/NewsletterSection'
+import AboutSection from '@/components/sections/AboutSection' // Добавляем импорт компонента "О нас"
 import LinkButton from '@/components/ui/LinkButton'
 
 // Примеры товаров для главной страницы
@@ -89,6 +91,9 @@ export default function Page() {
 						</div>
 					</div>
 				</section>
+
+				{/* About Us Section - Добавляем компонент "О нас" */}
+				<AboutSection />
 
 				{/* How It Works */}
 				<HowItWorks />
