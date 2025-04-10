@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Mail } from 'lucide-react'
+import LegalLinks from '@/components/layout/LegalLinks'
 
 export default function Footer() {
 	return (
 		<footer className="bg-slate-50 pt-16 border-t border-gray-300">
 			<div className="container mx-auto px-4">
-				<div className="grid grid-cols-1 md:grid-cols-3 gap-8 xl:px-20 max-w-80 md:max-w-none mx-auto">
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 xl:px-20 max-w-80 md:max-w-none mx-auto">
 					{/* Первая колонка с логотипом и описанием */}
 					<div className="xl:max-w-2xs">
 						<Link href="/" className="flex items-center mb-4">
@@ -120,6 +121,12 @@ export default function Footer() {
 								</Link>
 							</li>
 						</ul>
+					</div>
+
+					{/* Добавьте новую колонку для юридических документов */}
+					<div>
+						<h3 className="text-lg font-semibold mb-4">Правовая информация</h3>
+						<LegalLinks />
 					</div>
 
 					{/* Третья колонка: Подписка на рассылку */}

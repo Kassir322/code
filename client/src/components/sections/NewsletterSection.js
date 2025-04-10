@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import { Mail, Check, AlertCircle } from 'lucide-react'
+import MyButton from '../ui/MyButton'
 
 export default function NewsletterSection() {
 	const [email, setEmail] = useState('')
@@ -77,7 +78,7 @@ export default function NewsletterSection() {
 										)}
 									</div>
 
-									<button
+									<MyButton
 										type="submit"
 										className={`cursor-pointer px-6 py-3 rounded-md font-medium transition-colors ${
 											status === 'success'
@@ -93,7 +94,7 @@ export default function NewsletterSection() {
 										) : (
 											'Подписаться'
 										)}
-									</button>
+									</MyButton>
 								</form>
 
 								{status === 'error' && (

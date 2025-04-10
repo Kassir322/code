@@ -46,10 +46,10 @@ export default function ProductTrustBlock() {
 				{benefits.map((benefit, index) => (
 					<div
 						key={index}
-						className="flex items-start border border-gray-100 rounded-lg p-4 hover:shadow-md transition-shadow"
+						className="flex items-start border border-gray-100 rounded-lg p-4 hover:shadow-md transition-shadow gap-3"
 					>
-						<div className="bg-primary-light rounded-full p-2 mr-4 flex-shrink-0">
-							<benefit.icon className="h-5 w-5 text-secondary-blue" />
+						<div className="bg-primary-light rounded-full h-full p-2 flex-shrink-0">
+							<benefit.icon className="h-full text-secondary-blue mx-auto min-w-[28px]" />
 						</div>
 						<div>
 							<h3 className="font-medium mb-1">{benefit.title}</h3>

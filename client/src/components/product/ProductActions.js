@@ -157,7 +157,7 @@ export default function ProductActions({ product }) {
 					<button
 						onClick={decreaseQuantity}
 						disabled={productQuantity <= 1}
-						className={`p-2 ${
+						className={`cursor-pointer p-2 ${
 							productQuantity <= 1
 								? 'text-gray-300'
 								: 'text-gray-600 hover:bg-gray-100'
@@ -171,7 +171,7 @@ export default function ProductActions({ product }) {
 
 					<button
 						onClick={increaseQuantity}
-						className="p-2 text-gray-600 hover:bg-gray-100"
+						className="cursor-pointer p-2 text-gray-600 hover:bg-gray-100"
 						aria-label="Увеличить количество"
 					>
 						<Plus className="h-5 w-5" />
@@ -184,7 +184,7 @@ export default function ProductActions({ product }) {
 				<button
 					onClick={handleAddToCart}
 					disabled={!isAvailable || isAddingToCart}
-					className={`flex-1 py-3 px-4 rounded-md text-lg font-medium flex items-center justify-center transition-colors ${
+					className={`cursor-pointer flex-1 py-3 px-4 rounded-md text-lg font-medium flex items-center justify-center transition-colors ${
 						!isAvailable
 							? 'bg-gray-300 text-gray-500 cursor-not-allowed'
 							: isAddingToCart
@@ -216,7 +216,7 @@ export default function ProductActions({ product }) {
 				<button
 					onClick={handleQuickBuy}
 					disabled={!isAvailable || isQuickBuying}
-					className={`flex-1 py-3 px-4 rounded-md text-lg font-medium flex items-center justify-center transition-colors ${
+					className={`cursor-pointer flex-1 py-3 px-4 rounded-md text-lg font-medium flex items-center justify-center transition-colors ${
 						!isAvailable
 							? 'bg-gray-300 text-gray-500 cursor-not-allowed'
 							: isQuickBuying
@@ -240,7 +240,7 @@ export default function ProductActions({ product }) {
 
 				<button
 					onClick={handleWishToggle}
-					className={`p-3 rounded-md border border-gray-300 transition-colors ${
+					className={`cursor-pointer p-3 rounded-md border border-gray-300 transition-colors ${
 						isInWishlist ? 'bg-red-50 border-red-300' : 'hover:bg-gray-100'
 					}`}
 					aria-label={

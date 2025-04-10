@@ -3,6 +3,7 @@ import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import StoreProvider from '@/components/StoreProvider'
+import CookieConsent from '@/components/ui/CookieConsent'
 
 const roboto = Roboto({ subsets: ['cyrillic', 'latin'] })
 
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
 						{children}
 					</main>
 					<Footer />
+					<CookieConsent />
 				</StoreProvider>
 			</body>
 		</html>
