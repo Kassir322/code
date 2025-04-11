@@ -14,6 +14,7 @@ import {
 	fetchCurrentUser,
 	clearError,
 } from '@/store/slices/authSlice'
+import cookiesService from '@/lib/cookies'
 
 /**
  * Кастомный хук для управления авторизацией
@@ -45,7 +46,10 @@ export function useAuth() {
 			}
 		}
 
-		checkAuth()
+		// Проверяем авторизацию только если есть токен в cookies
+		if (cookiesService.hasAuthToken()) {
+			checkAuth()
+		}
 	}, [dispatch])
 
 	/**

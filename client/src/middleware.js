@@ -1,9 +1,10 @@
-// middleware.js (в корне проекта)
+// middleware.js
 import { NextResponse } from 'next/server'
+import cookiesService from './lib/cookies'
 
 export function middleware(request) {
-	// Получаем токен из cookies (не из localStorage!)
-	const token = request.cookies.get('token')?.value
+	// Получаем токен через cookiesService
+	const token = cookiesService.getAuthToken()
 
 	// Проверяем, является ли маршрут защищенным
 	if (request.nextUrl.pathname.startsWith('/account')) {

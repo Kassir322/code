@@ -5,9 +5,10 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, User, Mail, Lock, AlertCircle } from 'lucide-react'
-import LegalConsent from '@/components/ui/LegalConsent'
-import { useAuth } from '@/hooks/useAuth'
+import cookiesService from '@/lib/cookies'
+import { useAuth } from '@/hooks/useAuth' // Импортируем хук useAuth
 
 // Схема валидации для формы регистрации
 const registerSchema = z
@@ -85,7 +86,6 @@ export default function RegisterForm() {
 
 	const onSubmit = async (data) => {
 		setServerError(null)
-		setIsLoading(true) // Если используем напрямую fetch
 
 		try {
 			// Вызываем реальный API для регистрации
@@ -117,8 +117,8 @@ export default function RegisterForm() {
 				// Сохраняем данные пользователя в localStorage
 				localStorage.setItem('user', JSON.stringify(result.user))
 
-				// Сохраняем токен в cookies
-				Cookies.set('token', result.jwt, { expires: 30, path: '/' })
+				// Используем cookiesService для установки токена
+				cookiesService.setAuthToken(result.jwt)
 
 				// Перенаправляем на страницу аккаунта или другую страницу
 				router.push('/account')
@@ -132,8 +132,6 @@ export default function RegisterForm() {
 				error.message ||
 					'Произошла ошибка при регистрации. Пожалуйста, попробуйте позже.'
 			)
-		} finally {
-			setIsLoading(false)
 		}
 	}
 

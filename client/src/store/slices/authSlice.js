@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import * as authService from '@/lib/auth'
+import cookiesService from '@/lib/cookies'
 
 // Начальное состояние для слайса авторизации
 const initialState = {
@@ -62,7 +63,12 @@ export const fetchCurrentUser = createAsyncThunk(
 			}
 
 			const user = authService.getCurrentUser()
-			return user ? { user, token: localStorage.getItem('token') } : null
+			return user
+				? {
+						user,
+						token: cookiesService.getAuthToken(),
+				  }
+				: null
 		} catch (error) {
 			return rejectWithValue(error.message)
 		}
@@ -84,58 +90,20 @@ const authSlice = createSlice({
 		},
 	},
 	extraReducers: (builder) => {
-		// Обработка регистрации
-		builder
-			.addCase(registerUser.pending, (state) => {
-				state.isLoading = true
-				state.error = null
-			})
-			.addCase(registerUser.fulfilled, (state) => {
-				state.isLoading = false
-				// Регистрация успешна, но пользователь еще не авторизован
-			})
-			.addCase(registerUser.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.payload
-			})
-
 		// Обработка входа
 		builder
-			.addCase(loginUser.pending, (state) => {
-				state.isLoading = true
-				state.error = null
-			})
 			.addCase(loginUser.fulfilled, (state, action) => {
 				state.isLoading = false
 				state.isAuthenticated = true
 				state.user = action.payload.user
 				state.token = action.payload.jwt
 			})
-			.addCase(loginUser.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.payload
-			})
-
-		// Обработка выхода
-		builder
-			.addCase(logoutUser.pending, (state) => {
-				state.isLoading = true
-			})
+			// Обработка выхода
 			.addCase(logoutUser.fulfilled, (state) => {
 				// Сбрасываем состояние до начального
 				return initialState
 			})
-			.addCase(logoutUser.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.payload
-			})
-
-		// Обработка получения текущего пользователя
-		builder
-			.addCase(fetchCurrentUser.pending, (state) => {
-				state.isLoading = true
-				state.error = null
-			})
+			// Обработка получения текущего пользователя
 			.addCase(fetchCurrentUser.fulfilled, (state, action) => {
 				state.isLoading = false
 
@@ -148,13 +116,6 @@ const authSlice = createSlice({
 					state.user = null
 					state.token = null
 				}
-			})
-			.addCase(fetchCurrentUser.rejected, (state, action) => {
-				state.isLoading = false
-				state.error = action.payload
-				state.isAuthenticated = false
-				state.user = null
-				state.token = null
 			})
 	},
 })

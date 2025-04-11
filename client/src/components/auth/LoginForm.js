@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Eye, EyeOff, Mail, Lock, AlertCircle, CheckCircle } from 'lucide-react'
-import Cookies from 'js-cookie'
+import cookiesService from '@/lib/cookies' // Импортируем новый сервис
 
 // Схема валидации для формы входа
 const loginSchema = z.object({
@@ -18,7 +18,7 @@ const loginSchema = z.object({
 	rememberMe: z.boolean().optional(),
 })
 
-export default function LoginForm() {
+function LoginFormContent() {
 	const [showPassword, setShowPassword] = useState(false)
 	const [isLoading, setIsLoading] = useState(false)
 	const [serverError, setServerError] = useState(null)
@@ -82,12 +82,11 @@ export default function LoginForm() {
 				)
 			}
 
-			// Сохраняем данные пользователя в localStorage для использования на клиенте
+			// Сохраняем данные пользователя в localStorage
 			localStorage.setItem('user', JSON.stringify(result.user))
 
-			// Сохраняем токен в cookies вместо localStorage
-			// Используем js-cookie для удобства работы с cookies
-			Cookies.set('token', result.jwt, { expires: 30, path: '/' }) // Срок действия 30 дней
+			// Используем cookiesService для установки токена
+			cookiesService.setAuthToken(result.jwt)
 
 			// Проверяем, есть ли параметр redirect в URL
 			const redirect = searchParams.get('redirect') || '/account'
@@ -104,6 +103,7 @@ export default function LoginForm() {
 			setIsLoading(false)
 		}
 	}
+
 	const togglePasswordVisibility = () => {
 		setShowPassword(!showPassword)
 	}
@@ -257,5 +257,13 @@ export default function LoginForm() {
 				</p>
 			</div>
 		</div>
+	)
+}
+
+export default function LoginForm() {
+	return (
+		<Suspense fallback={<div>Загрузка...</div>}>
+			<LoginFormContent />
+		</Suspense>
 	)
 }

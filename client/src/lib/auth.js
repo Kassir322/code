@@ -1,4 +1,8 @@
-import Cookies from 'js-cookie'
+// src/lib/auth.js
+import cookiesService from './cookies'
+
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
+
 export const registerUser = async (userData) => {
 	try {
 		const response = await fetch(`${baseUrl}/api/auth/local/register`, {
@@ -17,13 +21,12 @@ export const registerUser = async (userData) => {
 			)
 		}
 
-		// Если в ответе есть jwt, значит пользователь автоматически авторизован после регистрации
-		if (data.jwt) {
-			// Сохраняем данные пользователя в localStorage
-			localStorage.setItem('user', JSON.stringify(data.user))
+		// Сохраняем данные пользователя в localStorage
+		localStorage.setItem('user', JSON.stringify(data.user))
 
-			// Сохраняем токен в cookies
-			Cookies.set('token', data.jwt, { expires: 30, path: '/' })
+		// Сохраняем токен через cookiesService
+		if (data.jwt) {
+			cookiesService.setAuthToken(data.jwt)
 		}
 
 		return data
@@ -54,8 +57,8 @@ export const loginUser = async (credentials) => {
 		// Сохраняем данные пользователя в localStorage
 		localStorage.setItem('user', JSON.stringify(data.user))
 
-		// Сохраняем токен в cookies
-		Cookies.set('token', data.jwt, { expires: 30, path: '/' })
+		// Сохраняем токен через cookiesService
+		cookiesService.setAuthToken(data.jwt)
 
 		return data
 	} catch (error) {
@@ -64,20 +67,18 @@ export const loginUser = async (credentials) => {
 	}
 }
 
-// Обновите функцию logoutUser
 export const logoutUser = () => {
 	// Удаляем данные пользователя из localStorage
 	localStorage.removeItem('user')
 
-	// Удаляем токен из cookies
-	Cookies.remove('token', { path: '/' })
+	// Удаляем токен через cookiesService
+	cookiesService.removeAuthToken()
 }
 
-// Обновите функцию validateToken
 export const validateToken = async () => {
 	try {
-		// Получаем токен из cookies
-		const token = Cookies.get('token')
+		// Получаем токен через cookiesService
+		const token = cookiesService.getAuthToken()
 
 		if (!token) {
 			return false
@@ -97,11 +98,10 @@ export const validateToken = async () => {
 	}
 }
 
-// Обновите функцию getCurrentUser
 export const getCurrentUser = () => {
 	try {
-		// Проверяем наличие токена в cookies
-		const token = Cookies.get('token')
+		// Проверяем наличие токена через cookiesService
+		const token = cookiesService.getAuthToken()
 		const user = localStorage.getItem('user')
 
 		if (!token || !user) {

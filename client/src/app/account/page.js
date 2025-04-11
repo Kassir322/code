@@ -16,6 +16,7 @@ import {
 	CreditCard,
 	Bell,
 } from 'lucide-react'
+import cookiesService from '@/lib/cookies'
 
 export default function AccountPage() {
 	const [isLoading, setIsLoading] = useState(true)
@@ -30,17 +31,14 @@ export default function AccountPage() {
 			try {
 				setIsLoading(true)
 
-				// Получаем токен из cookies вместо localStorage
-				const token = Cookies.get('token')
+				// Получаем токен через cookiesService
+				const token = cookiesService.getAuthToken()
 
 				if (!token) {
-					// Middleware должен автоматически перенаправлять на страницу входа,
-					// но для надежности добавим перенаправление и здесь
 					router.push('/account/login?redirect=/account')
 					return
 				}
 
-				// Проверяем валидность токена через API
 				const apiUrl = `${
 					process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
 				}/api/users/me`
@@ -54,7 +52,7 @@ export default function AccountPage() {
 
 				if (!response.ok) {
 					// Если токен не валиден, удаляем его
-					Cookies.remove('token', { path: '/' })
+					cookiesService.removeAuthToken()
 					localStorage.removeItem('user')
 					router.push('/account/login?redirect=/account')
 					return
@@ -88,8 +86,8 @@ export default function AccountPage() {
 			// Удаляем данные пользователя из localStorage
 			localStorage.removeItem('user')
 
-			// Удаляем токен из cookies
-			Cookies.remove('token', { path: '/' })
+			// Удаляем токен через cookiesService
+			cookiesService.removeAuthToken()
 
 			// Перенаправляем на страницу входа
 			router.push('/account/login')
