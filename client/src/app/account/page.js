@@ -21,34 +21,58 @@ export default function AccountPage() {
 	const [isLoading, setIsLoading] = useState(true)
 	const [isAuthenticated, setIsAuthenticated] = useState(false)
 	const [user, setUser] = useState(null)
+	const [error, setError] = useState(null)
 	const router = useRouter()
 
-	// Эмуляция проверки авторизации
+	// Проверка авторизации при загрузке компонента
 	useEffect(() => {
 		const checkAuth = async () => {
 			try {
-				// Имитация запроса к API для проверки авторизации
-				await new Promise((resolve) => setTimeout(resolve, 1000))
+				setIsLoading(true)
 
-				// Здесь будет проверка авторизации через API
-				// В данном примере просто эмулируем неавторизованное состояние
-				const authStatus = false // Это значение будет заменено на реальную проверку
+				// Получаем токен из localStorage
+				const token = localStorage.getItem('token')
 
-				setIsAuthenticated(authStatus)
-
-				if (authStatus) {
-					// Получение данных пользователя
-					setUser({
-						username: 'Иван Иванов',
-						email: 'ivan@example.com',
-						avatar: '/images/avatar-placeholder.jpg',
-					})
-				} else {
-					// Если пользователь не авторизован, перенаправляем на страницу входа
-					router.push('/account/login')
+				if (!token) {
+					// Если токена нет, перенаправляем на страницу входа
+					router.push('/account/login?redirect=/account')
+					return
 				}
+
+				// Проверяем валидность токена через API
+				const apiUrl = `${
+					process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
+				}/api/users/me`
+
+				const response = await fetch(apiUrl, {
+					method: 'GET',
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+
+				if (!response.ok) {
+					// Если токен не валиден, удаляем его и перенаправляем на страницу входа
+					localStorage.removeItem('token')
+					localStorage.removeItem('user')
+					router.push('/account/login?redirect=/account')
+					return
+				}
+
+				// Получаем данные пользователя из ответа
+				const userData = await response.json()
+
+				// Устанавливаем флаг авторизации и данные пользователя
+				setIsAuthenticated(true)
+				setUser(userData)
 			} catch (error) {
 				console.error('Ошибка при проверке авторизации:', error)
+				setError(
+					'Произошла ошибка при проверке авторизации. Пожалуйста, попробуйте еще раз.'
+				)
+
+				// В случае ошибки также перенаправляем на страницу входа
+				router.push('/account/login?redirect=/account')
 			} finally {
 				setIsLoading(false)
 			}
@@ -57,22 +81,14 @@ export default function AccountPage() {
 		checkAuth()
 	}, [router])
 
-	// Хлебные крошки для улучшения навигации и SEO
-	const breadcrumbItems = [
-		{ name: 'Главная', url: '/' },
-		{ name: 'Личный кабинет', url: '/account' },
-	]
-
 	// Функция для выхода из аккаунта
-	const handleLogout = async () => {
+	const handleLogout = () => {
 		try {
-			// Здесь будет API-запрос для выхода из аккаунта
-			// await fetch('/api/auth/logout', { method: 'POST' })
+			// Удаляем токен и данные пользователя из localStorage
+			localStorage.removeItem('token')
+			localStorage.removeItem('user')
 
-			// Имитация запроса
-			await new Promise((resolve) => setTimeout(resolve, 500))
-
-			// Перенаправление на страницу входа
+			// Перенаправляем на страницу входа
 			router.push('/account/login')
 		} catch (error) {
 			console.error('Ошибка при выходе из аккаунта:', error)
@@ -88,27 +104,42 @@ export default function AccountPage() {
 		)
 	}
 
+	// Если произошла ошибка, показываем сообщение
+	if (error) {
+		return (
+			<div className="container mx-auto px-4 mt-24 mb-16">
+				<div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8 flex items-start">
+					<AlertCircle className="h-5 w-5 text-red-500 mt-0.5 mr-2 flex-shrink-0" />
+					<div>
+						<p className="font-medium text-red-700">Ошибка</p>
+						<p className="text-red-600 mt-1">{error}</p>
+					</div>
+				</div>
+				<div className="text-center">
+					<Link
+						href="/account/login"
+						className="inline-flex items-center justify-center py-3 px-6 bg-secondary-blue text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
+					>
+						Вернуться на страницу входа
+					</Link>
+				</div>
+			</div>
+		)
+	}
+
 	// Основной контент личного кабинета для авторизованного пользователя
 	return (
 		<div className="container mx-auto px-4 mt-24 mb-16">
 			{/* Хлебные крошки */}
-			<Breadcrumbs items={breadcrumbItems} />
+			<Breadcrumbs
+				items={[
+					{ name: 'Главная', url: '/' },
+					{ name: 'Личный кабинет', url: '/account' },
+				]}
+			/>
 
 			<div className="max-w-6xl mx-auto">
 				<h1 className="text-3xl font-bold mb-8">Личный кабинет</h1>
-
-				{/* Сообщение о незавершенной разработке */}
-				<div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8 flex items-start">
-					<AlertCircle className="h-5 w-5 text-yellow-500 mt-0.5 mr-2 flex-shrink-0" />
-					<div>
-						<p className="font-medium text-yellow-700">Раздел в разработке</p>
-						<p className="text-yellow-600 mt-1">
-							Личный кабинет находится в процессе разработки. В ближайшее время
-							здесь появится возможность управлять заказами, просматривать
-							историю покупок и редактировать личные данные.
-						</p>
-					</div>
-				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-4 gap-8">
 					{/* Боковое меню */}

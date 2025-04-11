@@ -59,20 +59,18 @@ export default function LoginForm() {
 		setServerError(null)
 
 		try {
-			// Вызываем реальный API вместо эмуляции
-			const response = await fetch(
-				`${
-					process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
-				}/api/auth/local`,
-				{
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({
-						identifier: data.identifier,
-						password: data.password,
-					}),
-				}
-			)
+			const apiUrl = `${
+				process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
+			}/api/auth/local`
+
+			const response = await fetch(apiUrl, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					identifier: data.identifier,
+					password: data.password,
+				}),
+			})
 
 			const result = await response.json()
 
@@ -87,8 +85,11 @@ export default function LoginForm() {
 			localStorage.setItem('token', result.jwt)
 			localStorage.setItem('user', JSON.stringify(result.user))
 
-			// Перенаправляем на страницу аккаунта
-			router.push('/account')
+			// Проверяем, есть ли параметр redirect в URL
+			const redirect = searchParams.get('redirect') || '/account'
+
+			// Перенаправляем пользователя
+			router.push(redirect)
 		} catch (error) {
 			console.error('Ошибка при входе:', error)
 			setServerError(

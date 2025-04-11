@@ -1,13 +1,8 @@
+// src/components/auth/ProtectedRoute.js (обновленная версия)
 'use client'
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useSelector, useDispatch } from 'react-redux'
-import {
-	selectIsAuthenticated,
-	selectIsLoading,
-	fetchCurrentUser,
-} from '@/store/slices/authSlice'
 
 /**
  * Компонент для защиты маршрутов, требующих авторизации
@@ -16,11 +11,9 @@ import {
  * @returns {React.ReactNode} - Защищенный контент или перенаправление на страницу входа
  */
 export default function ProtectedRoute({ children }) {
-	const isAuthenticated = useSelector(selectIsAuthenticated)
-	const isLoading = useSelector(selectIsLoading)
 	const [isChecking, setIsChecking] = useState(true)
+	const [isAuthenticated, setIsAuthenticated] = useState(false)
 	const router = useRouter()
-	const dispatch = useDispatch()
 
 	useEffect(() => {
 		const checkAuth = async () => {
@@ -29,57 +22,61 @@ export default function ProtectedRoute({ children }) {
 
 				if (!token) {
 					// Если токена нет, перенаправляем на страницу входа
-					setIsChecking(false)
+					router.push(
+						`/account/login?redirect=${encodeURIComponent(
+							window.location.pathname
+						)}`
+					)
 					return
 				}
 
-				// Проверяем валидность токена
-				const response = await fetch(
-					`${
-						process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
-					}/api/users/me`,
-					{
-						method: 'GET',
-						headers: {
-							Authorization: `Bearer ${token}`,
-						},
-					}
-				)
+				// Проверяем валидность токена через API
+				const apiUrl = `${
+					process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
+				}/api/users/me`
+
+				const response = await fetch(apiUrl, {
+					method: 'GET',
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
 
 				if (!response.ok) {
-					// Если токен не валиден, очищаем localStorage
+					// Если токен не валиден, удаляем его и перенаправляем на страницу входа
 					localStorage.removeItem('token')
 					localStorage.removeItem('user')
-					setIsAuthenticated(false)
-				} else {
-					// Если токен валиден, устанавливаем флаг аутентификации
-					setIsAuthenticated(true)
+					router.push(
+						`/account/login?redirect=${encodeURIComponent(
+							window.location.pathname
+						)}`
+					)
+					return
 				}
+
+				// Если токен валиден, устанавливаем флаг аутентификации
+				setIsAuthenticated(true)
 			} catch (error) {
 				console.error('Ошибка при проверке авторизации:', error)
-				setIsAuthenticated(false)
+
+				// В случае ошибки перенаправляем на страницу входа
+				router.push(
+					`/account/login?redirect=${encodeURIComponent(
+						window.location.pathname
+					)}`
+				)
 			} finally {
 				setIsChecking(false)
 			}
 		}
 
 		checkAuth()
-	}, [])
-
-	useEffect(() => {
-		// Если проверка завершена и пользователь не авторизован, перенаправляем на страницу входа
-		if (!isChecking && !isLoading && !isAuthenticated) {
-			router.push(
-				'/account/login?redirect=' +
-					encodeURIComponent(window.location.pathname)
-			)
-		}
-	}, [isChecking, isAuthenticated, isLoading, router])
+	}, [router])
 
 	// Показываем индикатор загрузки, пока проверяется авторизация
-	if (isChecking || isLoading) {
+	if (isChecking) {
 		return (
-			<div className="flex justify-center items-center min-h-screen">
+			<div className="flex justify-center items-center min-h-[50vh]">
 				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary-blue"></div>
 			</div>
 		)

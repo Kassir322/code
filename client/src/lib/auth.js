@@ -38,7 +38,13 @@ export const registerUser = async (userData) => {
  */
 export const loginUser = async (credentials) => {
 	try {
-		const response = await fetch(`${baseUrl}/api/auth/local`, {
+		const apiUrl = `${baseUrl}/api/auth/local`
+		console.log('Вызов loginUser:', {
+			url: apiUrl,
+			credentials: { ...credentials, password: '***' }, // Скрываем пароль в логах
+		})
+
+		const response = await fetch(apiUrl, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -47,6 +53,7 @@ export const loginUser = async (credentials) => {
 		})
 
 		const data = await response.json()
+		console.log('Ответ от сервера:', data)
 
 		if (!response.ok) {
 			throw new Error(data.error?.message || 'Ошибка при входе в систему')
@@ -54,8 +61,10 @@ export const loginUser = async (credentials) => {
 
 		// Сохраняем токен и данные пользователя в localStorage
 		if (data.jwt) {
+			console.log('Сохраняем токен в localStorage')
 			localStorage.setItem('token', data.jwt)
 			localStorage.setItem('user', JSON.stringify(data.user))
+			console.log('Токен успешно сохранен')
 		}
 
 		return data
