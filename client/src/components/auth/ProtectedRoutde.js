@@ -25,17 +25,46 @@ export default function ProtectedRoute({ children }) {
 	useEffect(() => {
 		const checkAuth = async () => {
 			try {
-				// Проверяем авторизацию пользователя
-				await dispatch(fetchCurrentUser()).unwrap()
+				const token = localStorage.getItem('token')
+
+				if (!token) {
+					// Если токена нет, перенаправляем на страницу входа
+					setIsChecking(false)
+					return
+				}
+
+				// Проверяем валидность токена
+				const response = await fetch(
+					`${
+						process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
+					}/api/users/me`,
+					{
+						method: 'GET',
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				)
+
+				if (!response.ok) {
+					// Если токен не валиден, очищаем localStorage
+					localStorage.removeItem('token')
+					localStorage.removeItem('user')
+					setIsAuthenticated(false)
+				} else {
+					// Если токен валиден, устанавливаем флаг аутентификации
+					setIsAuthenticated(true)
+				}
 			} catch (error) {
 				console.error('Ошибка при проверке авторизации:', error)
+				setIsAuthenticated(false)
 			} finally {
 				setIsChecking(false)
 			}
 		}
 
 		checkAuth()
-	}, [dispatch])
+	}, [])
 
 	useEffect(() => {
 		// Если проверка завершена и пользователь не авторизован, перенаправляем на страницу входа

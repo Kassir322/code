@@ -1,3 +1,4 @@
+// src/store/api.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
 // Базовый URL для API
@@ -9,14 +10,30 @@ export const api = createApi({
 	baseQuery: fetchBaseQuery({
 		baseUrl,
 		prepareHeaders: (headers) => {
-			// Добавляем токен авторизации если нужно
-			const token = process.env.NEXT_PUBLIC_API_TOKEN
+			// Добавляем токен авторизации если он есть
+			const token = localStorage.getItem('token')
 			if (token) {
 				headers.set('Authorization', `Bearer ${token}`)
 			}
 			return headers
 		},
 	}),
-	endpoints: () => ({}), // Эндпоинты будут добавлены в отдельных файлах
-	tagTypes: ['Products', 'Categories', 'Cart'], // Определяем типы тегов для инвалидации кэша
+	endpoints: () => ({}),
+	tagTypes: ['Products', 'Categories', 'Cart'],
 })
+
+// Простой обработчик ошибок авторизации
+export const handleAuthError = (error) => {
+	// Проверяем на 401 ошибку (Unauthorized)
+	if (error?.status === 401) {
+		// Очищаем localStorage при ошибке авторизации
+		localStorage.removeItem('token')
+		localStorage.removeItem('user')
+
+		// В реальном приложении здесь можно добавить редирект на страницу входа
+		if (typeof window !== 'undefined') {
+			window.location.href = '/account/login'
+		}
+	}
+	return error
+}

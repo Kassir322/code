@@ -86,17 +86,41 @@ export default function RegisterForm() {
 		setServerError(null)
 
 		try {
-			// Используем функцию регистрации из хука useAuth
-			await registerUser({
-				username: data.username,
-				email: data.email,
-				password: data.password,
-			})
+			// Вызываем реальный API для регистрации
+			const response = await fetch(
+				`${
+					process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
+				}/api/auth/local/register`,
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						username: data.username,
+						email: data.email,
+						password: data.password,
+					}),
+				}
+			)
+
+			const result = await response.json()
+
+			if (!response.ok) {
+				throw new Error(
+					result.error?.message ||
+						'Произошла ошибка при регистрации. Пожалуйста, попробуйте позже.'
+				)
+			}
+
+			// Перенаправляем на страницу входа с флагом успешной регистрации
+			router.push('/account/login?registered=true')
 		} catch (error) {
 			console.error('Ошибка при регистрации:', error)
 			setServerError(
-				'Произошла ошибка при регистрации. Пожалуйста, попробуйте позже.'
+				error.message ||
+					'Произошла ошибка при регистрации. Пожалуйста, попробуйте позже.'
 			)
+		} finally {
+			setIsLoading(false)
 		}
 	}
 

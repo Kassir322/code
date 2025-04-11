@@ -59,25 +59,41 @@ export default function LoginForm() {
 		setServerError(null)
 
 		try {
-			// В будущем здесь будет интеграция с API
-			// const response = await fetch('/api/auth/login', {
-			//   method: 'POST',
-			//   headers: { 'Content-Type': 'application/json' },
-			//   body: JSON.stringify({
-			//     identifier: data.identifier,
-			//     password: data.password,
-			//   }),
-			// })
+			// Вызываем реальный API вместо эмуляции
+			const response = await fetch(
+				`${
+					process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
+				}/api/auth/local`,
+				{
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						identifier: data.identifier,
+						password: data.password,
+					}),
+				}
+			)
 
-			// Эмуляция ответа сервера
-			await new Promise((resolve) => setTimeout(resolve, 1000))
+			const result = await response.json()
+
+			if (!response.ok) {
+				throw new Error(
+					result.error?.message ||
+						'Неверные учетные данные. Пожалуйста, проверьте email и пароль.'
+				)
+			}
+
+			// Сохраняем токен и информацию о пользователе
+			localStorage.setItem('token', result.jwt)
+			localStorage.setItem('user', JSON.stringify(result.user))
 
 			// Перенаправляем на страницу аккаунта
 			router.push('/account')
 		} catch (error) {
 			console.error('Ошибка при входе:', error)
 			setServerError(
-				'Неверные учетные данные. Пожалуйста, проверьте email и пароль.'
+				error.message ||
+					'Неверные учетные данные. Пожалуйста, проверьте email и пароль.'
 			)
 		} finally {
 			setIsLoading(false)
@@ -221,31 +237,7 @@ export default function LoginForm() {
 			{/* Разделитель */}
 			<div className="my-6 flex items-center">
 				<div className="flex-grow border-t border-gray-300"></div>
-				<span className="mx-4 text-sm text-gray-500">или</span>
 				<div className="flex-grow border-t border-gray-300"></div>
-			</div>
-
-			{/* Социальные сети */}
-			<div className="space-y-3">
-				<button
-					type="button"
-					className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer"
-				>
-					<img
-						src="/images/google-icon.svg"
-						alt="Google"
-						className="h-5 w-5 mr-2"
-					/>
-					Войти через Google
-				</button>
-
-				<button
-					type="button"
-					className="w-full flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer"
-				>
-					<img src="/images/vk-icon.svg" alt="VK" className="h-5 w-5 mr-2" />
-					Войти через VK
-				</button>
 			</div>
 
 			{/* Ссылка на страницу регистрации */}
