@@ -36,6 +36,8 @@ const cookiesService = {
 	 */
 	get: (name) => {
 		if (typeof window === 'undefined') {
+			console.log('ssr')
+
 			return undefined // В SSR cookies недоступны
 		}
 

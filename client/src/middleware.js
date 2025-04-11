@@ -1,10 +1,10 @@
 // middleware.js
 import { NextResponse } from 'next/server'
-import cookiesService from './lib/cookies'
 
 export function middleware(request) {
-	// Получаем токен через cookiesService
-	const token = cookiesService.getAuthToken()
+	// // Получаем токен через cookiesService
+	let token = request.cookies.get('token')
+	// console.log(`token: ${token?.value}`)
 
 	// Проверяем, является ли маршрут защищенным
 	if (request.nextUrl.pathname.startsWith('/account')) {
