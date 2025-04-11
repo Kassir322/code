@@ -7,6 +7,7 @@ import { z } from 'zod'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Eye, EyeOff, Mail, Lock, AlertCircle, CheckCircle } from 'lucide-react'
+import Cookies from 'js-cookie'
 
 // Схема валидации для формы входа
 const loginSchema = z.object({
@@ -81,9 +82,12 @@ export default function LoginForm() {
 				)
 			}
 
-			// Сохраняем токен и информацию о пользователе
-			localStorage.setItem('token', result.jwt)
+			// Сохраняем данные пользователя в localStorage для использования на клиенте
 			localStorage.setItem('user', JSON.stringify(result.user))
+
+			// Сохраняем токен в cookies вместо localStorage
+			// Используем js-cookie для удобства работы с cookies
+			Cookies.set('token', result.jwt, { expires: 30, path: '/' }) // Срок действия 30 дней
 
 			// Проверяем, есть ли параметр redirect в URL
 			const redirect = searchParams.get('redirect') || '/account'
@@ -100,7 +104,6 @@ export default function LoginForm() {
 			setIsLoading(false)
 		}
 	}
-
 	const togglePasswordVisibility = () => {
 		setShowPassword(!showPassword)
 	}

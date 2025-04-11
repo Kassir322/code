@@ -42,6 +42,7 @@ const registerSchema = z
 	})
 
 export default function RegisterForm() {
+	const router = useRouter() // Инициализируем router
 	const [showPassword, setShowPassword] = useState(false)
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 	const [serverError, setServerError] = useState(null)
@@ -84,6 +85,7 @@ export default function RegisterForm() {
 
 	const onSubmit = async (data) => {
 		setServerError(null)
+		setIsLoading(true) // Если используем напрямую fetch
 
 		try {
 			// Вызываем реальный API для регистрации
@@ -109,6 +111,17 @@ export default function RegisterForm() {
 					result.error?.message ||
 						'Произошла ошибка при регистрации. Пожалуйста, попробуйте позже.'
 				)
+			}
+
+			if (result.jwt) {
+				// Сохраняем данные пользователя в localStorage
+				localStorage.setItem('user', JSON.stringify(result.user))
+
+				// Сохраняем токен в cookies
+				Cookies.set('token', result.jwt, { expires: 30, path: '/' })
+
+				// Перенаправляем на страницу аккаунта или другую страницу
+				router.push('/account')
 			}
 
 			// Перенаправляем на страницу входа с флагом успешной регистрации

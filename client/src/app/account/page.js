@@ -30,11 +30,12 @@ export default function AccountPage() {
 			try {
 				setIsLoading(true)
 
-				// Получаем токен из localStorage
-				const token = localStorage.getItem('token')
+				// Получаем токен из cookies вместо localStorage
+				const token = Cookies.get('token')
 
 				if (!token) {
-					// Если токена нет, перенаправляем на страницу входа
+					// Middleware должен автоматически перенаправлять на страницу входа,
+					// но для надежности добавим перенаправление и здесь
 					router.push('/account/login?redirect=/account')
 					return
 				}
@@ -52,8 +53,8 @@ export default function AccountPage() {
 				})
 
 				if (!response.ok) {
-					// Если токен не валиден, удаляем его и перенаправляем на страницу входа
-					localStorage.removeItem('token')
+					// Если токен не валиден, удаляем его
+					Cookies.remove('token', { path: '/' })
 					localStorage.removeItem('user')
 					router.push('/account/login?redirect=/account')
 					return
@@ -84,9 +85,11 @@ export default function AccountPage() {
 	// Функция для выхода из аккаунта
 	const handleLogout = () => {
 		try {
-			// Удаляем токен и данные пользователя из localStorage
-			localStorage.removeItem('token')
+			// Удаляем данные пользователя из localStorage
 			localStorage.removeItem('user')
+
+			// Удаляем токен из cookies
+			Cookies.remove('token', { path: '/' })
 
 			// Перенаправляем на страницу входа
 			router.push('/account/login')
