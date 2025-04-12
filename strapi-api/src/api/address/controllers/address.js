@@ -7,39 +7,56 @@
 const { createCoreController } = require('@strapi/strapi').factories
 
 module.exports = createCoreController('api::address.address', ({ strapi }) => ({
-	// Переопределяем метод create для автоматической привязки адреса к пользователю
+	// Кастомный метод create
 	async create(ctx) {
-		// Получаем ID текущего пользователя из контекста запроса
 		const userId = ctx.state.user.id
+		const { data } = ctx.request.body
 
-		// Добавляем user в тело запроса
-		ctx.request.body.data = {
-			...ctx.request.body.data,
-			user: userId,
+		try {
+			// Если адрес устанавливается как основной, сбрасываем флаг у других адресов
+			if (data.is_default) {
+				await strapi.entityService
+					.findMany('api::address.address', {
+						filters: { user: userId, is_default: true },
+					})
+					.then(async (addresses) => {
+						for (const address of addresses) {
+							await strapi.entityService.update(
+								'api::address.address',
+								address.id,
+								{
+									data: { is_default: false },
+								}
+							)
+						}
+					})
+			}
+
+			// Создаем новый адрес
+			const address = await strapi.entityService.create(
+				'api::address.address',
+				{
+					data: {
+						...data,
+						user: {
+							connect: [userId],
+						},
+					},
+					populate: {
+						user: {
+							fields: ['id', 'username', 'email'],
+						},
+					},
+				}
+			)
+
+			return this.transformResponse(address)
+		} catch (error) {
+			console.error('Error creating address:', error)
+			return ctx.badRequest('Ошибка при создании адреса', {
+				details: error.message,
+			})
 		}
-
-		// Проверяем, устанавливается ли адрес как основной
-		if (ctx.request.body.data.is_default) {
-			// Если да, сбрасываем флаг is_default для всех других адресов пользователя
-			await strapi.entityService
-				.findMany('api::address.address', {
-					filters: { user: userId, is_default: true },
-				})
-				.then(async (addresses) => {
-					for (const address of addresses) {
-						await strapi.entityService.update(
-							'api::address.address',
-							address.id,
-							{
-								data: { is_default: false },
-							}
-						)
-					}
-				})
-		}
-
-		// Вызываем стандартный обработчик создания
-		return await super.create(ctx)
 	},
 
 	// Переопределяем метод update для обработки основного адреса
@@ -97,7 +114,7 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 		const userId = ctx.state.user.id
 
 		try {
-			const address = await strapi.entityService.findMany(
+			const addresses = await strapi.entityService.findMany(
 				'api::address.address',
 				{
 					filters: { user: userId },
@@ -116,13 +133,7 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 				}
 			)
 
-			if (!address) {
-				return ctx.notFound(
-					'Адрес не найден или не принадлежит текущему пользователю'
-				)
-			}
-
-			return this.transformResponse(address)
+			return this.transformResponse(addresses)
 		} catch (error) {
 			console.error('Ошибка при поиске адреса:', error)
 			return ctx.badRequest('Ошибка при поиске адреса')

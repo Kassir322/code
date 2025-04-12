@@ -21,7 +21,7 @@ export default function AddressCard({ address, onEditClick, isDefault }) {
 			address.building ? `, корп. ${address.building}` : ''
 		}`,
 		address.apartment ? `кв./офис ${address.apartment}` : '',
-		address.postalCode,
+		address.postal_code,
 	]
 		.filter(Boolean)
 		.join(', ')
@@ -62,7 +62,7 @@ export default function AddressCard({ address, onEditClick, isDefault }) {
 							Основной
 						</div>
 					)}
-					<h3 className="text-lg font-semibold">{address.name}</h3>
+					<h3 className="text-lg font-semibold">{address.title}</h3>
 				</div>
 
 				<div className="flex space-x-2">
@@ -95,11 +95,11 @@ export default function AddressCard({ address, onEditClick, isDefault }) {
 				<MapPin className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" />
 				<div>
 					<p className="text-sm">{fullAddress}</p>
-					{address.recipientName && (
-						<p className="text-sm mt-1">Получатель: {address.recipientName}</p>
+					{address.recipient_name && (
+						<p className="text-sm mt-1">Получатель: {address.recipient_name}</p>
 					)}
-					{address.phone && (
-						<p className="text-sm mt-1">Телефон: {address.phone}</p>
+					{address.recipient_phone && (
+						<p className="text-sm mt-1">Телефон: {address.recipient_phone}</p>
 					)}
 					{address.comment && (
 						<p className="text-sm mt-1 text-gray-500">

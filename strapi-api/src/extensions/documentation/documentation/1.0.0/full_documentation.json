@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-04-12T23:27:33.487Z"
+    "x-generation-date": "2025-04-12T23:55:55.691Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -4562,6 +4562,9 @@
               "house": {
                 "type": "string"
               },
+              "building": {
+                "type": "string"
+              },
               "apartment": {
                 "type": "string"
               },
@@ -4675,6 +4678,9 @@
             "type": "string"
           },
           "house": {
+            "type": "string"
+          },
+          "building": {
             "type": "string"
           },
           "apartment": {
@@ -5163,6 +5169,9 @@
                       "type": "string"
                     },
                     "house": {
+                      "type": "string"
+                    },
+                    "building": {
                       "type": "string"
                     },
                     "apartment": {
@@ -6437,6 +6446,9 @@
                     "house": {
                       "type": "string"
                     },
+                    "building": {
+                      "type": "string"
+                    },
                     "apartment": {
                       "type": "string"
                     },
@@ -7320,6 +7332,9 @@
                           "type": "string"
                         },
                         "house": {
+                          "type": "string"
+                        },
+                        "building": {
                           "type": "string"
                         },
                         "apartment": {
@@ -9263,6 +9278,9 @@
                       "type": "string"
                     },
                     "house": {
+                      "type": "string"
+                    },
+                    "building": {
                       "type": "string"
                     },
                     "apartment": {

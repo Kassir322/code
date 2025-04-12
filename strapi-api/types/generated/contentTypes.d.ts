@@ -382,6 +382,7 @@ export interface ApiAddressAddress extends Struct.CollectionTypeSchema {
   };
   attributes: {
     apartment: Schema.Attribute.String;
+    building: Schema.Attribute.String;
     city: Schema.Attribute.String & Schema.Attribute.Required;
     comment: Schema.Attribute.Text;
     createdAt: Schema.Attribute.DateTime;

@@ -12,23 +12,23 @@ import {
 
 // Схема валидации адреса с использованием Zod
 const addressSchema = z.object({
-	name: z
+	title: z
 		.string()
 		.min(2, 'Минимум 2 символа')
 		.max(100, 'Максимум 100 символов'),
-	recipientName: z
+	recipient_name: z
 		.string()
 		.min(2, 'Укажите ФИО получателя')
 		.max(150, 'Слишком длинное ФИО'),
-	phone: z.string().min(10, 'Введите корректный номер телефона'),
+	recipient_phone: z.string().min(10, 'Введите корректный номер телефона'),
 	city: z.string().min(2, 'Укажите город'),
 	street: z.string().min(2, 'Укажите улицу'),
 	house: z.string().min(1, 'Укажите номер дома'),
 	building: z.string().optional(),
 	apartment: z.string().optional(),
-	postalCode: z.string().min(6, 'Введите корректный почтовый индекс'),
+	postal_code: z.string().min(6, 'Введите корректный почтовый индекс'),
 	comment: z.string().optional(),
-	isDefault: z.boolean().default(false),
+	is_default: z.boolean().default(false),
 })
 
 export default function AddressForm({
@@ -52,30 +52,30 @@ export default function AddressForm({
 		resolver: zodResolver(addressSchema),
 		defaultValues: address
 			? {
-					name: address.name || '',
-					recipientName: address.recipientName || '',
-					phone: address.phone || '',
+					title: address.title || '',
+					recipient_name: address.recipient_name || '',
+					recipient_phone: address.recipient_phone || '',
 					city: address.city || '',
 					street: address.street || '',
 					house: address.house || '',
 					building: address.building || '',
 					apartment: address.apartment || '',
-					postalCode: address.postalCode || '',
+					postal_code: address.postal_code || '',
 					comment: address.comment || '',
-					isDefault: address.isDefault || false,
+					is_default: address.is_default || false,
 			  }
 			: {
-					name: '',
-					recipientName: '',
-					phone: '',
+					title: '',
+					recipient_name: '',
+					recipient_phone: '',
 					city: '',
 					street: '',
 					house: '',
 					building: '',
 					apartment: '',
-					postalCode: '',
+					postal_code: '',
 					comment: '',
-					isDefault: false,
+					is_default: false,
 			  },
 	})
 
@@ -83,12 +83,13 @@ export default function AddressForm({
 	const onSubmit = async (data) => {
 		setIsSubmitting(true)
 		try {
+			console.log('Отправляемые данные:', data)
 			// Если редактируем существующий адрес
 			if (address) {
 				await updateAddress({ id: address.id, data })
 
 				// Если необходимо установить адрес как основной
-				if (data.isDefault && !address.isDefault) {
+				if (data.is_default && !address.is_default) {
 					await setDefaultAddress(address.id)
 				}
 			} else {
@@ -96,7 +97,7 @@ export default function AddressForm({
 				const result = await createAddress(data)
 
 				// Если необходимо установить адрес как основной
-				if (data.isDefault && result.data?.id) {
+				if (data.is_default && result.data?.id) {
 					await setDefaultAddress(result.data.id)
 				}
 			}
@@ -129,45 +130,47 @@ export default function AddressForm({
 					{/* Название адреса */}
 					<div>
 						<label
-							htmlFor="name"
+							htmlFor="title"
 							className="block text-sm font-medium text-gray-700 mb-1"
 						>
 							Название адреса <span className="text-red-500">*</span>
 						</label>
 						<input
 							type="text"
-							id="name"
-							{...register('name')}
+							id="title"
+							{...register('title')}
 							className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-blue ${
-								errors.name ? 'border-red-500' : 'border-gray-300'
+								errors.title ? 'border-red-500' : 'border-gray-300'
 							}`}
 							placeholder="Например: Дом, Работа"
 						/>
-						{errors.name && (
-							<p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
+						{errors.title && (
+							<p className="mt-1 text-sm text-red-500">
+								{errors.title.message}
+							</p>
 						)}
 					</div>
 
 					{/* ФИО получателя */}
 					<div>
 						<label
-							htmlFor="recipientName"
+							htmlFor="recipient_name"
 							className="block text-sm font-medium text-gray-700 mb-1"
 						>
 							ФИО получателя <span className="text-red-500">*</span>
 						</label>
 						<input
 							type="text"
-							id="recipientName"
-							{...register('recipientName')}
+							id="recipient_name"
+							{...register('recipient_name')}
 							className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-blue ${
-								errors.recipientName ? 'border-red-500' : 'border-gray-300'
+								errors.recipient_name ? 'border-red-500' : 'border-gray-300'
 							}`}
 							placeholder="Иванов Иван Иванович"
 						/>
-						{errors.recipientName && (
+						{errors.recipient_name && (
 							<p className="mt-1 text-sm text-red-500">
-								{errors.recipientName.message}
+								{errors.recipient_name.message}
 							</p>
 						)}
 					</div>
@@ -175,23 +178,23 @@ export default function AddressForm({
 					{/* Телефон */}
 					<div>
 						<label
-							htmlFor="phone"
+							htmlFor="recipient_phone"
 							className="block text-sm font-medium text-gray-700 mb-1"
 						>
 							Телефон <span className="text-red-500">*</span>
 						</label>
 						<input
 							type="tel"
-							id="phone"
-							{...register('phone')}
+							id="recipient_phone"
+							{...register('recipient_phone')}
 							className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-blue ${
-								errors.phone ? 'border-red-500' : 'border-gray-300'
+								errors.recipient_phone ? 'border-red-500' : 'border-gray-300'
 							}`}
 							placeholder="+7 (999) 123-45-67"
 						/>
-						{errors.phone && (
+						{errors.recipient_phone && (
 							<p className="mt-1 text-sm text-red-500">
-								{errors.phone.message}
+								{errors.recipient_phone.message}
 							</p>
 						)}
 					</div>
@@ -224,23 +227,23 @@ export default function AddressForm({
 						{/* Почтовый индекс */}
 						<div>
 							<label
-								htmlFor="postalCode"
+								htmlFor="postal_code"
 								className="block text-sm font-medium text-gray-700 mb-1"
 							>
 								Почтовый индекс <span className="text-red-500">*</span>
 							</label>
 							<input
 								type="text"
-								id="postalCode"
-								{...register('postalCode')}
+								id="postal_code"
+								{...register('postal_code')}
 								className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-blue ${
-									errors.postalCode ? 'border-red-500' : 'border-gray-300'
+									errors.postal_code ? 'border-red-500' : 'border-gray-300'
 								}`}
 								placeholder="123456"
 							/>
-							{errors.postalCode && (
+							{errors.postal_code && (
 								<p className="mt-1 text-sm text-red-500">
-									{errors.postalCode.message}
+									{errors.postal_code.message}
 								</p>
 							)}
 						</div>
@@ -351,12 +354,12 @@ export default function AddressForm({
 					<div className="flex items-center">
 						<input
 							type="checkbox"
-							id="isDefault"
-							{...register('isDefault')}
+							id="is_default"
+							{...register('is_default')}
 							className="h-4 w-4 text-secondary-blue focus:ring-secondary-blue border-gray-300 rounded"
 						/>
 						<label
-							htmlFor="isDefault"
+							htmlFor="is_default"
 							className="ml-2 block text-sm text-gray-700"
 						>
 							Использовать как адрес по умолчанию
