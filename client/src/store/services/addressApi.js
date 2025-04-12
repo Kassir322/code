@@ -5,9 +5,10 @@ export const addressApi = api.injectEndpoints({
 		// Получение списка адресов текущего пользователя
 		getAddresses: builder.query({
 			query: () => ({
-				url: '/addresses',
+				url: '/api/addresses',
 				method: 'GET',
 			}),
+			transformResponse: (response) => response.data,
 			// Обработка ошибок авторизации
 			onQueryStarted: async (_, { queryFulfilled }) => {
 				try {
@@ -22,7 +23,7 @@ export const addressApi = api.injectEndpoints({
 		// Получение адреса по ID
 		getAddress: builder.query({
 			query: (id) => ({
-				url: `/addresses/${id}`,
+				url: `/api/addresses/${id}`,
 				method: 'GET',
 			}),
 			onQueryStarted: async (_, { queryFulfilled }) => {
@@ -38,7 +39,7 @@ export const addressApi = api.injectEndpoints({
 		// Создание нового адреса
 		createAddress: builder.mutation({
 			query: (data) => ({
-				url: '/addresses',
+				url: '/api/addresses',
 				method: 'POST',
 				body: data,
 			}),
@@ -55,7 +56,7 @@ export const addressApi = api.injectEndpoints({
 		// Обновление существующего адреса
 		updateAddress: builder.mutation({
 			query: ({ id, data }) => ({
-				url: `/addresses/${id}`,
+				url: `/api/addresses/${id}`,
 				method: 'PUT',
 				body: data,
 			}),
@@ -75,7 +76,7 @@ export const addressApi = api.injectEndpoints({
 		// Удаление адреса
 		deleteAddress: builder.mutation({
 			query: (id) => ({
-				url: `/addresses/${id}`,
+				url: `/api/addresses/${id}`,
 				method: 'DELETE',
 			}),
 			onQueryStarted: async (_, { queryFulfilled }) => {
@@ -91,7 +92,7 @@ export const addressApi = api.injectEndpoints({
 		// Установка адреса как основного
 		setDefaultAddress: builder.mutation({
 			query: (id) => ({
-				url: `/addresses/${id}/default`,
+				url: `/api/addresses/${id}/default`,
 				method: 'PUT',
 			}),
 			onQueryStarted: async (_, { queryFulfilled }) => {

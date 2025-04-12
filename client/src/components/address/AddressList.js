@@ -48,15 +48,14 @@ export default function AddressList({
 		}
 	}
 
-	// Находим основной адрес
-	const defaultAddress = addresses.find((address) => address.isDefault)
-
 	// Сортируем адреса так, чтобы основной был первым
-	const sortedAddresses = [...addresses].sort((a, b) => {
-		if (a.isDefault) return -1
-		if (b.isDefault) return 1
-		return 0
-	})
+	const sortedAddresses = addresses
+		? [...addresses].sort((a, b) => {
+				if (a.is_default) return -1
+				if (b.is_default) return 1
+				return 0
+		  })
+		: []
 
 	// Отображаем загрузку
 	if (isLoading) {
@@ -124,7 +123,7 @@ export default function AddressList({
 								<AddressCard
 									address={address}
 									onEditClick={handleEditClick}
-									isDefault={address.isDefault}
+									isDefault={address.is_default}
 								/>
 							</div>
 						))}

@@ -53,7 +53,18 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 			'api::address.address',
 			id,
 			{
-				populate: ['user'],
+				populate: {
+					user: {
+						fields: [
+							'id',
+							'username',
+							'email',
+							'provider',
+							'confirmed',
+							'blocked',
+						],
+					},
+				},
 			}
 		)
 
@@ -83,18 +94,39 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 	// Переопределяем метод find для получения только своих адресов
 	async find(ctx) {
 		console.log('find')
+		const userId = ctx.state.user.id
 
-		// Добавляем фильтр по текущему пользователю
-		ctx.query = {
-			...ctx.query,
-			filters: {
-				...ctx.query.filters,
-				user: ctx.state.user?.id,
-			},
+		try {
+			const address = await strapi.entityService.findMany(
+				'api::address.address',
+				{
+					filters: { user: userId },
+					populate: {
+						user: {
+							fields: [
+								'id',
+								'username',
+								'email',
+								'provider',
+								'confirmed',
+								'blocked',
+							],
+						},
+					},
+				}
+			)
+
+			if (!address) {
+				return ctx.notFound(
+					'Адрес не найден или не принадлежит текущему пользователю'
+				)
+			}
+
+			return this.transformResponse(address)
+		} catch (error) {
+			console.error('Ошибка при поиске адреса:', error)
+			return ctx.badRequest('Ошибка при поиске адреса')
 		}
-
-		// Вызываем стандартный обработчик поиска
-		return await super.find(ctx)
 	},
 
 	// Переопределяем метод findOne для проверки доступа
@@ -117,7 +149,18 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 					numericId,
 					{
 						filters: { user: userId },
-						populate: ['user'],
+						populate: {
+							user: {
+								fields: [
+									'id',
+									'username',
+									'email',
+									'provider',
+									'confirmed',
+									'blocked',
+								],
+							},
+						},
 					}
 				)
 			} else {
@@ -127,7 +170,18 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 					id,
 					{
 						filters: { user: userId },
-						populate: ['user'],
+						populate: {
+							user: {
+								fields: [
+									'id',
+									'username',
+									'email',
+									'provider',
+									'confirmed',
+									'blocked',
+								],
+							},
+						},
 					}
 				)
 			}
@@ -155,7 +209,18 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 			'api::address.address',
 			id,
 			{
-				populate: ['user'],
+				populate: {
+					user: {
+						fields: [
+							'id',
+							'username',
+							'email',
+							'provider',
+							'confirmed',
+							'blocked',
+						],
+					},
+				},
 			}
 		)
 
@@ -178,7 +243,18 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 			'api::address.address',
 			id,
 			{
-				populate: ['user'],
+				populate: {
+					user: {
+						fields: [
+							'id',
+							'username',
+							'email',
+							'provider',
+							'confirmed',
+							'blocked',
+						],
+					},
+				},
 			}
 		)
 
