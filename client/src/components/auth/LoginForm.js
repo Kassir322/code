@@ -56,6 +56,8 @@ function LoginFormContent() {
 	})
 
 	const onSubmit = async (data) => {
+		console.log('submit')
+
 		setIsLoading(true)
 		setServerError(null)
 
@@ -74,6 +76,7 @@ function LoginFormContent() {
 			})
 
 			const result = await response.json()
+			console.log(result)
 
 			if (!response.ok) {
 				throw new Error(

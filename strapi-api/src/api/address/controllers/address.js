@@ -97,29 +97,48 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 
 	// Переопределяем метод findOne для проверки доступа
 	async findOne(ctx) {
-		console.log('Я ЗДЕСЬ')
-
 		const { id } = ctx.params
-		console.log(id)
+		const userId = ctx.state.user.id
+		console.log(`id: ${id}; userId: ${userId}`)
 
-		const userId = ctx.state.user?.documentId
-		console.log(userId)
+		try {
+			// Проверяем, является ли id числовым значением
+			const numericId = parseInt(id, 10)
+			let address = null
 
-		// Сначала проверяем, принадлежит ли адрес пользователю
-		const address = await strapi.entityService.findOne(
-			'api::address.address',
-			id,
-			{
-				populate: ['user'],
+			if (!isNaN(numericId)) {
+				// Если id числовой, ищем адрес по числовому id
+				address = await strapi.entityService.findOne(
+					'api::address.address',
+					numericId,
+					{
+						filters: { user: userId },
+						populate: ['user'],
+					}
+				)
+			} else {
+				// Если id не числовой, используем старую логику поиска
+				address = await strapi.entityService.findOne(
+					'api::address.address',
+					id,
+					{
+						filters: { user: userId },
+						populate: ['user'],
+					}
+				)
 			}
-		)
 
-		if (!address || address.user?.id !== userId) {
-			return ctx.forbidden('Вы не можете просматривать этот адрес')
+			if (!address) {
+				return ctx.notFound(
+					'Адрес не найден или не принадлежит текущему пользователю'
+				)
+			}
+
+			return this.transformResponse(address)
+		} catch (error) {
+			console.error('Ошибка при поиске адреса:', error)
+			return ctx.badRequest('Ошибка при поиске адреса')
 		}
-
-		// Если все проверки пройдены, вызываем стандартный обработчик
-		return await super.findOne(ctx)
 	},
 
 	// Переопределяем метод delete для проверки доступа
@@ -148,6 +167,7 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 	async setDefault(ctx) {
 		const { id } = ctx.params
 		const userId = ctx.state.user.id
+		console.log('ahahahha')
 
 		// Проверяем, принадлежит ли адрес пользователю
 		const address = await strapi.entityService.findOne(
