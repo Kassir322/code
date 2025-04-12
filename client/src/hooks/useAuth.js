@@ -14,7 +14,7 @@ import {
 	fetchCurrentUser,
 	clearError,
 } from '@/store/slices/authSlice'
-import cookiesService from '@/lib/cookies'
+import cookiesService from '@/services/cookies'
 
 /**
  * Кастомный хук для управления авторизацией

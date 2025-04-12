@@ -16,7 +16,7 @@ import {
 	CreditCard,
 	Bell,
 } from 'lucide-react'
-import cookiesService from '@/lib/cookies'
+import cookiesService from '@/services/cookies'
 
 export default function AccountPage() {
 	const [isLoading, setIsLoading] = useState(true)
@@ -191,6 +191,13 @@ export default function AccountPage() {
 								>
 									<Heart className="h-5 w-5" />
 									<span>Избранное</span>
+								</Link>
+								<Link
+									href="/account/addresses"
+									className="flex items-center space-x-3 py-2 px-3 rounded-md text-gray-700 hover:bg-gray-100 cursor-pointer"
+								>
+									<MapPin className="h-5 w-5" />
+									<span>Адреса доставки</span>
 								</Link>
 								<Link
 									href="/account/settings"

@@ -7,7 +7,7 @@ import { z } from 'zod'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Eye, EyeOff, User, Mail, Lock, AlertCircle } from 'lucide-react'
-import cookiesService from '@/lib/cookies'
+import cookiesService from '@/services/cookies'
 import { useAuth } from '@/hooks/useAuth' // Импортируем хук useAuth
 
 // Схема валидации для формы регистрации

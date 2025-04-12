@@ -1,25 +1,26 @@
 // src/store/api.js
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import cookiesService from '@/services/cookies'
 
-// Базовый URL для API
-const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
+// Базовый query с автоматическим добавлением токена
+const baseQuery = fetchBaseQuery({
+	baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337',
+	prepareHeaders: (headers) => {
+		const token = cookiesService.getAuthToken()
+		if (token) {
+			headers.set('authorization', `Bearer ${token}`)
+		}
+		return headers
+	},
+	credentials: 'include',
+})
 
-// Создаем основной API с базовой конфигурацией
+// Создаем базовый API
 export const api = createApi({
 	reducerPath: 'api',
-	baseQuery: fetchBaseQuery({
-		baseUrl,
-		prepareHeaders: (headers) => {
-			// Добавляем токен авторизации если он есть
-			const token = localStorage.getItem('token')
-			if (token) {
-				headers.set('Authorization', `Bearer ${token}`)
-			}
-			return headers
-		},
-	}),
+	baseQuery,
 	endpoints: () => ({}),
-	tagTypes: ['Products', 'Categories', 'Cart'],
+	tagTypes: ['Products', 'Categories', 'Cart', 'Addresses'],
 })
 
 // Простой обработчик ошибок авторизации

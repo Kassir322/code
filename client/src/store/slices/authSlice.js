@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import * as authService from '@/lib/auth'
-import cookiesService from '@/lib/cookies'
+import cookiesService from '@/services/cookies'
 
 // Начальное состояние для слайса авторизации
 const initialState = {

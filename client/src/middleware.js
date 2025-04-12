@@ -1,11 +1,7 @@
 // middleware.js
 import { NextResponse } from 'next/server'
 
-export function middleware(request) {
-	// // Получаем токен через cookiesService
-	let token = request.cookies.get('token')
-	// console.log(`token: ${token?.value}`)
-
+export async function middleware(request) {
 	// Проверяем, является ли маршрут защищенным
 	if (request.nextUrl.pathname.startsWith('/account')) {
 		// Исключаем страницы авторизации
@@ -17,14 +13,37 @@ export function middleware(request) {
 			return NextResponse.next()
 		}
 
+		// Получаем токен из куки
+		const token = request.cookies.get('token')?.value
+
 		// Если нет токена, перенаправляем на страницу входа
 		if (!token) {
 			const loginUrl = new URL('/account/login', request.url)
 			loginUrl.searchParams.set('redirect', request.nextUrl.pathname)
 			return NextResponse.redirect(loginUrl)
 		}
-	}
 
+		// Проверяем валидность токена через API
+		try {
+			const response = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`,
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			)
+
+			if (!response.ok) {
+				throw new Error('Invalid token')
+			}
+		} catch (error) {
+			// Если токен невалидный, перенаправляем на страницу входа
+			const loginUrl = new URL('/account/login', request.url)
+			loginUrl.searchParams.set('redirect', request.nextUrl.pathname)
+			return NextResponse.redirect(loginUrl)
+		}
+	}
 	return NextResponse.next()
 }
 

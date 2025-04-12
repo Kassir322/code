@@ -1,4 +1,5 @@
 import { api } from '../api'
+import cookiesService from '@/services/cookies'
 
 export const authApi = api.injectEndpoints({
 	endpoints: (builder) => ({
@@ -9,6 +10,15 @@ export const authApi = api.injectEndpoints({
 				method: 'POST',
 				body: userData,
 			}),
+			// Сохраняем токен в куки при успешной регистрации
+			onQueryStarted: async (_, { queryFulfilled }) => {
+				try {
+					const { data } = await queryFulfilled
+					if (data.jwt) {
+						cookiesService.setAuthToken(data.jwt)
+					}
+				} catch {}
+			},
 		}),
 
 		// Вход пользователя
@@ -18,29 +28,20 @@ export const authApi = api.injectEndpoints({
 				method: 'POST',
 				body: credentials,
 			}),
-			// Обработка успешного ответа для сохранения токена и данных пользователя
+			// Сохраняем токен в куки при успешном входе
 			onQueryStarted: async (_, { queryFulfilled }) => {
 				try {
 					const { data } = await queryFulfilled
-					// Сохраняем токен и данные пользователя в localStorage
-					localStorage.setItem('token', data.jwt)
-					localStorage.setItem('user', JSON.stringify(data.user))
-				} catch (error) {
-					// Ошибка при авторизации, ничего не делаем
-				}
+					if (data.jwt) {
+						cookiesService.setAuthToken(data.jwt)
+					}
+				} catch {}
 			},
 		}),
 
 		// Получение данных текущего пользователя
-		getCurrentUser: builder.query({
-			query: () => ({
-				url: '/users/me',
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
-				},
-			}),
-			// Не отправляем запрос, если токен отсутствует
-			skip: () => !localStorage.getItem('token'),
+		getUser: builder.query({
+			query: () => '/api/users/me',
 		}),
 
 		// Обновление профиля пользователя
@@ -49,9 +50,6 @@ export const authApi = api.injectEndpoints({
 				url: `/users/${id}`,
 				method: 'PUT',
 				body: userData,
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem('token')}`,
-				},
 			}),
 		}),
 
@@ -72,14 +70,30 @@ export const authApi = api.injectEndpoints({
 				body: data,
 			}),
 		}),
+
+		// Выход пользователя
+		logout: builder.mutation({
+			query: () => ({
+				url: '/auth/logout',
+				method: 'POST',
+			}),
+			// Удаляем токен из кук при выходе
+			onQueryStarted: async (_, { queryFulfilled }) => {
+				try {
+					await queryFulfilled
+					cookiesService.removeAuthToken()
+				} catch {}
+			},
+		}),
 	}),
 })
 
 export const {
 	useRegisterMutation,
 	useLoginMutation,
-	useGetCurrentUserQuery,
+	useGetUserQuery,
 	useUpdateProfileMutation,
 	useForgotPasswordMutation,
 	useResetPasswordMutation,
+	useLogoutMutation,
 } = authApi

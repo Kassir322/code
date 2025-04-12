@@ -1,5 +1,5 @@
 // src/lib/auth.js
-import cookiesService from './cookies'
+import cookiesService from '@/services/cookies'
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:1337'
 

@@ -82,6 +82,8 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 
 	// Переопределяем метод find для получения только своих адресов
 	async find(ctx) {
+		console.log('find')
+
 		// Добавляем фильтр по текущему пользователю
 		ctx.query = {
 			...ctx.query,
@@ -97,6 +99,8 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 
 	// Переопределяем метод findOne для проверки доступа
 	async findOne(ctx) {
+		console.log('findOne')
+
 		const { id } = ctx.params
 		const userId = ctx.state.user.id
 		console.log(`id: ${id}; userId: ${userId}`)

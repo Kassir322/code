@@ -7,7 +7,7 @@ import { z } from 'zod'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Eye, EyeOff, Mail, Lock, AlertCircle, CheckCircle } from 'lucide-react'
-import cookiesService from '@/lib/cookies' // Импортируем новый сервис
+import cookiesService from '@/services/cookies' // Импортируем новый сервис
 
 // Схема валидации для формы входа
 const loginSchema = z.object({
