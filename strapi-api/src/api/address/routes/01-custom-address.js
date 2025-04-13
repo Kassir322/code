@@ -7,10 +7,13 @@
 module.exports = {
 	routes: [
 		{
-			method: 'POST',
+			method: 'PUT',
 			path: '/addresses/:id/set-default',
 			handler: 'address.setDefault',
-			config: {},
+			config: {
+				policies: [],
+				middlewares: [],
+			},
 		},
 	],
 }

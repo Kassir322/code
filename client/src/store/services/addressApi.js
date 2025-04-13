@@ -92,7 +92,7 @@ export const addressApi = api.injectEndpoints({
 		// Установка адреса как основного
 		setDefaultAddress: builder.mutation({
 			query: (id) => ({
-				url: `/api/addresses/${id}/default`,
+				url: `/api/addresses/${id}/set-default`,
 				method: 'PUT',
 			}),
 			onQueryStarted: async (_, { queryFulfilled }) => {

@@ -245,57 +245,94 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 
 	// Собственный метод для установки адреса по умолчанию
 	async setDefault(ctx) {
-		const { id } = ctx.params
-		const userId = ctx.state.user.id
-		console.log('ahahahha')
+		try {
+			const { id } = ctx.params
+			const userId = ctx.state.user.id
 
-		// Проверяем, принадлежит ли адрес пользователю
-		const address = await strapi.entityService.findOne(
-			'api::address.address',
-			id,
-			{
-				populate: {
-					user: {
-						fields: [
-							'id',
-							'username',
-							'email',
-							'provider',
-							'confirmed',
-							'blocked',
-						],
+			console.log('=== setDefault DEBUG ===')
+			console.log('Request params:', ctx.params)
+			console.log('User ID:', userId)
+			console.log('Request body:', ctx.request.body)
+			console.log('Request query:', ctx.query)
+
+			// Проверяем существование и принадлежность адреса пользователю
+			console.log('Fetching target address...')
+			const targetAddress = await strapi.entityService.findOne(
+				'api::address.address',
+				id,
+				{
+					populate: {
+						user: {
+							fields: ['id'],
+						},
 					},
-				},
+				}
+			)
+			console.log('Target address:', targetAddress)
+
+			if (!targetAddress || targetAddress.user.id !== userId) {
+				console.log(
+					'Access denied. Target address user ID:',
+					targetAddress?.user?.id
+				)
+				return ctx.forbidden('Нет доступа к этому адресу')
 			}
-		)
 
-		if (!address || address.user.id !== userId) {
-			return ctx.forbidden('Вы не можете изменить этот адрес')
-		}
+			// Находим все адреса пользователя с is_default = true
+			console.log('Finding default addresses...')
+			const defaultAddresses = await strapi.entityService.findMany(
+				'api::address.address',
+				{
+					filters: {
+						user: userId,
+						is_default: true,
+						id: { $ne: id },
+					},
+				}
+			)
+			console.log('Found default addresses:', defaultAddresses)
 
-		// Сбрасываем флаг is_default для всех других адресов пользователя
-		await strapi.entityService
-			.findMany('api::address.address', {
-				filters: { user: userId, id: { $ne: id } },
-			})
-			.then(async (addresses) => {
-				for (const addr of addresses) {
-					await strapi.entityService.update('api::address.address', addr.id, {
+			// Сбрасываем флаг is_default у найденных адресов
+			console.log('Resetting default flags...')
+			const resetResults = await Promise.all(
+				defaultAddresses.map((addr) =>
+					strapi.entityService.update('api::address.address', addr.id, {
 						data: { is_default: false },
 					})
+				)
+			)
+			console.log('Reset results:', resetResults)
+
+			// Устанавливаем новый адрес как основной
+			console.log('Setting new default address...')
+			const updatedAddress = await strapi.entityService.update(
+				'api::address.address',
+				id,
+				{
+					data: { is_default: true },
+					populate: {
+						user: {
+							fields: ['id', 'username', 'email'],
+						},
+					},
 				}
+			)
+			console.log('Updated address:', updatedAddress)
+
+			console.log('=== setDefault END ===')
+			return this.transformResponse(updatedAddress)
+		} catch (error) {
+			console.error('=== setDefault ERROR ===')
+			console.error('Error details:', {
+				message: error.message,
+				stack: error.stack,
+				name: error.name,
 			})
-
-		// Устанавливаем текущий адрес как основной
-		await strapi.entityService.update('api::address.address', id, {
-			data: { is_default: true },
-		})
-
-		// Возвращаем обновленный адрес
-		const updatedAddress = await strapi.entityService.findOne(
-			'api::address.address',
-			id
-		)
-		return ctx.send(updatedAddress)
+			console.error('=== setDefault ERROR END ===')
+			return ctx.badRequest('Ошибка при установке основного адреса', {
+				error: error.message,
+				details: error.details,
+			})
+		}
 	},
 }))
