@@ -1,7 +1,17 @@
 'use strict'
 
 /**
- * address controller
+ * ЭТАЛОННАЯ МОДЕЛЬ
+ * Данная модель является образцом для разработки других моделей в проекте.
+ * При возникновении ошибок в других моделях, сверяйтесь с реализацией модели адресов.
+ *
+ * Ключевые особенности:
+ * 1. Правильная структура CRUD операций
+ * 2. Проверка владельца для каждой операции
+ * 3. Корректная обработка ошибок
+ * 4. Правильное использование entityService
+ * 5. Четкое определение полей в populate
+ * 6. Возврат корректных HTTP статусов
  */
 
 const { createCoreController } = require('@strapi/strapi').factories
@@ -277,37 +287,39 @@ module.exports = createCoreController('api::address.address', ({ strapi }) => ({
 		const { id } = ctx.params
 		const userId = ctx.state.user.id
 
-		// Проверяем, принадлежит ли адрес пользователю
-		console.log('Checking address ownership...')
-		const address = await strapi.entityService.findOne(
-			'api::address.address',
-			id,
-			{
-				populate: {
-					user: {
-						fields: [
-							'id',
-							'username',
-							'email',
-							'provider',
-							'confirmed',
-							'blocked',
-						],
+		try {
+			// Проверяем, принадлежит ли адрес пользователю
+			console.log('Checking address ownership...')
+			const address = await strapi.entityService.findOne(
+				'api::address.address',
+				id,
+				{
+					populate: {
+						user: {
+							fields: ['id'],
+						},
 					},
-				},
+				}
+			)
+
+			console.log('Found address:', address)
+
+			if (!address || address.user.id !== userId) {
+				console.log('Access denied: address not found or not owned by user')
+				return ctx.forbidden('Вы не можете удалить этот адрес')
 			}
-		)
 
-		console.log('Found address:', address)
+			// Удаляем адрес
+			console.log('Deleting address...')
+			await strapi.entityService.delete('api::address.address', id)
+			console.log('Address deleted successfully')
 
-		if (!address || address.user.id !== userId) {
-			console.log('Access denied: address not found or not owned by user')
-			return ctx.forbidden('Вы не можете удалить этот адрес')
+			// Возвращаем 204 No Content
+			return ctx.send({ data: null }, 204)
+		} catch (error) {
+			console.error('Error deleting address:', error)
+			return ctx.badRequest('Ошибка при удалении адреса')
 		}
-
-		// Если все проверки пройдены, вызываем стандартный обработчик
-		console.log('Calling super.delete...')
-		return await super.delete(ctx)
 	},
 
 	// Собственный метод для установки адреса по умолчанию

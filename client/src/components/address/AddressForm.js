@@ -1,9 +1,10 @@
 'use client'
 
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useState } from 'react'
+import { IMaskInput } from 'react-imask'
 import {
 	useCreateAddressMutation,
 	useUpdateAddressMutation,
@@ -27,7 +28,8 @@ const addressSchema = z.object({
 		.regex(/^[а-яА-ЯёЁ\s-]+$/, 'Допустимы только буквы, пробелы и дефисы'),
 	recipient_phone: z
 		.string()
-		.regex(/^\+7[0-9]{10}$/, 'Телефон должен быть в формате +79991234567'),
+		.regex(/^\+7[0-9]{10}$/, 'Введите корректный номер телефона')
+		.transform((val) => val.replace(/[\s()-]/g, '')), // Убираем пробелы, скобки и дефисы
 	city: z
 		.string()
 		.min(2, 'Минимум 2 символа')
@@ -89,6 +91,7 @@ export default function AddressForm({
 		handleSubmit,
 		formState: { errors },
 		reset,
+		control,
 	} = useForm({
 		resolver: zodResolver(addressSchema),
 		defaultValues: address
@@ -216,7 +219,7 @@ export default function AddressForm({
 						)}
 					</div>
 
-					{/* Телефон */}
+					{/* Телефон с маской */}
 					<div>
 						<label
 							htmlFor="recipient_phone"
@@ -224,14 +227,38 @@ export default function AddressForm({
 						>
 							Телефон <span className="text-red-500">*</span>
 						</label>
-						<input
-							type="tel"
-							id="recipient_phone"
-							{...register('recipient_phone')}
-							className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-blue ${
-								errors.recipient_phone ? 'border-red-500' : 'border-gray-300'
-							}`}
-							placeholder="+7 (999) 123-45-67"
+						<Controller
+							name="recipient_phone"
+							control={control}
+							render={({ field: { onChange, value } }) => (
+								<IMaskInput
+									value={value}
+									onAccept={(value) => {
+										// Сначала убираем форматирование
+										const cleanValue = value.replace(/[\s()-]/g, '')
+										// Проверяем, что номер начинается с +7
+										if (!cleanValue.startsWith('+7')) {
+											onChange('+7' + cleanValue.replace(/[^\d]/g, ''))
+										} else {
+											onChange(cleanValue)
+										}
+									}}
+									mask="+{7} (000) 000-00-00"
+									definitions={{
+										0: /[0-9]/,
+									}}
+									unmask={false}
+									lazy={false}
+									id="recipient_phone"
+									type="tel"
+									className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-blue ${
+										errors.recipient_phone
+											? 'border-red-500'
+											: 'border-gray-300'
+									}`}
+									placeholder="+7 (999) 123-45-67"
+								/>
+							)}
 						/>
 						{errors.recipient_phone && (
 							<p className="mt-1 text-sm text-red-500">

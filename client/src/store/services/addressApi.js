@@ -79,6 +79,13 @@ export const addressApi = api.injectEndpoints({
 				url: `/api/addresses/${id}`,
 				method: 'DELETE',
 			}),
+			// Для 204 ответа возвращаем { success: true }
+			transformResponse: (response, meta) => {
+				if (meta?.response?.status === 204) {
+					return { success: true }
+				}
+				return response
+			},
 			onQueryStarted: async (_, { queryFulfilled }) => {
 				try {
 					await queryFulfilled
