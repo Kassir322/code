@@ -13,6 +13,7 @@ import {
 	selectWishlistItemsCount,
 	selectWishlistItems,
 } from '@/store/slices/wishlistSlice'
+import { useAuth } from '@/hooks/useAuth'
 
 export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -24,6 +25,9 @@ export default function Header() {
 	const wishlistItemsCount = useSelector(selectWishlistItemsCount)
 	const cartItems = useSelector(selectCartItems)
 	const wishlistItems = useSelector(selectWishlistItems)
+
+	// Получаем данные о пользователе
+	const { user, isAuthenticated } = useAuth()
 
 	// При изменении количества товаров запускаем анимацию корзины
 	useEffect(() => {
@@ -46,7 +50,7 @@ export default function Header() {
 			<div className="lg:container mx-auto flex items-center justify-between">
 				{/* Логотип */}
 				<Link href="/" className="flex items-center group">
-					<div className="hidden sm:inline mr-2">
+					<div className="inline mr-2">
 						<Image
 							src="/images/logo.svg"
 							alt="Mat-Focus Logo"
@@ -101,12 +105,38 @@ export default function Header() {
 
 					{/* Аккаунт */}
 					<div className="flex flex-col items-end">
-						<Link href="/account" className="flex items-center text-sm">
-							<User className="h-5 w-5 mr-1 md:mr-2" />
-							<span className="hidden min-[900px]:inline text-base hover:text-hover transition-colors">
-								Аккаунт
-							</span>
-						</Link>
+						{isAuthenticated && user ? (
+							<Link href="/account" className="flex items-center group">
+								<div className="w-8 h-8 rounded-full bg-secondary-blue overflow-hidden flex items-center justify-center text-white">
+									{user.avatar ? (
+										<img
+											src={user.avatar}
+											alt={user.username}
+											className="w-full h-full object-cover"
+										/>
+									) : (
+										<span className="text-sm font-medium">
+											{user.username.charAt(0).toUpperCase()}
+										</span>
+									)}
+								</div>
+								<div className="hidden min-[900px]:block ml-2">
+									<p className="text-sm font-medium truncate max-w-[120px] group-hover:text-hover transition-colors">
+										{user.username}
+									</p>
+									<p className="text-xs text-gray-500 truncate max-w-[120px]">
+										{user.email}
+									</p>
+								</div>
+							</Link>
+						) : (
+							<Link href="/account" className="flex items-center text-sm">
+								<User className="h-5 w-5 mr-1 md:mr-2" />
+								<span className="hidden min-[900px]:inline text-base hover:text-hover transition-colors">
+									Аккаунт
+								</span>
+							</Link>
+						)}
 					</div>
 				</div>
 
@@ -120,6 +150,27 @@ export default function Header() {
 					{/* Корзина на мобильном */}
 					<Link href="/cart" className="flex items-center">
 						<CartIcon />
+					</Link>
+
+					{/* Аккаунт на мобильном */}
+					<Link href="/account" className="flex items-center">
+						{isAuthenticated && user ? (
+							<div className="w-7 h-7 rounded-full bg-secondary-blue overflow-hidden flex items-center justify-center text-white">
+								{user.avatar ? (
+									<img
+										src={user.avatar}
+										alt={user.username}
+										className="w-full h-full object-cover"
+									/>
+								) : (
+									<span className="text-xs font-medium">
+										{user.username.charAt(0).toUpperCase()}
+									</span>
+								)}
+							</div>
+						) : (
+							<User className="h-5 w-5" />
+						)}
 					</Link>
 
 					{/* Мобильное меню (кнопка бургер) */}
@@ -164,7 +215,7 @@ export default function Header() {
 							onClick={() => setIsMenuOpen(false)}
 						>
 							<User className="h-4 w-4 inline mr-2" />
-							Аккаунт
+							{isAuthenticated && user ? user.username : 'Аккаунт'}
 						</Link>
 						<Link
 							href="/wishlist"
