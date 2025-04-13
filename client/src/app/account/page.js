@@ -17,6 +17,70 @@ import {
 	Bell,
 } from 'lucide-react'
 import cookiesService from '@/services/cookies'
+import { useGetAddressesQuery } from '@/store/services/addressApi'
+
+// Компонент для отображения виджета адреса
+const AddressWidget = () => {
+	const { data: addresses = [], isLoading, error } = useGetAddressesQuery()
+
+	// Получаем основной адрес или первый в списке
+	const defaultAddress =
+		addresses.find((addr) => addr.is_default) || addresses[0]
+
+	if (isLoading) {
+		return (
+			<div className="flex justify-center items-center py-2">
+				<div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-secondary-blue"></div>
+			</div>
+		)
+	}
+
+	return (
+		<div className="bg-white rounded-lg shadow-sm p-6">
+			<div className="flex justify-between items-start mb-4">
+				<h3 className="font-semibold">Адреса доставки</h3>
+				<MapPin className="h-5 w-5 text-gray-400" />
+			</div>
+
+			{defaultAddress ? (
+				<>
+					<div className="mb-3">
+						<div className="text-sm mt-1">
+							<p className="font-medium">{defaultAddress.city}</p>
+							<p className="text-gray-600">
+								{defaultAddress.street}, д. {defaultAddress.house}
+								{defaultAddress.apartment
+									? `, кв. ${defaultAddress.apartment}`
+									: ''}
+							</p>
+							{defaultAddress.postal_code && (
+								<p className="text-gray-600">{defaultAddress.postal_code}</p>
+							)}
+						</div>
+					</div>
+					<Link
+						href="/account/addresses"
+						className="text-sm text-secondary-blue hover:underline cursor-pointer"
+					>
+						Управление адресами
+					</Link>
+				</>
+			) : (
+				<>
+					<p className="text-sm text-gray-600 mb-3">
+						Добавьте адреса для быстрого оформления заказов
+					</p>
+					<Link
+						href="/account/addresses"
+						className="text-sm text-secondary-blue hover:underline cursor-pointer"
+					>
+						Управление адресами
+					</Link>
+				</>
+			)}
+		</div>
+	)
+}
 
 export default function AccountPage() {
 	const [isLoading, setIsLoading] = useState(true)
@@ -238,21 +302,7 @@ export default function AccountPage() {
 						{/* Виджеты */}
 						<div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
 							{/* Адреса доставки */}
-							<div className="bg-white rounded-lg shadow-sm p-6">
-								<div className="flex justify-between items-start mb-4">
-									<h3 className="font-semibold">Адреса доставки</h3>
-									<MapPin className="h-5 w-5 text-gray-400" />
-								</div>
-								<p className="text-sm text-gray-600 mb-3">
-									Добавьте адреса для быстрого оформления заказов
-								</p>
-								<Link
-									href="/account/addresses"
-									className="text-sm text-secondary-blue hover:underline cursor-pointer"
-								>
-									Управление адресами
-								</Link>
-							</div>
+							<AddressWidget />
 
 							{/* Способы оплаты */}
 							<div className="bg-white rounded-lg shadow-sm p-6">
