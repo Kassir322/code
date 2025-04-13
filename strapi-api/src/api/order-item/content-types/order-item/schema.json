@@ -23,12 +23,14 @@
     "order": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::order.order"
+      "target": "api::order.order",
+      "inversedBy": "order_item"
     },
     "study_card": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::study-card.study-card"
+      "target": "api::study-card.study-card",
+      "inversedBy": "order_item"
     }
   }
 }

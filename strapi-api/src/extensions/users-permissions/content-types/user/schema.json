@@ -70,6 +70,12 @@
       "relation": "oneToMany",
       "target": "api::address.address",
       "mappedBy": "user"
+    },
+    "payments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::payment.payment",
+      "mappedBy": "users_permissions_user"
     }
   }
 }

@@ -520,8 +520,13 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
       Schema.Attribute.Private;
+    order_item: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::order-item.order-item'
+    >;
     order_status: Schema.Attribute.String &
       Schema.Attribute.DefaultTo<'pending'>;
+    payment: Schema.Attribute.Relation<'oneToOne', 'api::payment.payment'>;
     payment_method: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     shipping_method: Schema.Attribute.String;
@@ -533,6 +538,61 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
       'oneToOne',
       'plugin::users-permissions.user'
     >;
+  };
+}
+
+export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
+  collectionName: 'payments';
+  info: {
+    description: '';
+    displayName: 'Payment';
+    pluralName: 'payments';
+    singularName: 'payment';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    amount: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    confirmation_url: Schema.Attribute.String;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    currency: Schema.Attribute.Enumeration<['RUB']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'RUB'>;
+    description: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::payment.payment'
+    > &
+      Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
+    order: Schema.Attribute.Relation<'oneToOne', 'api::order.order'>;
+    payment_method: Schema.Attribute.Enumeration<['sbp', 'yookassa_redirect']> &
+      Schema.Attribute.Required;
+    payment_status: Schema.Attribute.Enumeration<
+      ['pending', 'waiting_for_capture', 'succeeded', 'canceled']
+    > &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'pending'>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    yookassa_id: Schema.Attribute.String & Schema.Attribute.Unique;
   };
 }
 
@@ -609,6 +669,10 @@ export interface ApiStudyCardStudyCard extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     number_of_cards: Schema.Attribute.Integer;
+    order_item: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::order-item.order-item'
+    >;
     price: Schema.Attribute.Decimal & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     quantity: Schema.Attribute.Integer;
@@ -1102,6 +1166,7 @@ export interface PluginUsersPermissionsUser
       Schema.Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
+    payments: Schema.Attribute.Relation<'oneToMany', 'api::payment.payment'>;
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
@@ -1135,6 +1200,7 @@ declare module '@strapi/strapi' {
       'api::category.category': ApiCategoryCategory;
       'api::order-item.order-item': ApiOrderItemOrderItem;
       'api::order.order': ApiOrderOrder;
+      'api::payment.payment': ApiPaymentPayment;
       'api::review.review': ApiReviewReview;
       'api::study-card.study-card': ApiStudyCardStudyCard;
       'plugin::content-releases.release': PluginContentReleasesRelease;
