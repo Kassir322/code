@@ -72,8 +72,17 @@ export default function AddressSelector({
 										.join(', ')}
 								</p>
 								<p className="text-sm text-gray-600 mt-1">
-									Получатель: {selectedAddress.recipientName},{' '}
-									{selectedAddress.phone}
+									{selectedAddress.recipient_name ||
+									selectedAddress.recipient_phone ? (
+										<>
+											Получатель:{' '}
+											{selectedAddress.recipient_name || 'Не указан'}
+											{selectedAddress.recipient_phone &&
+												`, ${selectedAddress.recipient_phone}`}
+										</>
+									) : (
+										''
+									)}
 								</p>
 							</div>
 						</div>
@@ -191,7 +200,14 @@ export default function AddressSelector({
 											.join(', ')}
 									</p>
 									<p className="text-sm text-gray-600 mt-1">
-										Получатель: {address.recipientName}, {address.phone}
+										{address.recipientName || address.phone ? (
+											<>
+												Получатель: {address.recipientName || 'Не указан'}
+												{address.phone && `, ${address.phone}`}
+											</>
+										) : (
+											''
+										)}
 									</p>
 								</div>
 							</div>

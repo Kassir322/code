@@ -128,8 +128,8 @@ export default function ProductCard({ product, variant = 'default' }) {
 
 		setIsAddingToCart(true)
 
-		// Добавляем товар в корзину через Redux
-		dispatch(addToCart(product))
+		// Добавляем товар в корзину через Redux с явным указанием количества
+		dispatch(addToCart({ ...product, quantity: 1 }))
 
 		// Показываем уведомление о добавлении
 		setShowCartNotification(true)
@@ -146,7 +146,7 @@ export default function ProductCard({ product, variant = 'default' }) {
 
 		// Если товар не в корзине, добавляем его
 		if (!productInCart) {
-			dispatch(addToCart(product))
+			dispatch(addToCart({ ...product, quantity: 1 }))
 		}
 
 		// Переходим к оформлению заказа
