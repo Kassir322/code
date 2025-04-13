@@ -5,7 +5,7 @@
 		"singularName": "address",
 		"pluralName": "addresses",
 		"displayName": "Address",
-		"description": ""
+		"description": "Адреса доставки пользователей"
 	},
 	"options": {
 		"draftAndPublish": false
@@ -15,43 +15,56 @@
 			"type": "string",
 			"maxLength": 255,
 			"minLength": 2,
-			"required": true
+			"required": true,
+			"regex": "^[а-яА-ЯёЁ0-9\\s-]+$"
 		},
 		"recipient_name": {
 			"type": "string",
 			"required": true,
-			"maxLength": 150
+			"maxLength": 150,
+			"minLength": 5,
+			"regex": "^[а-яА-ЯёЁ\\s-]+$"
 		},
 		"recipient_phone": {
 			"type": "string",
-			"required": true
+			"required": true,
+			"regex": "^\\+7[0-9]{10}$"
 		},
 		"city": {
 			"type": "string",
-			"required": true
+			"required": true,
+			"minLength": 2,
+			"regex": "^[а-яА-ЯёЁ\\s-]+$"
 		},
 		"street": {
 			"type": "string",
-			"required": true
+			"required": true,
+			"minLength": 2,
+			"regex": "^[а-яА-ЯёЁ0-9\\s-\\.]+$"
 		},
 		"house": {
 			"type": "string",
-			"required": true
+			"required": true,
+			"regex": "^[0-9]+(?:\\/[0-9]+)?[а-яА-Я]?$"
 		},
 		"building": {
 			"type": "string",
-			"required": false
+			"required": false,
+			"regex": "^[0-9]+(?:\\/[0-9]+)?[а-яА-Я]?$"
 		},
 		"apartment": {
 			"type": "string",
-			"required": false
+			"required": false,
+			"regex": "^[0-9]+(?:\\/[0-9]+)?[а-яА-Я]?$"
 		},
 		"postal_code": {
 			"type": "string",
-			"required": true
+			"required": true,
+			"regex": "^[0-9]{6}$"
 		},
 		"comment": {
-			"type": "text"
+			"type": "text",
+			"maxLength": 500
 		},
 		"is_default": {
 			"type": "boolean",

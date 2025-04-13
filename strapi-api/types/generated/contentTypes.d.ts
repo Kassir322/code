@@ -372,7 +372,7 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
 export interface ApiAddressAddress extends Struct.CollectionTypeSchema {
   collectionName: 'addresses';
   info: {
-    description: '';
+    description: '\u0410\u0434\u0440\u0435\u0441\u0430 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438 \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u0435\u0439';
     displayName: 'Address';
     pluralName: 'addresses';
     singularName: 'address';
@@ -383,8 +383,15 @@ export interface ApiAddressAddress extends Struct.CollectionTypeSchema {
   attributes: {
     apartment: Schema.Attribute.String;
     building: Schema.Attribute.String;
-    city: Schema.Attribute.String & Schema.Attribute.Required;
-    comment: Schema.Attribute.Text;
+    city: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        minLength: 2;
+      }>;
+    comment: Schema.Attribute.Text &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 500;
+      }>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -402,9 +409,14 @@ export interface ApiAddressAddress extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{
         maxLength: 150;
+        minLength: 5;
       }>;
     recipient_phone: Schema.Attribute.String & Schema.Attribute.Required;
-    street: Schema.Attribute.String & Schema.Attribute.Required;
+    street: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMaxLength<{
+        minLength: 2;
+      }>;
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.SetMinMaxLength<{

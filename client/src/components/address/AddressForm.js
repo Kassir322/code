@@ -15,19 +15,60 @@ const addressSchema = z.object({
 	title: z
 		.string()
 		.min(2, 'Минимум 2 символа')
-		.max(100, 'Максимум 100 символов'),
+		.max(255, 'Максимум 255 символов')
+		.regex(
+			/^[а-яА-ЯёЁ0-9\s-]+$/,
+			'Допустимы только буквы, цифры, пробелы и дефисы'
+		),
 	recipient_name: z
 		.string()
-		.min(2, 'Укажите ФИО получателя')
-		.max(150, 'Слишком длинное ФИО'),
-	recipient_phone: z.string().min(10, 'Введите корректный номер телефона'),
-	city: z.string().min(2, 'Укажите город'),
-	street: z.string().min(2, 'Укажите улицу'),
-	house: z.string().min(1, 'Укажите номер дома'),
-	building: z.string().optional(),
-	apartment: z.string().optional(),
-	postal_code: z.string().min(6, 'Введите корректный почтовый индекс'),
-	comment: z.string().optional(),
+		.min(5, 'Минимум 5 символов')
+		.max(150, 'Максимум 150 символов')
+		.regex(/^[а-яА-ЯёЁ\s-]+$/, 'Допустимы только буквы, пробелы и дефисы'),
+	recipient_phone: z
+		.string()
+		.regex(/^\+7[0-9]{10}$/, 'Телефон должен быть в формате +79991234567'),
+	city: z
+		.string()
+		.min(2, 'Минимум 2 символа')
+		.regex(/^[а-яА-ЯёЁ\s-]+$/, 'Допустимы только буквы, пробелы и дефисы'),
+	street: z
+		.string()
+		.min(2, 'Минимум 2 символа')
+		.regex(
+			/^[а-яА-ЯёЁ0-9\s-\.]+$/,
+			'Допустимы буквы, цифры, пробелы, точки и дефисы'
+		),
+	house: z
+		.string()
+		.regex(
+			/^[0-9]+(?:\/[0-9]+)?[а-яА-Я]?$/,
+			'Номер дома должен быть числом с опциональной дробью и буквой (например: 12, 12а или 417/3)'
+		),
+	building: z
+		.string()
+		.regex(
+			/^[0-9]+(?:\/[0-9]+)?[а-яА-Я]?$/,
+			'Корпус должен быть числом с опциональной дробью и буквой (например: 1, 1а или 1/2)'
+		)
+		.optional()
+		.or(z.literal('')),
+	apartment: z
+		.string()
+		.regex(
+			/^[0-9]+(?:\/[0-9]+)?[а-яА-Я]?$/,
+			'Номер квартиры должен быть числом с опциональной дробью и буквой (например: 42, 42б или 42/1)'
+		)
+		.optional()
+		.or(z.literal('')),
+	postal_code: z
+		.string()
+		.regex(/^[0-9]{6}$/, 'Почтовый индекс должен состоять из 6 цифр'),
+	comment: z
+		.string()
+		.max(500, 'Максимум 500 символов')
+		.optional()
+		.or(z.literal('')),
 	is_default: z.boolean().default(false),
 })
 
@@ -86,7 +127,7 @@ export default function AddressForm({
 			console.log('Отправляемые данные:', data)
 			// Если редактируем существующий адрес
 			if (address) {
-				await updateAddress({ id: address.id, data })
+				await updateAddress({ id: address.id, data: { data } })
 
 				// Если необходимо установить адрес как основной
 				if (data.is_default && !address.is_default) {
@@ -94,7 +135,7 @@ export default function AddressForm({
 				}
 			} else {
 				// Создаем новый адрес
-				const result = await createAddress(data)
+				const result = await createAddress({ data })
 
 				// Если необходимо установить адрес как основной
 				if (data.is_default && result.data?.id) {
