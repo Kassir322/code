@@ -8,7 +8,7 @@ export const paymentApi = api.injectEndpoints({
 			query: (paymentData) => ({
 				url: '/api/payments',
 				method: 'POST',
-				body: paymentData,
+				body: { data: paymentData },
 			}),
 			// Обработка ошибок авторизации
 			onQueryStarted: async (_, { queryFulfilled }) => {

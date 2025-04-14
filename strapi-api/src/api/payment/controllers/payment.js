@@ -21,23 +21,32 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 	 * }
 	 */
 	async create(ctx) {
-		const { data } = ctx.request.body
-		const { amount, order, payment_method } = data
+		const data = ctx.request.body
+		console.log(`DATTAAAA: ${JSON.stringify(data)}`)
+		console.log(data.amount)
+		const order = 26
+		// const { amount, order, payment_method } = data
+		const { amount, payment_method } = data
 		const user = ctx.state.user
+		console.log(amount, order, payment_method)
 
 		if (!user) {
 			return ctx.unauthorized('User not authenticated')
 		}
 
 		try {
+			console.log('перед order_items')
+
 			// Проверяем заказ
 			const orderEntity = await strapi.entityService.findOne(
 				'api::order.order',
 				order,
 				{
-					populate: ['user', 'order_item'],
+					populate: ['user', 'order_items'],
 				}
 			)
+
+			console.log('после order_items')
 
 			if (!orderEntity) {
 				return ctx.notFound('Order not found')
@@ -94,10 +103,10 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 				}
 			)
 
-			return {
+			return this.transformResponse({
 				...payment,
 				confirmation_url: yookassaPayment.confirmation.confirmation_url,
-			}
+			})
 		} catch (error) {
 			console.error('Payment creation error:', error)
 			ctx.throw(500, error)

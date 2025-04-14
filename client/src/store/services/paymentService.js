@@ -30,6 +30,7 @@ export const usePaymentService = () => {
 			}
 
 			const response = await createPayment(payload).unwrap()
+			console.log(response)
 
 			// Если платеж создан успешно, возвращаем URL для перенаправления
 			if (response.data) {

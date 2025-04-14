@@ -22,7 +22,6 @@ module.exports = createCoreController('api::order.order', ({ strapi }) => ({
 	async create(ctx) {
 		const { data } = ctx.request.body
 		const user = ctx.state.user
-		console.log(user)
 
 		// console.log(`${JSON.stringify(data)}`)
 

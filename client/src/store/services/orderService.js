@@ -52,17 +52,18 @@ export const useOrderService = () => {
 			// Отправляем запрос на создание заказа
 			const response = await createOrder(payload).unwrap()
 
-			// Если заказ создан успешно, возвращаем его ID
-			if (response.data) {
+			// Проверяем структуру ответа, учитывая особенности Strapi API
+			if (response && (response.id || (response.data && response.data.id))) {
 				return {
 					success: true,
-					orderId: response.data.id,
+					orderId: response.id || response.data.id,
 				}
 			}
 
+			console.error('Неожиданная структура ответа:', response)
 			return {
 				success: false,
-				error: 'Не удалось создать заказ',
+				error: 'Не удалось создать заказ: неверный формат ответа',
 			}
 		} catch (error) {
 			console.error('Ошибка при создании заказа:', error)
