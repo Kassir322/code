@@ -1,10 +1,9 @@
-// Обновленный файл: client/src/app/cart/checkout/success/page.js
+// Файл: client/src/app/orders/[id]/success/page.js
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import {
 	CheckCircle,
@@ -13,52 +12,70 @@ import {
 	ShoppingBag,
 	AlertCircle,
 	CreditCard,
+	User,
+	Lock,
 } from 'lucide-react'
 import { useGetOrderDetailsQuery } from '@/store/services/orderApi'
 import { usePaymentService } from '@/store/services/paymentService'
 import SchemaOrg from '@/components/SchemaOrg'
 import { useDispatch } from 'react-redux'
 import { clearCart } from '@/store/slices/cartSlice'
+import { useGetUserQuery } from '@/store/services/authApi'
+import { use } from 'react'
 
-export default function OrderSuccessPage() {
+export default function OrderSuccessPage({ params }) {
+	const resolvedParams = use(params)
+	const orderId = resolvedParams?.id
 	const router = useRouter()
-	const searchParams = useSearchParams()
-	const [orderId, setOrderId] = useState(null)
+	const dispatch = useDispatch()
+
+	// Состояния для управления UI
 	const [agreeToPayment, setAgreeToPayment] = useState(false)
 	const [isPaymentInitiating, setIsPaymentInitiating] = useState(false)
 	const [paymentError, setPaymentError] = useState(null)
-	const dispatch = useDispatch()
+	const [orderAccessDenied, setOrderAccessDenied] = useState(false)
+
+	// Получаем данные текущего пользователя
+	const { data: currentUser, isLoading: isUserLoading } = useGetUserQuery()
 
 	// Получаем сервис для работы с платежами
 	const { initiatePayment, isCreatingPayment } = usePaymentService()
 
-	// Получаем ID заказа из URL параметров
-	useEffect(() => {
-		//корзину очищать нужно, только если заказ принадлежит текущему пользователю
-		//нужно подумать, где реализовать эту логику
-		dispatch(clearCart())
-	}, [searchParams, router])
-
-	//нужно выполнить проверку, есть ли данный заказ у пользователя
-	//если есть, то оставить его на странице описания заказа
-	//если нет, то вывести сообщение о том, что заказа принадлежит другому
-	//пользователю. Сообщение должно быть в виде контента на странице, а не модального окна
-
-	// Получаем детали заказа, если есть ID
+	// Получаем детали заказа по ID из URL
 	const {
 		data: orderData,
-		isLoading,
-		error,
+		isLoading: isOrderLoading,
+		error: orderError,
 	} = useGetOrderDetailsQuery(orderId, {
 		skip: !orderId,
 	})
 
+	// При загрузке страницы очищаем корзину, если заказ успешно оформлен
+	useEffect(() => {
+		if (orderData && !isOrderLoading) {
+			dispatch(clearCart())
+		}
+	}, [orderData, isOrderLoading, dispatch])
+
+	// Проверяем, принадлежит ли заказ текущему пользователю
+	useEffect(() => {
+		if (orderData && currentUser && !isOrderLoading && !isUserLoading) {
+			// Проверяем, совпадает ли ID пользователя в заказе с ID текущего пользователя
+			console.log(orderData, currentUser.id)
+
+			if (orderData.user?.id !== currentUser.id) {
+				setOrderAccessDenied(true)
+			}
+		}
+	}, [orderData, currentUser, isOrderLoading, isUserLoading])
+
 	// Хлебные крошки для SEO и навигации
 	const breadcrumbItems = [
 		{ name: 'Главная', url: '/' },
-		{ name: 'Корзина', url: '/cart' },
-		{ name: 'Оформление заказа', url: '/cart/checkout' },
-		{ name: 'Заказ оформлен', url: '/cart/checkout/success' },
+		{ name: 'Личный кабинет', url: '/account' },
+		{ name: 'Заказы', url: '/account/orders' },
+		{ name: `Заказ #${orderId}`, url: `/orders/${orderId}` },
+		{ name: 'Успешное оформление', url: `/orders/${orderId}/success` },
 	]
 
 	// Обработчик перехода к оплате
@@ -76,11 +93,9 @@ export default function OrderSuccessPage() {
 				orderId: orderId,
 				paymentMethod: 'yookassa_redirect', // По умолчанию используем переадресацию на страницу ЮKassa
 			}
-			console.log(paymentData)
 
 			// Используем сервис для инициации платежа через Redux
 			const result = await initiatePayment(paymentData)
-			console.log(result)
 
 			if (result.success && result.confirmationUrl) {
 				// Перенаправляем пользователя на страницу оплаты
@@ -133,7 +148,8 @@ export default function OrderSuccessPage() {
 		}
 	}
 
-	if (isLoading) {
+	// Отображаем загрузку
+	if (isOrderLoading || isUserLoading) {
 		return (
 			<div className="container mx-auto px-4 mt-24 mb-16 flex justify-center">
 				<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-secondary-blue"></div>
@@ -141,7 +157,50 @@ export default function OrderSuccessPage() {
 		)
 	}
 
-	if (error) {
+	// Если доступ запрещен (заказ принадлежит другому пользователю)
+	if (orderAccessDenied) {
+		return (
+			<div className="container mx-auto px-4 mt-24 mb-16">
+				<Breadcrumbs items={breadcrumbItems} />
+
+				<div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm p-8 text-center">
+					<div className="flex flex-col items-center text-red-600 mb-6">
+						<div className="bg-red-100 rounded-full p-4 mb-4">
+							<Lock className="h-12 w-12 text-red-600" />
+						</div>
+						<h2 className="text-2xl font-semibold text-gray-900 mb-2">
+							Доступ запрещен
+						</h2>
+						<p className="text-gray-600 mb-6">
+							Этот заказ принадлежит другому пользователю, и вы не можете
+							просматривать его детали.
+						</p>
+					</div>
+
+					<div className="flex flex-col sm:flex-row justify-center gap-4">
+						<Link
+							href="/account/orders"
+							className="inline-flex items-center justify-center py-3 px-6 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer"
+						>
+							<Package className="h-5 w-5 mr-2" />
+							Мои заказы
+						</Link>
+
+						<Link
+							href="/catalog"
+							className="inline-flex items-center justify-center py-3 px-6 bg-secondary-blue text-white rounded-md hover:bg-blue-700 transition-colors cursor-pointer"
+						>
+							<ShoppingBag className="h-5 w-5 mr-2" />
+							Перейти в каталог
+						</Link>
+					</div>
+				</div>
+			</div>
+		)
+	}
+
+	// Если произошла ошибка при загрузке заказа
+	if (orderError) {
 		return (
 			<div className="container mx-auto px-4 mt-24 mb-16">
 				<Breadcrumbs items={breadcrumbItems} />
@@ -155,7 +214,7 @@ export default function OrderSuccessPage() {
 					</div>
 					<Link
 						href="/catalog"
-						className="inline-flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 cursor-pointer"
+						className="inline-flex items-center justify-center py-2 px-4 border border-gray-300 rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors cursor-pointer"
 					>
 						<ArrowLeft className="h-4 w-4 mr-2" />
 						Вернуться в каталог
@@ -165,6 +224,7 @@ export default function OrderSuccessPage() {
 		)
 	}
 
+	// Основной контент страницы с информацией о заказе
 	return (
 		<div className="container mx-auto px-4 mt-24 mb-16">
 			<Breadcrumbs items={breadcrumbItems} />
@@ -293,7 +353,7 @@ export default function OrderSuccessPage() {
 						</div>
 					)}
 
-					{/* Блок оплаты */}
+					{/* Блок оплаты - отображаем только если метод оплаты - картой */}
 					{orderData && orderData.payment_method === 'card' && (
 						<div className="mb-6">
 							<div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">

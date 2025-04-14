@@ -195,12 +195,17 @@ module.exports = createCoreController('api::order.order', ({ strapi }) => ({
 		if (!isNaN(numericId)) {
 			const order = await strapi.entityService.findOne(
 				'api::order.order',
-				numericId
+				numericId,
+				{
+					populate: ['user'],
+				}
 			)
 
 			if (!order) {
 				return ctx.notFound('Order not found')
 			}
+
+			console.log(order)
 
 			return this.transformResponse(order)
 		}
