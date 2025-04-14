@@ -20,7 +20,7 @@ export const api = createApi({
 	reducerPath: 'api',
 	baseQuery,
 	endpoints: () => ({}),
-	tagTypes: ['Products', 'Categories', 'Cart', 'Addresses'],
+	tagTypes: ['Products', 'Categories', 'Cart', 'Addresses', 'Orders'],
 })
 
 // Простой обработчик ошибок авторизации

@@ -1,0 +1,42 @@
+{
+	"data": {
+		"shipping_method": "sdek",
+		"payment_method": "card",
+		"shipping_address": 7,
+		"items": [
+			{ "study_card_id": 15, "quantity": 3 },
+			{ "study_card_id": 2, "quantity": 1 },
+			{ "study_card_id": 3, "quantity": 1 },
+			{ "study_card_id": 1, "quantity": 1 },
+			{ "study_card_id": 22, "quantity": 1 }
+		],
+		"notes": ""
+	},
+	"user": {
+		"id": 18,
+		"documentId": "z93y257mq5k1pt5rb1pb3v8a",
+		"username": "test1",
+		"email": "test1@mail.ru",
+		"provider": "local",
+		"password": "$2a$10$.lzkaYoR7UrUPpz.NwO92.LCbionm1B2D6.BPBvrSICFpCoQzqiE6",
+		"resetPasswordToken": null,
+		"confirmationToken": null,
+		"confirmed": true,
+		"blocked": false,
+		"createdAt": "2025-04-13T21:46:05.404Z",
+		"updatedAt": "2025-04-13T21:46:05.404Z",
+		"publishedAt": "2025-04-13T21:46:05.405Z",
+		"locale": null,
+		"role": {
+			"id": 1,
+			"documentId": "nvl8yzq5ctpanu75mnohnuf0",
+			"name": "Authenticated",
+			"description": "Default role given to authenticated user.",
+			"type": "authenticated",
+			"createdAt": "2025-04-01T20:21:41.397Z",
+			"updatedAt": "2025-04-13T21:38:12.998Z",
+			"publishedAt": "2025-04-01T20:21:41.398Z",
+			"locale": null
+		}
+	}
+}

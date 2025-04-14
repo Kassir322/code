@@ -36,11 +36,20 @@
       "target": "api::payment.payment",
       "mappedBy": "order"
     },
-    "order_item": {
+    "order_items": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "oneToMany",
       "target": "api::order-item.order-item",
-      "inversedBy": "order"
+      "mappedBy": "order"
+    },
+    "shipping_address": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::address.address",
+      "inversedBy": "orders"
+    },
+    "notes": {
+      "type": "text"
     }
   }
 }

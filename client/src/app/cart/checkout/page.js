@@ -1,33 +1,36 @@
+// src/app/cart/checkout/page.js
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
-import { selectCartItems, selectCartTotal } from '@/store/slices/cartSlice'
+import { useSelector, useDispatch } from 'react-redux'
+import {
+	selectCartItems,
+	selectCartTotal,
+	clearCart,
+} from '@/store/slices/cartSlice'
 import { useRouter } from 'next/navigation'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import Link from 'next/link'
-import { ArrowLeft, CreditCard, Truck, ShoppingBag } from 'lucide-react'
+import {
+	ArrowLeft,
+	CreditCard,
+	Truck,
+	ShoppingBag,
+	AlertCircle,
+} from 'lucide-react'
 import AddressSelector from '@/components/address/AddressSelector'
 import { useGetUserQuery } from '@/store/services/authApi'
-
-// // Метаданные для SEO
-// export const metadata = {
-// 	title: 'Оформление заказа | Mat-Focus',
-// 	description:
-// 		'Оформите заказ в интернет-магазине Mat-Focus. Выберите адрес доставки и способ оплаты.',
-// 	openGraph: {
-// 		title: 'Оформление заказа | Mat-Focus',
-// 		description:
-// 			'Оформите заказ в интернет-магазине Mat-Focus. Выберите адрес доставки и способ оплаты.',
-// 		type: 'website',
-// 	},
-// }
+import { useOrderService } from '@/store/services/orderService'
 
 export default function CheckoutPage() {
 	const router = useRouter()
 	const cartItems = useSelector(selectCartItems)
 	const cartTotal = useSelector(selectCartTotal)
 	const { data: user, isLoading: isUserLoading } = useGetUserQuery()
+	const dispatch = useDispatch()
+
+	// Подключаем сервис для работы с заказами
+	const { placeOrder, isCreatingOrder } = useOrderService()
 
 	// Состояния для формы оформления заказа
 	const [selectedAddress, setSelectedAddress] = useState(null)
@@ -35,6 +38,7 @@ export default function CheckoutPage() {
 	const [paymentMethod, setPaymentMethod] = useState(null)
 	const [note, setNote] = useState('')
 	const [isSubmitting, setIsSubmitting] = useState(false)
+	const [error, setError] = useState(null)
 
 	// Доступные способы доставки
 	const deliveryMethods = [
@@ -103,31 +107,53 @@ export default function CheckoutPage() {
 	// Обработчик отправки формы заказа
 	const handleSubmitOrder = async (e) => {
 		if (e) e.preventDefault()
+		setError(null)
 
-		if (!selectedAddress || !deliveryMethod || !paymentMethod) {
-			alert('Пожалуйста, заполните все обязательные поля')
+		if (!selectedAddress) {
+			setError('Пожалуйста, выберите адрес доставки')
+			return
+		}
+
+		if (!deliveryMethod) {
+			setError('Пожалуйста, выберите способ доставки')
+			return
+		}
+
+		if (!paymentMethod) {
+			setError('Пожалуйста, выберите способ оплаты')
 			return
 		}
 
 		setIsSubmitting(true)
 
 		try {
-			// Здесь будет логика отправки заказа на сервер
-			console.log('Оформление заказа', {
+			// Формируем данные для создания заказа
+			const orderData = {
+				shipping_method: deliveryMethod.id,
+				payment_method: paymentMethod.id,
+				shipping_address: selectedAddress.id,
 				items: cartItems,
-				total: cartTotal,
-				address: selectedAddress,
-				delivery: deliveryMethod,
-				payment: paymentMethod,
-				note,
-			})
+				notes: note,
+			}
 
-			// Имитируем успешное оформление заказа
-			setTimeout(() => {
-				router.push('/cart/checkout/success?orderId=12345')
-			}, 1500)
+			// Создаем заказ
+			const result = await placeOrder(orderData)
+
+			if (result.success) {
+				// Очищаем корзину после успешного создания заказа
+				dispatch(clearCart())
+
+				// Перенаправляем на страницу успешного оформления заказа
+				router.push(`/cart/checkout/success?orderId=${result.orderId}`)
+			} else {
+				setError(result.error || 'Произошла ошибка при создании заказа')
+				setIsSubmitting(false)
+			}
 		} catch (error) {
 			console.error('Ошибка при оформлении заказа:', error)
+			setError(
+				'Произошла ошибка при обработке заказа. Пожалуйста, попробуйте позже.'
+			)
 			setIsSubmitting(false)
 		}
 	}
@@ -164,6 +190,20 @@ export default function CheckoutPage() {
 			</div>
 
 			<h1 className="text-2xl font-bold mb-8">Оформление заказа</h1>
+
+			{error && (
+				<div className="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+					<div className="flex items-start">
+						<AlertCircle className="h-5 w-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" />
+						<div>
+							<p className="font-medium text-red-700">
+								Ошибка при оформлении заказа
+							</p>
+							<p className="text-red-600 mt-1">{error}</p>
+						</div>
+					</div>
+				</div>
+			)}
 
 			<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 				{/* Форма оформления заказа */}
@@ -315,12 +355,14 @@ export default function CheckoutPage() {
 							onClick={handleSubmitOrder}
 							disabled={
 								isSubmitting ||
+								isCreatingOrder ||
 								!selectedAddress ||
 								!deliveryMethod ||
 								!paymentMethod
 							}
 							className={`w-full py-3 px-4 rounded-md font-medium text-center transition-colors cursor-pointer ${
 								isSubmitting ||
+								isCreatingOrder ||
 								!selectedAddress ||
 								!deliveryMethod ||
 								!paymentMethod
@@ -328,7 +370,9 @@ export default function CheckoutPage() {
 									: 'bg-secondary-blue text-white hover:bg-blue-700'
 							}`}
 						>
-							{isSubmitting ? 'Оформление...' : 'Подтвердить заказ'}
+							{isSubmitting || isCreatingOrder
+								? 'Оформление...'
+								: 'Подтвердить заказ'}
 						</button>
 
 						<p className="text-xs text-gray-500 mt-3 text-center">

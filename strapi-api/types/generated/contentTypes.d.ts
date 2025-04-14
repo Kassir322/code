@@ -403,6 +403,7 @@ export interface ApiAddressAddress extends Struct.CollectionTypeSchema {
       'api::address.address'
     > &
       Schema.Attribute.Private;
+    orders: Schema.Attribute.Relation<'oneToMany', 'api::order.order'>;
     postal_code: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     recipient_name: Schema.Attribute.String &
@@ -486,14 +487,14 @@ export interface ApiOrderItemOrderItem extends Struct.CollectionTypeSchema {
       'api::order-item.order-item'
     > &
       Schema.Attribute.Private;
-    order: Schema.Attribute.Relation<'oneToOne', 'api::order.order'>;
+    order: Schema.Attribute.Relation<'manyToOne', 'api::order.order'>;
     price: Schema.Attribute.Decimal & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     quantity: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<1>;
     study_card: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'api::study-card.study-card'
     >;
     updatedAt: Schema.Attribute.DateTime;
@@ -520,8 +521,9 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::order.order'> &
       Schema.Attribute.Private;
-    order_item: Schema.Attribute.Relation<
-      'oneToOne',
+    notes: Schema.Attribute.Text;
+    order_items: Schema.Attribute.Relation<
+      'oneToMany',
       'api::order-item.order-item'
     >;
     order_status: Schema.Attribute.String &
@@ -529,6 +531,10 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     payment: Schema.Attribute.Relation<'oneToOne', 'api::payment.payment'>;
     payment_method: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
+    shipping_address: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::address.address'
+    >;
     shipping_method: Schema.Attribute.String;
     total_amount: Schema.Attribute.Decimal & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
@@ -669,8 +675,8 @@ export interface ApiStudyCardStudyCard extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     number_of_cards: Schema.Attribute.Integer;
-    order_item: Schema.Attribute.Relation<
-      'oneToOne',
+    order_items: Schema.Attribute.Relation<
+      'oneToMany',
       'api::order-item.order-item'
     >;
     price: Schema.Attribute.Decimal & Schema.Attribute.Required;

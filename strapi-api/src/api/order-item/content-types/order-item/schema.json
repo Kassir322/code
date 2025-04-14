@@ -22,15 +22,15 @@
     },
     "order": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::order.order",
-      "inversedBy": "order_item"
+      "inversedBy": "order_items"
     },
     "study_card": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::study-card.study-card",
-      "inversedBy": "order_item"
+      "inversedBy": "order_items"
     }
   }
 }
