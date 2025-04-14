@@ -21,10 +21,10 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 	 * }
 	 */
 	async create(ctx) {
-		const data = ctx.request.body
+		const { data } = ctx.request.body
 		console.log(`DATTAAAA: ${JSON.stringify(data)}`)
 		console.log(data.amount)
-		const order = 26
+		const order = 27
 		// const { amount, order, payment_method } = data
 		const { amount, payment_method } = data
 		const user = ctx.state.user

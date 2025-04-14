@@ -143,12 +143,9 @@ export default function CheckoutPage() {
 				// Очищаем корзину после успешного создания заказа
 				// dispatch(clearCart())
 
-				// Перенаправляем на страницу успешного оформления заказа
-				console.log(
-					'Перенаправление на:',
-					`/cart/checkout/success?orderId=${result.orderId}`
-				)
-				router.push(`/cart/checkout/success?orderId=${result.orderId}`)
+				// ИЗМЕНЕНО: Перенаправляем на новую страницу успешного оформления заказа
+				console.log('Перенаправление на:', `/orders/${result.orderId}/success`)
+				router.push(`/orders/${result.orderId}/success`)
 			} else {
 				console.error('Ошибка при создании заказа:', result.error)
 				setError(result.error || 'Произошла ошибка при создании заказа')
