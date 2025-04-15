@@ -18,17 +18,19 @@ export const usePaymentService = () => {
 			const {
 				amount,
 				description,
+				orderId,
 				items,
 				paymentMethod = 'yookassa_redirect',
 			} = orderData
 
 			const payload = {
 				amount,
+				order: orderId,
 				description: description || `Заказ в интернет-магазине Mat-Focus`,
 				payment_method: paymentMethod,
 				metadata: { items },
 			}
-
+			console.log(`PAYLOAD: ${JSON.stringify(payload)}`)
 			const response = await createPayment(payload).unwrap()
 			console.log(response)
 

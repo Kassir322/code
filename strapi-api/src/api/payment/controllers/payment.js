@@ -24,9 +24,9 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 		const { data } = ctx.request.body
 		console.log(`DATTAAAA: ${JSON.stringify(data)}`)
 		console.log(data.amount)
-		const order = 27
-		// const { amount, order, payment_method } = data
-		const { amount, payment_method } = data
+		// const order = 44
+		const { amount, order, payment_method } = data
+		// const { amount, payment_method } = data
 		const user = ctx.state.user
 		console.log(amount, order, payment_method)
 
@@ -58,7 +58,7 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 
 			// Проверяем, что заказ принадлежит пользователю
 			if (orderEntity.user.id !== user.id) {
-				return ctx.forbidden('Access denied to this order')
+				return ctx.forbidden(`Access denied to this order ${order}`)
 			}
 
 			// Проверяем, что заказ еще не оплачен
