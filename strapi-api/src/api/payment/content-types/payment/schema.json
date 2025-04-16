@@ -1,74 +1,64 @@
 {
-  "kind": "collectionType",
-  "collectionName": "payments",
-  "info": {
-    "singularName": "payment",
-    "pluralName": "payments",
-    "displayName": "Payment",
-    "description": ""
-  },
-  "options": {
-    "draftAndPublish": false
-  },
-  "attributes": {
-    "amount": {
-      "type": "decimal",
-      "min": 0,
-      "required": true
-    },
-    "currency": {
-      "type": "enumeration",
-      "enum": [
-        "RUB"
-      ],
-      "default": "RUB",
-      "required": true
-    },
-    "payment_status": {
-      "type": "enumeration",
-      "enum": [
-        "pending",
-        "waiting_for_capture",
-        "succeeded",
-        "canceled"
-      ],
-      "required": true,
-      "default": "pending"
-    },
-    "payment_method": {
-      "type": "enumeration",
-      "enum": [
-        "sbp",
-        "yookassa_redirect"
-      ],
-      "required": true
-    },
-    "yookassa_id": {
-      "type": "string",
-      "unique": true,
-      "required": false,
-      "regex": "^[a-zA-Z0-9-]+$"
-    },
-    "confirmation_url": {
-      "type": "string"
-    },
-    "description": {
-      "type": "text"
-    },
-    "metadata": {
-      "type": "json"
-    },
-    "order": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::order.order",
-      "inversedBy": "payment"
-    },
-    "users_permissions_user": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "payments"
-    }
-  }
+	"kind": "collectionType",
+	"collectionName": "payments",
+	"info": {
+		"singularName": "payment",
+		"pluralName": "payments",
+		"displayName": "Payment",
+		"description": ""
+	},
+	"options": {
+		"draftAndPublish": false
+	},
+	"attributes": {
+		"amount": {
+			"type": "decimal",
+			"min": 0,
+			"required": true
+		},
+		"currency": {
+			"type": "enumeration",
+			"enum": ["RUB"],
+			"default": "RUB",
+			"required": true
+		},
+		"payment_status": {
+			"type": "enumeration",
+			"enum": ["pending", "waiting_for_capture", "succeeded", "canceled"],
+			"required": true,
+			"default": "pending"
+		},
+		"payment_method": {
+			"type": "enumeration",
+			"enum": ["sbp", "yookassa_redirect"],
+			"required": true
+		},
+		"yookassa_id": {
+			"type": "string",
+			"unique": true,
+			"required": false,
+			"regex": "^[a-zA-Z0-9-]+$"
+		},
+		"confirmation_url": {
+			"type": "string"
+		},
+		"description": {
+			"type": "text"
+		},
+		"metadata": {
+			"type": "json"
+		},
+		"order": {
+			"type": "relation",
+			"relation": "oneToOne",
+			"target": "api::order.order",
+			"inversedBy": "payment"
+		},
+		"users_permissions_user": {
+			"type": "relation",
+			"relation": "manyToOne",
+			"target": "plugin::users-permissions.user",
+			"inversedBy": "payments"
+		}
+	}
 }

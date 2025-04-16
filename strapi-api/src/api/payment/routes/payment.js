@@ -15,6 +15,7 @@ module.exports = {
 			handler: 'payment.create',
 			config: {
 				policies: ['global::is-auth'],
+				middlewares: ['api::payment.idempotency'],
 			},
 		},
 		// Получение информации о платеже (только для авторизованных)

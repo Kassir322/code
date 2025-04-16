@@ -20,39 +20,45 @@ module.exports = createStrapi.createCoreService(
 
 		/**
 		 * Создание платежа в ЮKassa
+		 * @param {Object} paymentData - Данные платежа
+		 * @param {string} idempotencyKey - Ключ идемпотентности
 		 */
-		async createYookassaPayment({
-			amount,
-			payment_method,
-			order_id,
-			user_id,
-			return_url,
-		}) {
+		async createYookassaPayment(paymentData, idempotencyKey) {
 			try {
-				// Создаем платеж
+				strapi.log.debug('Creating YooKassa payment', {
+					...paymentData,
+					idempotencyKey,
+				})
+
+				// Создаем платеж с ключом идемпотентности
 				const payment = await this.yooKassa.createPayment(
 					{
 						amount: {
-							value: amount.value,
-							currency: amount.currency,
+							value: paymentData.amount.value,
+							currency: paymentData.amount.currency,
 						},
 						confirmation: {
-							type: payment_method === 'sbp' ? 'qr' : 'redirect',
-							return_url: return_url,
+							type: paymentData.payment_method === 'sbp' ? 'qr' : 'redirect',
+							return_url: paymentData.return_url,
 						},
 						capture: true, // Автоматический захват платежа
-						description: `Оплата заказа #${order_id}`,
+						description: `Оплата заказа #${paymentData.order_id}`,
 						metadata: {
-							order_id: order_id,
-							user_id: user_id,
+							order_id: paymentData.order_id,
+							user_id: paymentData.user_id,
 						},
 					},
-					crypto.randomUUID() // Идемпотентный ключ
+					idempotencyKey // Используем переданный ключ идемпотентности
 				)
+
+				strapi.log.debug('YooKassa payment created', {
+					payment_id: payment.id,
+					status: payment.status,
+				})
 
 				return payment
 			} catch (error) {
-				console.error('YooKassa payment creation error:', error)
+				strapi.log.error('YooKassa payment creation error:', error)
 				throw error
 			}
 		},

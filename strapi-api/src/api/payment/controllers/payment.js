@@ -24,6 +24,7 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 		const { data } = ctx.request.body
 		const { amount, order, payment_method } = data
 		const user = ctx.state.user
+		const idempotencyKey = ctx.state.idempotencyKey
 
 		if (!user) {
 			return ctx.unauthorized('User not authenticated')
@@ -57,19 +58,22 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 				return ctx.badRequest('Order is already paid')
 			}
 
-			// Создаем платеж в ЮKassa
+			// Создаем платеж в ЮKassa с ключом идемпотентности
 			const yookassaPayment = await strapi
 				.service('api::payment.payment')
-				.createYookassaPayment({
-					amount: {
-						value: amount.toFixed(2),
-						currency: 'RUB',
+				.createYookassaPayment(
+					{
+						amount: {
+							value: amount.toFixed(2),
+							currency: 'RUB',
+						},
+						payment_method,
+						order_id: order,
+						user_id: user.id,
+						return_url: `${process.env.FRONTEND_URL}/orders/${order}/success`,
 					},
-					payment_method,
-					order_id: order,
-					user_id: user.id,
-					return_url: `${process.env.FRONTEND_URL}/orders/${order}/success`,
-				})
+					idempotencyKey // Передаем ключ идемпотентности
+				)
 
 			// Создаем запись в нашей БД
 			const payment = await strapi.entityService.create(
@@ -86,6 +90,8 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 						metadata: {
 							order_id: order,
 							user_id: user.id,
+							idempotency_key: idempotencyKey, // Сохраняем ключ в метаданных
+							request_timestamp: new Date().toISOString(), // Сохраняем время запроса
 						},
 						order,
 						users_permissions_user: user.id,
@@ -99,7 +105,7 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 				confirmation_url: yookassaPayment.confirmation.confirmation_url,
 			})
 		} catch (error) {
-			console.error('Payment creation error:', error)
+			strapi.log.error('Payment creation error:', error)
 			ctx.throw(500, error)
 		}
 	},
