@@ -22,21 +22,14 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 	 */
 	async create(ctx) {
 		const { data } = ctx.request.body
-		console.log(`DATTAAAA: ${JSON.stringify(data)}`)
-		console.log(data.amount)
-		// const order = 44
 		const { amount, order, payment_method } = data
-		// const { amount, payment_method } = data
 		const user = ctx.state.user
-		console.log(amount, order, payment_method)
 
 		if (!user) {
 			return ctx.unauthorized('User not authenticated')
 		}
 
 		try {
-			console.log('перед order_items')
-
 			// Проверяем заказ
 			const orderEntity = await strapi.entityService.findOne(
 				'api::order.order',
@@ -45,8 +38,6 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 					populate: ['user', 'order_items'],
 				}
 			)
-
-			console.log('после order_items')
 
 			if (!orderEntity) {
 				return ctx.notFound('Order not found')
@@ -150,19 +141,14 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 	 * @param {Object} ctx - Контекст Koa
 	 */
 	async webhook(ctx) {
-		const { body, headers } = ctx.request
+		const { body } = ctx.request
+		const { event, object: yookassaPayment } = body
 
 		try {
-			// Проверяем подпись вебхука
-			const isValid = await strapi
-				.service('api::payment.payment')
-				.verifyWebhookSignature(body, headers['x-payment-sha256'])
-
-			if (!isValid) {
-				return ctx.forbidden('Invalid webhook signature')
-			}
-
-			const { object: yookassaPayment } = body
+			strapi.log.debug(`Received YooKassa webhook: ${event}`, {
+				payment_id: yookassaPayment.id,
+				status: yookassaPayment.status,
+			})
 
 			// Находим платеж по yookassa_id
 			const payment = await strapi.db.query('api::payment.payment').findOne({
@@ -171,6 +157,7 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 			})
 
 			if (!payment) {
+				strapi.log.error(`Payment not found: ${yookassaPayment.id}`)
 				return ctx.notFound('Payment not found')
 			}
 
@@ -185,22 +172,53 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 				},
 			})
 
-			// Если платеж успешен, обновляем статус заказа
-			if (yookassaPayment.status === 'succeeded') {
-				await strapi.entityService.update(
-					'api::order.order',
-					payment.order.id,
-					{
-						data: {
-							order_status: 'paid',
-						},
-					}
-				)
+			// Обрабатываем различные статусы платежа
+			switch (yookassaPayment.status) {
+				case 'succeeded':
+					// Платеж успешно завершен
+					await strapi.entityService.update(
+						'api::order.order',
+						payment.order.id,
+						{
+							data: {
+								order_status: 'paid',
+							},
+						}
+					)
+					strapi.log.info(`Payment succeeded: ${yookassaPayment.id}`)
+					break
+
+				case 'canceled':
+					// Платеж отменен
+					await strapi.entityService.update(
+						'api::order.order',
+						payment.order.id,
+						{
+							data: {
+								order_status: 'payment_failed',
+							},
+						}
+					)
+					strapi.log.info(`Payment canceled: ${yookassaPayment.id}`)
+					break
+
+				case 'waiting_for_capture':
+					// Платеж ожидает подтверждения
+					strapi.log.info(`Payment waiting for capture: ${yookassaPayment.id}`)
+					break
+
+				default:
+					strapi.log.info(
+						`Payment status updated to ${yookassaPayment.status}: ${yookassaPayment.id}`
+					)
 			}
 
-			return { success: true }
+			// Всегда возвращаем 200 OK
+			return ctx.send({ success: true })
 		} catch (error) {
-			ctx.throw(500, error)
+			strapi.log.error('Webhook processing error:', error)
+			// Всегда возвращаем 200 OK, даже при ошибке
+			return ctx.send({ success: true })
 		}
 	},
 }))

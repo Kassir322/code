@@ -26,13 +26,13 @@ module.exports = {
 				policies: ['global::is-auth'],
 			},
 		},
-		// Вебхук от ЮKassa (публичный доступ)
+		// Вебхук от ЮKassa (с проверкой IP)
 		{
 			method: 'POST',
 			path: '/payments/webhook',
 			handler: 'payment.webhook',
 			config: {
-				policies: [], // Пустой массив для публичного доступа
+				middlewares: ['api::payment.yookassa-ip-filter'],
 			},
 		},
 	],
