@@ -17,13 +17,41 @@ const ALLOWED_IPS = [
 
 const ipRangeCheck = require('ip-range-check')
 
+/**
+ * Получает реальный IP-адрес клиента с учетом прокси
+ * @param {object} ctx - Koa контекст
+ * @returns {string} IP-адрес клиента
+ */
+const getClientIp = (ctx) => {
+	// Проверяем X-Forwarded-For
+	const forwardedIp = ctx.request.get('x-forwarded-for')
+	if (forwardedIp) {
+		// Берем первый IP из списка (самый дальний клиент)
+		return forwardedIp.split(',')[0].trim()
+	}
+
+	// Проверяем X-Real-IP
+	const realIp = ctx.request.get('x-real-ip')
+	if (realIp) {
+		return realIp
+	}
+
+	// Если нет прокси-заголовков, возвращаем обычный IP
+	return ctx.request.ip
+}
+
 module.exports = (config, { strapi }) => {
 	return async (ctx, next) => {
-		const clientIp = ctx.request.ip
+		const clientIp = getClientIp(ctx)
+		console.log('clientIp', clientIp)
 
 		// Пропускаем в dev режиме
 		if (process.env.NODE_ENV === 'development') {
-			strapi.log.debug('YooKassa IP check skipped in development mode')
+			console.log('YooKassa IP check skipped in development mode')
+			console.log(
+				`isAllowed: ${ALLOWED_IPS.some((range) => ipRangeCheck(clientIp, range))}`
+			)
+
 			return await next()
 		}
 

@@ -1,11 +1,17 @@
 ---
 description: 
 globs: 
+alwaysApply: false
+---
+---
+description: Правила разработки
+globs: ["**/*"]
 alwaysApply: true
 ---
 # Правила разработки Mat-Focus
 
 РАБОТУ С КУКАМИ ПРОВОДИТЬ ЧЕРЕЗ cookiesService в файле cookies.js
+НЕ удаляй комментарии, а только дополняй их, в случае чего.
 
 ### Хранение токенов
 

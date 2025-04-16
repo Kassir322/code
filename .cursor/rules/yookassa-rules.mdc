@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: Правила работы с юкассой
+globs: ["**/*"]
+alwaysApply: true
+---
+
+НЕ НАДО реализовать проверку сигнатуры. Мы это делать не будем.
