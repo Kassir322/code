@@ -42,8 +42,6 @@ const testimonials = [
 	},
 ]
 
-export const revalidate = 3600 // Ревалидация каждый час
-
 export default async function Home() {
 	const featuredProducts = await getFeaturedProducts()
 

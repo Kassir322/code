@@ -30,7 +30,8 @@ export async function getAllProducts() {
 		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards`,
 		{
 			headers: await getHeaders(),
-			cache: 'no-store', // Отключаем кэширование для получения актуальных данных
+			cache: 'force-cache',
+			next: { revalidate: 3600 },
 		}
 	)
 	if (!res.ok) {
@@ -162,7 +163,8 @@ export async function getFeaturedProducts() {
 		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards?populate=*&sort=price:asc&pagination[pageSize]=3`,
 		{
 			headers: await getHeaders(),
-			cache: 'no-store',
+			cache: 'force-cache',
+			next: { revalidate: 3600 },
 		}
 	)
 
