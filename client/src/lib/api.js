@@ -152,3 +152,24 @@ function transformStrapiResponse(strapiItem) {
 			: null,
 	}
 }
+
+/**
+ * Получает три самых дешёвых товара для featured секции
+ * @returns {Promise<Array>} Массив из трёх товаров
+ */
+export async function getFeaturedProducts() {
+	const res = await fetch(
+		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards?populate=*&sort=price:asc&pagination[pageSize]=3`,
+		{
+			headers: await getHeaders(),
+			cache: 'no-store',
+		}
+	)
+
+	if (!res.ok) {
+		throw new Error('Ошибка при получении featured товаров')
+	}
+
+	const data = await res.json()
+	return data.data.map(transformStrapiResponse)
+}

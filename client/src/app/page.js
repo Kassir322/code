@@ -8,6 +8,7 @@ import NewsletterSection from '@/components/sections/NewsletterSection'
 import AboutSection from '@/components/sections/AboutSection'
 import LinkButton from '@/components/ui/LinkButton'
 import productMockData from '@/lib/mock-data'
+import { getFeaturedProducts } from '@/lib/api'
 
 // Обновленные примеры товаров для главной страницы с добавлением slug
 const featuredProducts = [
@@ -41,7 +42,11 @@ const testimonials = [
 	},
 ]
 
-export default function Page() {
+export const revalidate = 3600 // Ревалидация каждый час
+
+export default async function Home() {
+	const featuredProducts = await getFeaturedProducts()
+
 	return (
 		<div className="flex flex-col min-h-screen">
 			<main className="flex-grow">
