@@ -38,10 +38,12 @@ export async function getAllProducts() {
 	}
 
 	const data = await res.json()
-	console.log(`DATA OF ALL PRODUCTS`, data)
 
 	return data.data.map(transformStrapiResponse)
 }
+
+// /api/restaurants?filters[id][$in][0]=6&filters[id][$in][1]=8
+// /api/study-cards?filters[category][%eq]=matematika
 
 /**
  * Получает товары по категории
@@ -50,7 +52,7 @@ export async function getAllProducts() {
  */
 export async function getProductsByCategory(categorySlug) {
 	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards?filters[category][slug]=${categorySlug}&populate=*`,
+		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards?populate=*&filters[category][slug][$eq]=${categorySlug}`,
 		{
 			headers: await getHeaders(),
 			cache: 'no-store',
@@ -62,6 +64,8 @@ export async function getProductsByCategory(categorySlug) {
 	}
 
 	const data = await res.json()
+	console.log(`data api.js: ${JSON.stringify(data)}`)
+
 	return data.data.map(transformStrapiResponse)
 }
 
@@ -123,7 +127,6 @@ function transformStrapiResponse(strapiItem) {
 		image,
 		category,
 	} = strapiItem
-	console.log(`STRAPI ITEM`, strapiItem)
 
 	return {
 		id,

@@ -26,6 +26,12 @@
     "is_active": {
       "type": "boolean",
       "default": true
+    },
+    "study_cards": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::study-card.study-card",
+      "mappedBy": "category"
     }
   }
 }

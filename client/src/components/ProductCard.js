@@ -27,7 +27,7 @@ import WishlistNotification from './ui/WishlistNotification'
 export default function ProductCard({ product, variant = 'default' }) {
 	const {
 		id, // Сохраняем id для идентификации в корзине и избранном
-		name,
+		title,
 		price,
 		oldPrice,
 		rating,
@@ -36,6 +36,7 @@ export default function ProductCard({ product, variant = 'default' }) {
 		label,
 		quantity = 5, // По умолчанию считаем, что есть 5 штук в наличии
 	} = product
+	console.log(`product Card.name: ${JSON.stringify(product)}`)
 
 	// Используем slug для построения URL
 	const productSlug = product.slug || id.toString()
@@ -231,7 +232,7 @@ export default function ProductCard({ product, variant = 'default' }) {
 						<div className="h-full w-full relative overflow-hidden">
 							<Image
 								src={'/images/products/card_example2.png'}
-								alt={name}
+								alt={title}
 								fill
 								className="object-contain group-hover:scale-105 transition-transform duration-300"
 							/>
@@ -247,7 +248,7 @@ export default function ProductCard({ product, variant = 'default' }) {
 								variant == 'catalog' ? 'text-lg' : 'text-xl'
 							} mx-auto text-center font-medium text-gray-900 hover:text-primary transition-colors mb-1 line-clamp-2 h-14 w-fit max-w-[290px]`}
 						>
-							{name}
+							{title || 'Название товара'}
 						</h3>
 					</Link>
 

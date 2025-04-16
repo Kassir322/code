@@ -7,8 +7,8 @@ import Link from 'next/link'
 // Категории предметов с правильными URL
 const subjects = [
 	{ name: 'Все предметы', slug: '' }, // Изменено с 'catalog' на пустую строку
-	{ name: 'Математика', slug: 'mathematics' },
-	{ name: 'Русский язык', slug: 'russian-language' },
+	{ name: 'Математика', slug: 'matematika' },
+	{ name: 'Русский язык', slug: 'russkiy-yazik' },
 	{ name: 'Физика', slug: 'physics' },
 	{ name: 'Химия', slug: 'chemistry' },
 	{ name: 'Биология', slug: 'biology' },

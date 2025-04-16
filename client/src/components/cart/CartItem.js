@@ -25,7 +25,7 @@ export default function CartItem({ item }) {
 					<Link href={`/product/${item.id}`}>
 						<Image
 							src="/images/products/card_example2.png"
-							alt={item.name}
+							alt={item.title}
 							fill
 							className="object-contain p-2"
 						/>

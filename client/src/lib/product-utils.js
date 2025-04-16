@@ -6,15 +6,17 @@
 export function filterProducts(products, filters) {
 	return products.filter((product) => {
 		// Фильтр по предмету (категории)
-		if (
-			filters.subject !== 'catalog' &&
-			product.subject.toLowerCase() !== filters.subject.toLowerCase() &&
-			!mapCategoryToSubjects(filters.subject).includes(
-				product.subject.toLowerCase()
-			)
-		) {
-			return false
-		}
+		// if (
+		// 	filters.subject !== 'catalog' &&
+		// 	product.subject?.toLowerCase() !== filters.subject.toLowerCase() &&
+		// 	!mapCategoryToSubjects(filters.subject).includes(
+		// 		product.subject?.toLowerCase()
+		// 	)
+		// ) {
+		// 	console.log(`subject FALSE`)
+
+		// 	return false
+		// }
 
 		// Фильтр по классу
 		if (filters.grade !== 'Все классы' && product.grade !== filters.grade) {
@@ -73,24 +75,24 @@ export function sortProducts(products, sortBy) {
 /**
  * Вспомогательная функция для сопоставления URL категории с темами предметов
  */
-function mapCategoryToSubjects(categorySlug) {
-	const categoryMap = {
-		mathematics: ['математика', 'алгебра', 'геометрия'],
-		'russian-language': ['русский язык'],
-		physics: ['физика'],
-		chemistry: ['химия'],
-		biology: ['биология'],
-		history: ['история'],
-		'social-science': ['обществознание'],
-		'english-language': ['английский язык'],
-		literature: ['литература'],
-		geography: ['география'],
-		informatics: ['информатика'],
-		geometry: ['геометрия'],
-	}
+// function mapCategoryToSubjects(categorySlug) {
+// 	const categoryMap = {
+// 		mathematics: ['математика', 'алгебра', 'геометрия'],
+// 		'russian-language': ['русский язык'],
+// 		physics: ['физика'],
+// 		chemistry: ['химия'],
+// 		biology: ['биология'],
+// 		history: ['история'],
+// 		'social-science': ['обществознание'],
+// 		'english-language': ['английский язык'],
+// 		literature: ['литература'],
+// 		geography: ['география'],
+// 		informatics: ['информатика'],
+// 		geometry: ['геометрия'],
+// 	}
 
-	return categoryMap[categorySlug] || []
-}
+// 	return categoryMap[categorySlug] || []
+// }
 
 /**
  * Возвращает диапазон цен по идентификатору
