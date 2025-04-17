@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-04-16T21:32:37.102Z"
+    "x-generation-date": "2025-04-17T01:06:57.689Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -6013,12 +6013,6 @@
                                         }
                                       }
                                     },
-                                    "subject": {
-                                      "type": "string"
-                                    },
-                                    "card_type": {
-                                      "type": "string"
-                                    },
                                     "is_active": {
                                       "type": "boolean"
                                     },
@@ -6126,6 +6120,14 @@
                                           }
                                         }
                                       }
+                                    },
+                                    "card_type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "Вопрос-ответ",
+                                        "Шпаргалки",
+                                        "Комбинированный"
+                                      ]
                                     },
                                     "createdAt": {
                                       "type": "string",
@@ -7249,12 +7251,6 @@
                     }
                   }
                 },
-                "subject": {
-                  "type": "string"
-                },
-                "card_type": {
-                  "type": "string"
-                },
                 "is_active": {
                   "type": "boolean"
                 },
@@ -8039,6 +8035,14 @@
                       }
                     }
                   }
+                },
+                "card_type": {
+                  "type": "string",
+                  "enum": [
+                    "Вопрос-ответ",
+                    "Шпаргалки",
+                    "Комбинированный"
+                  ]
                 },
                 "createdAt": {
                   "type": "string",
@@ -9374,12 +9378,6 @@
                                         }
                                       }
                                     },
-                                    "subject": {
-                                      "type": "string"
-                                    },
-                                    "card_type": {
-                                      "type": "string"
-                                    },
                                     "is_active": {
                                       "type": "boolean"
                                     },
@@ -9487,6 +9485,14 @@
                                           }
                                         }
                                       }
+                                    },
+                                    "card_type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "Вопрос-ответ",
+                                        "Шпаргалки",
+                                        "Комбинированный"
+                                      ]
                                     },
                                     "createdAt": {
                                       "type": "string",
@@ -11187,12 +11193,6 @@
                             }
                           }
                         },
-                        "subject": {
-                          "type": "string"
-                        },
-                        "card_type": {
-                          "type": "string"
-                        },
                         "is_active": {
                           "type": "boolean"
                         },
@@ -11300,6 +11300,14 @@
                               }
                             }
                           }
+                        },
+                        "card_type": {
+                          "type": "string",
+                          "enum": [
+                            "Вопрос-ответ",
+                            "Шпаргалки",
+                            "Комбинированный"
+                          ]
                         },
                         "createdAt": {
                           "type": "string",
@@ -12877,12 +12885,6 @@
                             }
                           }
                         },
-                        "subject": {
-                          "type": "string"
-                        },
-                        "card_type": {
-                          "type": "string"
-                        },
                         "is_active": {
                           "type": "boolean"
                         },
@@ -12990,6 +12992,14 @@
                               }
                             }
                           }
+                        },
+                        "card_type": {
+                          "type": "string",
+                          "enum": [
+                            "Вопрос-ответ",
+                            "Шпаргалки",
+                            "Комбинированный"
+                          ]
                         },
                         "createdAt": {
                           "type": "string",
@@ -13980,12 +13990,6 @@
                   }
                 }
               },
-              "subject": {
-                "type": "string"
-              },
-              "card_type": {
-                "type": "string"
-              },
               "is_active": {
                 "type": "boolean"
               },
@@ -14771,6 +14775,14 @@
                   }
                 }
               },
+              "card_type": {
+                "type": "string",
+                "enum": [
+                  "Вопрос-ответ",
+                  "Шпаргалки",
+                  "Комбинированный"
+                ]
+              },
               "createdAt": {
                 "type": "string",
                 "format": "date-time"
@@ -14988,7 +15000,8 @@
             "required": [
               "title",
               "price",
-              "slug"
+              "slug",
+              "card_type"
             ],
             "type": "object",
             "properties": {
@@ -15022,12 +15035,6 @@
                   "example": "string or id"
                 }
               },
-              "subject": {
-                "type": "string"
-              },
-              "card_type": {
-                "type": "string"
-              },
               "is_active": {
                 "type": "boolean"
               },
@@ -15058,6 +15065,14 @@
                   ],
                   "example": "string or id"
                 }
+              },
+              "card_type": {
+                "type": "string",
+                "enum": [
+                  "Вопрос-ответ",
+                  "Шпаргалки",
+                  "Комбинированный"
+                ]
               },
               "locale": {
                 "type": "string"
@@ -15120,7 +15135,8 @@
         "required": [
           "title",
           "price",
-          "slug"
+          "slug",
+          "card_type"
         ],
         "properties": {
           "id": {
@@ -15746,12 +15762,6 @@
               }
             }
           },
-          "subject": {
-            "type": "string"
-          },
-          "card_type": {
-            "type": "string"
-          },
           "is_active": {
             "type": "boolean"
           },
@@ -15934,12 +15944,6 @@
                           }
                         }
                       }
-                    },
-                    "subject": {
-                      "type": "string"
-                    },
-                    "card_type": {
-                      "type": "string"
                     },
                     "is_active": {
                       "type": "boolean"
@@ -16649,6 +16653,14 @@
                         }
                       }
                     },
+                    "card_type": {
+                      "type": "string",
+                      "enum": [
+                        "Вопрос-ответ",
+                        "Шпаргалки",
+                        "Комбинированный"
+                      ]
+                    },
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -16772,6 +16784,14 @@
                 }
               }
             }
+          },
+          "card_type": {
+            "type": "string",
+            "enum": [
+              "Вопрос-ответ",
+              "Шпаргалки",
+              "Комбинированный"
+            ]
           },
           "createdAt": {
             "type": "string",

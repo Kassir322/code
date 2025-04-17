@@ -4,23 +4,6 @@
 import { Filter, X } from 'lucide-react'
 import Link from 'next/link'
 
-// Категории предметов с правильными URL
-const subjects = [
-	{ name: 'Все предметы', slug: '' }, // Изменено с 'catalog' на пустую строку
-	{ name: 'Математика', slug: 'matematika' },
-	{ name: 'Русский язык', slug: 'russkiy-yazik' },
-	{ name: 'Физика', slug: 'physics' },
-	{ name: 'Химия', slug: 'chemistry' },
-	{ name: 'Биология', slug: 'biology' },
-	{ name: 'История', slug: 'history' },
-	{ name: 'Обществознание', slug: 'social-science' },
-	{ name: 'Английский язык', slug: 'english-language' },
-	{ name: 'Литература', slug: 'literature' },
-	{ name: 'География', slug: 'geography' },
-	{ name: 'Информатика', slug: 'informatics' },
-	{ name: 'Геометрия', slug: 'geometry' },
-]
-
 // Классы
 const grades = [
 	'Все классы',
@@ -45,6 +28,7 @@ const priceRanges = [
 ]
 
 export default function FiltersPanel({
+	categories,
 	categorySlug,
 	selectedGrade,
 	setSelectedGrade,
@@ -58,6 +42,15 @@ export default function FiltersPanel({
 	showMobileFilter,
 	setShowMobileFilter,
 }) {
+	// Преобразуем категории в формат для отображения
+	const subjects = [
+		{ name: 'Все предметы', slug: '' },
+		...(categories?.map((category) => ({
+			name: category.name,
+			slug: category.slug,
+		})) || []),
+	]
+
 	// Находим активную категорию, используя пустую строку для "Все предметы"
 	const activeSubject =
 		subjects.find(

@@ -1,0 +1,31 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+При написании функций для обращения к API используй данную функцию, как эталон для преобразования полученных данных:
+function transformCategoryResponse(categoryItem) {
+	const { id, name, slug, description, is_active } = categoryItem
+	return {
+		id,
+		name,
+		slug,
+		description,
+		isActive: is_active,
+	}
+}
+
+Вот пример плохой функции, которая не работает:
+function transformCategoryResponse(categoryItem) {
+	const { id, attributes } = categoryItem
+	return {
+		id,
+		name: attributes.name,
+		slug: attributes.slug,
+		description: attributes.description,
+		isActive: attributes.is_active
+	}
+}
+
+Вывод данного правила: у нас нет attributes в теле ответа от api
+==================================================================

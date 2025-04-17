@@ -1,7 +1,11 @@
 // src/app/catalog/[[...slug]]/page.js
 import CatalogView from '@/components/catalog/CatalogView'
 import { getSeoTextForCategory } from '@/lib/seo-helpers'
-import { getProductsByCategory, getAllProducts } from '@/lib/api'
+import {
+	getProductsByCategory,
+	getAllProducts,
+	getAllCategories,
+} from '@/lib/api'
 import Breadcrumbs from '@/components/Breadcrumbs'
 
 export async function generateMetadata({ params }) {
@@ -25,6 +29,10 @@ export default async function CatalogPage({ params, searchParams }) {
 	console.log(`categorySlug page.js: ${categorySlug}`)
 
 	const search_Params = await searchParams
+
+	// Получаем все категории
+	const categories = await getAllCategories()
+
 	// Получаем данные о категории и товарах
 	const products =
 		categorySlug === 'catalog'
@@ -68,6 +76,7 @@ export default async function CatalogPage({ params, searchParams }) {
 			{/* Основной компонент каталога (клиентский) */}
 			<CatalogView
 				products={products}
+				categories={categories}
 				categorySlug={categorySlug}
 				initialSort={initialSort}
 				initialPage={initialPage}

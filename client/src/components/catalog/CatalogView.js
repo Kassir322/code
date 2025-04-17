@@ -14,6 +14,7 @@ import SchemaOrg from '@/components/SchemaOrg'
 
 export default function CatalogView({
 	products,
+	categories,
 	categorySlug,
 	initialSort = 'popular',
 	initialPage = 1,
@@ -159,6 +160,7 @@ export default function CatalogView({
 			<div className="flex flex-col md:flex-row gap-6">
 				{/* Фильтры */}
 				<FiltersPanel
+					categories={categories}
 					categorySlug={categorySlug}
 					selectedGrade={selectedGrade}
 					setSelectedGrade={setSelectedGrade}

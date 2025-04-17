@@ -175,3 +175,41 @@ export async function getFeaturedProducts() {
 	const data = await res.json()
 	return data.data.map(transformStrapiResponse)
 }
+
+/**
+ * Получает все категории
+ * @returns {Promise<Array>} Массив категорий
+ */
+export async function getAllCategories() {
+	const res = await fetch(
+		`${process.env.NEXT_PUBLIC_API_URL}/api/categories?populate=*`,
+		{
+			headers: await getHeaders(),
+			cache: 'force-cache',
+			next: { revalidate: 3600 },
+		}
+	)
+
+	if (!res.ok) {
+		throw new Error('Ошибка при получении категорий')
+	}
+
+	const data = await res.json()
+	return data.data.map(transformCategoryResponse)
+}
+
+/**
+ * Трансформирует ответ категории от Strapi
+ * @param {Object} categoryItem - Элемент категории из ответа Strapi
+ * @returns {Object} Трансформированный объект категории
+ */
+function transformCategoryResponse(categoryItem) {
+	const { id, name, slug, description, is_active } = categoryItem
+	return {
+		id,
+		name,
+		slug,
+		description,
+		isActive: is_active,
+	}
+}

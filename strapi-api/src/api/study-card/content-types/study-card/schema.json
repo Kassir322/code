@@ -38,12 +38,6 @@
         "videos"
       ]
     },
-    "subject": {
-      "type": "string"
-    },
-    "card_type": {
-      "type": "string"
-    },
     "is_active": {
       "type": "boolean",
       "default": true
@@ -64,6 +58,16 @@
       "relation": "oneToMany",
       "target": "api::order-item.order-item",
       "mappedBy": "study_card"
+    },
+    "card_type": {
+      "type": "enumeration",
+      "enum": [
+        "Вопрос-ответ",
+        "Шпаргалки",
+        "Комбинированный"
+      ],
+      "required": true,
+      "default": "Вопрос-ответ"
     }
   }
 }
