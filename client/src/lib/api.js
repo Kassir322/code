@@ -65,7 +65,6 @@ export async function getProductsByCategory(categorySlug) {
 	}
 
 	const data = await res.json()
-	console.log(`data api.js: ${JSON.stringify(data)}`)
 
 	return data.data.map(transformStrapiResponse)
 }

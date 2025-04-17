@@ -10,14 +10,12 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 
 export async function generateMetadata({ params }) {
 	const { slug } = await params
-
-	// Используем "catalog" как дефолтное значение для пустого slug
 	const categorySlug = slug?.[0] || 'catalog'
+	const seoText = getSeoTextForCategory(categorySlug)
 
 	return {
-		categorySlug,
-		title: getSeoTextForCategory(categorySlug).title,
-		description: getSeoTextForCategory(categorySlug).description,
+		title: seoText.title,
+		description: seoText.description,
 	}
 }
 
@@ -29,8 +27,9 @@ export default async function CatalogPage({ params, searchParams }) {
 
 	const search_Params = await searchParams
 
-	// Получаем все категории
+	// Получаем все категории и находим текущую
 	const categories = await getAllCategories()
+	const currentCategory = categories.find((cat) => cat.slug === categorySlug)
 
 	// Получаем данные о категории и товарах
 	const products =
@@ -41,15 +40,15 @@ export default async function CatalogPage({ params, searchParams }) {
 	// Получаем SEO текст для данной категории
 	const seoText = getSeoTextForCategory(categorySlug)
 
-	// Получаем данные для хлебных крошек
+	// Формируем хлебные крошки
 	const breadcrumbItems = [
 		{ name: 'Главная', url: '/' },
 		{ name: 'Каталог', url: '/catalog' },
 	]
 
-	if (categorySlug !== 'catalog') {
+	if (categorySlug !== 'catalog' && currentCategory) {
 		breadcrumbItems.push({
-			name: seoText.title,
+			name: currentCategory.name,
 			url: `/catalog/${categorySlug}`,
 		})
 	}

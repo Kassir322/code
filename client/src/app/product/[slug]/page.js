@@ -61,6 +61,7 @@ export async function generateMetadata({ params }) {
 export default async function ProductPage({ params }) {
 	const { slug } = await params
 	const product = await getProductBySlugServer(slug)
+	console.log('Product category:', JSON.stringify(product?.category, null, 2))
 
 	if (!product) {
 		notFound()
@@ -72,6 +73,7 @@ export default async function ProductPage({ params }) {
 		{ name: 'Каталог', url: '/catalog' },
 	]
 
+	// Добавляем категорию только если она существует
 	if (product.category) {
 		breadcrumbItems.push({
 			name: product.category.name,
@@ -79,9 +81,10 @@ export default async function ProductPage({ params }) {
 		})
 	}
 
+	// Добавляем текущий продукт
 	breadcrumbItems.push({
 		name: product.title,
-		url: `/product/${slug}`,
+		url: `/product/${product.slug}`,
 	})
 
 	// Создаем схемы для микроразметки

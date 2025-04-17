@@ -3,7 +3,7 @@
 import { Star, AlertCircle, CheckCircle, Clock, Info } from 'lucide-react'
 
 export default function ProductInfo({ product }) {
-	console.log(product)
+	console.log(`productInfo: ${JSON.stringify(product)}`)
 
 	const {
 		title,
@@ -12,14 +12,11 @@ export default function ProductInfo({ product }) {
 		rating = 4.5,
 		reviewCount = 0,
 		category,
-		card_type,
+		cardType,
 		quantity = 5,
 		numberOfCards,
 		grades,
 	} = product
-
-	console.log(`productInfo grades: ${JSON.stringify(grades)}`)
-	grades.map((grade, i) => console.log(JSON.stringify(grade), i))
 
 	// Определение статуса наличия товара
 	const getStockStatus = (quantity) => {
@@ -92,7 +89,7 @@ export default function ProductInfo({ product }) {
 			<div className="grid grid-cols-2 md:gap-4 gap-2 mb-6">
 				<div className="flex items-center">
 					<span className="text-gray-500 mr-2">Предмет:</span>
-					<span className="font-medium">{category || 'Не указан'}</span>
+					<span className="font-medium">{category?.name || 'Не указан'}</span>
 				</div>
 
 				{/* <div className="flex items-center">
@@ -114,7 +111,7 @@ export default function ProductInfo({ product }) {
 
 				<div className="flex items-center">
 					<span className="text-gray-500 mr-2">Тип:</span>
-					<span className="font-medium">{card_type || 'Не указан'}</span>
+					<span className="font-medium">{cardType || 'Не указан'}</span>
 				</div>
 
 				<div className="flex items-center">

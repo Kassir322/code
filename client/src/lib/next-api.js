@@ -96,9 +96,22 @@ function transformStrapiResponse(strapiItem) {
 		grades,
 	} = strapiItem
 
-	// grades.map((grade) => console.log(grade))
-
-	return {
+	// console.log('strapiItem', {
+	// 	id,
+	// 	title,
+	// 	description,
+	// 	price,
+	// 	quantity,
+	// 	number_of_cards,
+	// 	subject,
+	// 	card_type,
+	// 	is_active,
+	// 	slug,
+	// 	image,
+	// 	category,
+	// 	grades,
+	// })
+	const obj = {
 		id,
 		title,
 		description,
@@ -114,13 +127,22 @@ function transformStrapiResponse(strapiItem) {
 				url: img.url,
 				alt: img.alternativeText || title,
 			})) || [],
-		category: category ? category.name : null,
+		category: category
+			? {
+					name: category.name,
+					slug: category.slug,
+			  }
+			: null,
 		// grade: grade ? grade.name : null,
 		grades:
 			grades?.map((grade) => ({
 				displayName: grade.display_name,
 			})) || [],
 	}
+
+	console.log(`obj: ${JSON.stringify(obj)}`)
+
+	return obj
 }
 
 /**
