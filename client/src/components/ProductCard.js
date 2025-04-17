@@ -36,7 +36,6 @@ export default function ProductCard({ product, variant = 'default' }) {
 		label,
 		quantity = 5, // По умолчанию считаем, что есть 5 штук в наличии
 	} = product
-	console.log(`product Card.name: ${JSON.stringify(product)}`)
 
 	// Используем slug для построения URL
 	const productSlug = product.slug || id.toString()

@@ -3,17 +3,23 @@
 import { Star, AlertCircle, CheckCircle, Clock, Info } from 'lucide-react'
 
 export default function ProductInfo({ product }) {
+	console.log(product)
+
 	const {
-		name,
+		title,
 		price,
 		oldPrice,
 		rating = 4.5,
 		reviewCount = 0,
-		subject,
+		category,
 		card_type,
 		quantity = 5,
-		number_of_cards,
+		numberOfCards,
+		grades,
 	} = product
+
+	console.log(`productInfo grades: ${JSON.stringify(grades)}`)
+	grades.map((grade, i) => console.log(JSON.stringify(grade), i))
 
 	// Определение статуса наличия товара
 	const getStockStatus = (quantity) => {
@@ -67,7 +73,7 @@ export default function ProductInfo({ product }) {
 	return (
 		<>
 			{/* Название товара */}
-			<h1 className="text-3xl font-bold mb-2">{name}</h1>
+			<h1 className="text-3xl font-bold mb-2">{title}</h1>
 
 			{/* Рейтинг */}
 			<div className="mb-4">{renderRating(rating)}</div>
@@ -86,12 +92,24 @@ export default function ProductInfo({ product }) {
 			<div className="grid grid-cols-2 md:gap-4 gap-2 mb-6">
 				<div className="flex items-center">
 					<span className="text-gray-500 mr-2">Предмет:</span>
-					<span className="font-medium">{subject || 'Не указан'}</span>
+					<span className="font-medium">{category || 'Не указан'}</span>
 				</div>
+
+				{/* <div className="flex items-center">
+					<span className="text-gray-500 mr-2">Класс:</span>
+					<span className="font-medium">{product.grade || 'Не указан'}</span>
+				</div> */}
 
 				<div className="flex items-center">
 					<span className="text-gray-500 mr-2">Класс:</span>
-					<span className="font-medium">{product.grade || 'Не указан'}</span>
+					{grades.map((grade, i) => (
+						<span
+							key={i}
+							className="font-medium text-white bg-secondary-blue rounded-md m-0.5 p-1 px-2"
+						>
+							{grade.displayName || 'Не указан'}
+						</span>
+					))}
 				</div>
 
 				<div className="flex items-center">
@@ -101,7 +119,7 @@ export default function ProductInfo({ product }) {
 
 				<div className="flex items-center">
 					<span className="text-gray-500 mr-2">Количество карточек:</span>
-					<span className="font-medium">{number_of_cards || 'Не указано'}</span>
+					<span className="font-medium">{numberOfCards || 'Не указано'}</span>
 				</div>
 			</div>
 

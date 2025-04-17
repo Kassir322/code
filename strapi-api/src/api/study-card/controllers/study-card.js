@@ -11,13 +11,17 @@ module.exports = createCoreController(
 	({ strapi }) => ({
 		async findOne(ctx) {
 			const { id } = ctx.params
+			const { populate } = ctx.query
 
 			// Пытаемся найти по числовому id
 			const numericId = parseInt(id, 10)
 			if (!isNaN(numericId)) {
 				const studyCard = await strapi.entityService.findOne(
 					'api::study-card.study-card',
-					numericId
+					numericId,
+					{
+						populate: populate || ['category'],
+					}
 				)
 
 				if (!studyCard) {

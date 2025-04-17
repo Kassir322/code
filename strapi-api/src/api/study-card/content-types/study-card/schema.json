@@ -68,6 +68,12 @@
       ],
       "required": true,
       "default": "Вопрос-ответ"
+    },
+    "grades": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::grade.grade",
+      "mappedBy": "study_cards"
     }
   }
 }

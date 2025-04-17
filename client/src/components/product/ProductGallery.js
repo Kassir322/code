@@ -3,20 +3,20 @@
 import { useState } from 'react'
 import Image from 'next/image'
 
-export default function ProductGallery({ product }) {
+export default function ProductGallery({ oldPrice, images, title }) {
 	const [selectedImage, setSelectedImage] = useState(0)
 
 	// В реальном приложении изображения будут загружаться из API
 	// Здесь мы создаем заглушку для демонстрации
 	const productImages = [
-		{ src: '/images/products/card_example2.png', alt: product.name },
+		{ src: '/images/products/card_example2.png', alt: title },
 		{
 			src: '/images/products/card_example2.png',
-			alt: `${product.name} (вид сбоку)`,
+			alt: `${title} (вид сбоку)`,
 		},
 		{
 			src: '/images/products/card_example2.png',
-			alt: `${product.name} (в использовании)`,
+			alt: `${title} (в использовании)`,
 		},
 	]
 
@@ -25,15 +25,15 @@ export default function ProductGallery({ product }) {
 			{/* Основное изображение */}
 			<div className="relative bg-neutral-03 rounded-lg overflow-hidden mb-4 aspect-[993/1347] max-h-[570px]">
 				{/* Лейбл скидки, если есть */}
-				{product.oldPrice && (
+				{oldPrice && (
 					<div className="absolute top-4 left-4 z-10 bg-red-500 text-white px-3 py-1 text-sm font-semibold rounded-md">
-						{Math.round((1 - product.price / product.oldPrice) * 100)}% скидка
+						{Math.round((1 - price / oldPrice) * 100)}% скидка
 					</div>
 				)}
 
 				<Image
 					src={
-						product.image?.data?.[0]?.attributes?.url ||
+						images?.data?.[0]?.attributes?.url ||
 						productImages[selectedImage].src
 					}
 					alt={productImages[selectedImage].alt}

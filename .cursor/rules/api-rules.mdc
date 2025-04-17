@@ -3,7 +3,7 @@ description:
 globs: 
 alwaysApply: true
 ---
-При написании функций для обращения к API используй данную функцию, как эталон для преобразования полученных данных:
+Не используй attributes при трансформировании данных из бэка. У нас нет attributes в теле ответа! При написании функций для обращения к API используй данную функцию, как эталон для преобразования полученных данных:
 function transformCategoryResponse(categoryItem) {
 	const { id, name, slug, description, is_active } = categoryItem
 	return {
@@ -28,4 +28,49 @@ function transformCategoryResponse(categoryItem) {
 }
 
 Вывод данного правила: у нас нет attributes в теле ответа от api
-==================================================================
+
+# Работа с API ключами
+
+В проекте используется два типа API ключей для разных целей:
+
+1. **Пользовательский токен**
+   - Хранится в httpOnly cookies
+   - Используется для авторизованных запросов от клиента
+   - Имеет полный доступ к API в соответствии с правами пользователя
+   - Работает через `api.js`
+
+2. **Серверный API ключ (STRAPI_API_KEY)**
+   - Используется только на сервере для статической генерации
+   - Имеет ограниченные права только на чтение публичных данных:
+     - study-cards: find, findOne
+     - categories: find, findOne
+     - reviews: find, findOne
+   - Работает через `next-api.js`
+   - Используется в generateStaticParams и других серверных функциях
+   - Не доступен на клиенте
+
+## Правила использования API ключей
+
+1. Для клиентских запросов всегда использовать `api.js`
+2. Для серверной генерации (generateStaticParams, generateMetadata) использовать `next-api.js`
+3. Никогда не использовать STRAPI_API_KEY на клиенте
+4. Всегда использовать трансформацию данных через соответствующие функции
+
+## Пример правильного использования:
+
+```javascript
+// Клиентский запрос (api.js)
+export async function getProduct(id) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards/${id}`, {
+    headers: getHeaders() // Использует токен из cookies
+  })
+  return transformResponse(res)
+}
+
+// Серверный запрос (next-api.js)
+export async function getProductServer(id) {
+  const res = await fetch(`${process.env.STRAPI_API_URL}/api/study-cards/${id}`, {
+    headers: getServerHeaders() // Использует STRAPI_API_KEY
+  })
+  return transformResponse(res)
+}

@@ -26,7 +26,6 @@ export default async function CatalogPage({ params, searchParams }) {
 
 	// Получаем slug категории из URL или устанавливаем дефолтное значение
 	const categorySlug = slug?.[0] || 'catalog'
-	console.log(`categorySlug page.js: ${categorySlug}`)
 
 	const search_Params = await searchParams
 
@@ -38,7 +37,6 @@ export default async function CatalogPage({ params, searchParams }) {
 		categorySlug === 'catalog'
 			? await getAllProducts()
 			: await getProductsByCategory(categorySlug)
-	console.log(`products page.js: ${JSON.stringify(products)}`)
 
 	// Получаем SEO текст для данной категории
 	const seoText = getSeoTextForCategory(categorySlug)

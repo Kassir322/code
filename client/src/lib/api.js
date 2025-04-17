@@ -96,7 +96,8 @@ export async function getProductBySlug(slug) {
 		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards?filters[slug]=${slug}&populate=*`,
 		{
 			headers: await getHeaders(),
-			cache: 'no-store',
+			cache: 'force-cache',
+			next: { revalidate: 3600 },
 		}
 	)
 
