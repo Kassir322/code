@@ -446,6 +446,7 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    banner: Schema.Attribute.Media<'images'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -457,6 +458,15 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
       'api::category.category'
     > &
       Schema.Attribute.Private;
+    meta_description: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 160;
+      }>;
+    meta_keywords: Schema.Attribute.String;
+    meta_title: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     slug: Schema.Attribute.UID<'name'> & Schema.Attribute.Required;
@@ -564,6 +574,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    cancellation_reason: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -584,8 +595,11 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
       'manyToOne',
       'api::address.address'
     >;
-    shipping_method: Schema.Attribute.String;
+    shipping_method: Schema.Attribute.Enumeration<
+      ['courier', 'post', 'pickup']
+    >;
     total_amount: Schema.Attribute.Decimal & Schema.Attribute.Required;
+    tracking_number: Schema.Attribute.String;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -732,6 +746,15 @@ export interface ApiStudyCardStudyCard extends Struct.CollectionTypeSchema {
       'api::study-card.study-card'
     > &
       Schema.Attribute.Private;
+    meta_description: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 160;
+      }>;
+    meta_keywords: Schema.Attribute.String;
+    meta_title: Schema.Attribute.String &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 60;
+      }>;
     number_of_cards: Schema.Attribute.Integer;
     order_items: Schema.Attribute.Relation<
       'oneToMany',
@@ -740,7 +763,15 @@ export interface ApiStudyCardStudyCard extends Struct.CollectionTypeSchema {
     price: Schema.Attribute.Decimal & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
     quantity: Schema.Attribute.Integer;
+    related_cards: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::study-card.study-card'
+    >;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
+    study_cards: Schema.Attribute.Relation<
+      'manyToMany',
+      'api::study-card.study-card'
+    >;
     title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &

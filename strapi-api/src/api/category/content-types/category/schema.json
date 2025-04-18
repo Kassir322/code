@@ -32,6 +32,25 @@
       "relation": "oneToMany",
       "target": "api::study-card.study-card",
       "mappedBy": "category"
+    },
+    "meta_title": {
+      "type": "string",
+      "maxLength": 60
+    },
+    "meta_description": {
+      "type": "string",
+      "required": false,
+      "maxLength": 160
+    },
+    "meta_keywords": {
+      "type": "string"
+    },
+    "banner": {
+      "allowedTypes": [
+        "images"
+      ],
+      "type": "media",
+      "multiple": false
     }
   }
 }

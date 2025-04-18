@@ -22,9 +22,6 @@
     "payment_method": {
       "type": "string"
     },
-    "shipping_method": {
-      "type": "string"
-    },
     "user": {
       "type": "relation",
       "relation": "oneToOne",
@@ -50,6 +47,20 @@
     },
     "notes": {
       "type": "text"
+    },
+    "tracking_number": {
+      "type": "string"
+    },
+    "shipping_method": {
+      "type": "enumeration",
+      "enum": [
+        "courier",
+        "post",
+        "pickup"
+      ]
+    },
+    "cancellation_reason": {
+      "type": "string"
     }
   }
 }
