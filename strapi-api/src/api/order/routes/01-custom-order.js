@@ -11,7 +11,7 @@ module.exports = {
 			path: '/orders/me',
 			handler: 'order.findMe',
 			config: {
-				policies: ['global::is-auth'], // Предполагается, что у вас есть политика для проверки авторизации
+				policies: ['api::order.is-auth'], // Предполагается, что у вас есть политика для проверки авторизации
 			},
 		},
 	],

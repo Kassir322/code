@@ -9,222 +9,358 @@ const { createCoreController } = require('@strapi/strapi').factories
 module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 	/**
 	 * Создание платежа
-	 * @param {Object} ctx - Контекст Koa
-	 * @example
-	 * // Тело запроса для создания платежа:
-	 * {
-	 *   "data": {
-	 *     "amount": 1500,
-	 *     "order": 1,
-	 *     "payment_method": "yookassa_redirect"
-	 *   }
-	 * }
 	 */
 	async create(ctx) {
-		const { data } = ctx.request.body
-		const { amount, order, payment_method } = data
-		const user = ctx.state.user
-		const idempotencyKey = ctx.state.idempotencyKey
-
-		if (!user) {
-			return ctx.unauthorized('User not authenticated')
-		}
-
 		try {
-			// Проверяем заказ
-			const orderEntity = await strapi.entityService.findOne(
-				'api::order.order',
+			console.log('create payment data: ', ctx.request.body)
+
+			const { order, amount, payment_method } = ctx.request.body.data
+			const user = ctx.state.user
+
+			if (!user) {
+				return ctx.unauthorized('Необходима авторизация')
+			}
+
+			// Генерируем ключ идемпотентности
+			const idempotencyKey = crypto.randomUUID()
+
+			const paymentData = {
 				order,
-				{
-					populate: ['user', 'order_items'],
-				}
-			)
-
-			if (!orderEntity) {
-				return ctx.notFound('Order not found')
+				amount: {
+					value: amount,
+					currency: 'RUB',
+				},
+				payment_method,
+				return_url: `${process.env.FRONTEND_URL}/orders/${order}/success`,
+				user_id: user.id,
 			}
 
-			if (!orderEntity.user) {
-				return ctx.badRequest('Order has no associated user')
-			}
-
-			// Проверяем, что заказ принадлежит пользователю
-			if (orderEntity.user.id !== user.id) {
-				return ctx.forbidden(`Access denied to this order ${order}`)
-			}
-
-			// Проверяем, что заказ еще не оплачен
-			if (orderEntity.order_status === 'paid') {
-				return ctx.badRequest('Order is already paid')
-			}
-
-			// Создаем платеж в ЮKassa с ключом идемпотентности
-			const yookassaPayment = await strapi
+			const result = await strapi
 				.service('api::payment.payment')
-				.createYookassaPayment(
-					{
-						amount: {
-							value: amount.toFixed(2),
-							currency: 'RUB',
-						},
-						payment_method,
-						order_id: order,
-						user_id: user.id,
-						return_url: `${process.env.FRONTEND_URL}/orders/${order}/success`,
-					},
-					idempotencyKey // Передаем ключ идемпотентности
-				)
+				.createYookassaPayment(paymentData, idempotencyKey)
 
-			// Создаем запись в нашей БД
+			if (result.error) {
+				console.log(`ошибочка вот тут 1`)
+
+				return ctx.badRequest(result.error)
+			}
+
+			// Создаем запись в БД
 			const payment = await strapi.entityService.create(
 				'api::payment.payment',
 				{
 					data: {
+						yookassa_id: result.id,
+						order: order,
 						amount,
-						currency: 'RUB',
-						payment_status: 'pending',
-						payment_method,
-						yookassa_id: yookassaPayment.id,
-						confirmation_url: yookassaPayment.confirmation.confirmation_url,
-						description: `Оплата заказа #${order}`,
-						metadata: {
-							order_id: order,
-							user_id: user.id,
-							idempotency_key: idempotencyKey, // Сохраняем ключ в метаданных
-							request_timestamp: new Date().toISOString(), // Сохраняем время запроса
-						},
-						order,
+						status: result.status,
 						users_permissions_user: user.id,
 						publishedAt: new Date(),
+						payment_method: payment_method,
 					},
 				}
 			)
 
+			// Возвращаем платеж с URL для перенаправления
 			return this.transformResponse({
 				...payment,
-				confirmation_url: yookassaPayment.confirmation.confirmation_url,
+				confirmation_url: result.confirmation.confirmation_url,
 			})
 		} catch (error) {
-			strapi.log.error('Payment creation error:', error)
-			ctx.throw(500, error)
+			console.error('Ошибка создания платежа:', error)
+			return ctx.badRequest('Ошибка создания платежа')
 		}
 	},
 
 	/**
 	 * Получение информации о платеже
-	 * @param {Object} ctx - Контекст Koa
 	 */
 	async findOne(ctx) {
-		const { id } = ctx.params
-		const user = ctx.state.user
-
 		try {
+			const { id } = ctx.params
+			const user = ctx.state.user
+
+			if (!user) {
+				return ctx.unauthorized('Необходима авторизация')
+			}
+
+			// Получаем платеж из БД
 			const payment = await strapi.entityService.findOne(
 				'api::payment.payment',
 				id,
 				{
-					populate: ['order', 'users_permissions_user'],
+					populate: ['user'],
 				}
 			)
 
 			if (!payment) {
-				return ctx.notFound('Payment not found')
+				return ctx.notFound('Платеж не найден')
 			}
 
-			// Проверяем, что платеж принадлежит пользователю
-			if (payment.users_permissions_user.id !== user.id) {
-				return ctx.forbidden('Access denied to this payment')
+			// Проверяем принадлежность платежа пользователю
+			if (payment.user.id !== user.id) {
+				return ctx.forbidden('Нет доступа к этому платежу')
 			}
 
-			return payment
+			// Получаем актуальную информацию из ЮKassa
+			const yookassaInfo = await strapi
+				.service('api::payment.payment')
+				.getYookassaPayment(payment.yookassa_id)
+
+			if (yookassaInfo.error) {
+				return ctx.badRequest(yookassaInfo.error)
+			}
+
+			// Обновляем статус в БД если он изменился
+			if (payment.status !== yookassaInfo.status) {
+				await strapi.entityService.update('api::payment.payment', id, {
+					data: {
+						status: yookassaInfo.status,
+					},
+				})
+			}
+
+			return this.transformResponse({
+				...payment,
+				yookassa_info: yookassaInfo,
+			})
 		} catch (error) {
-			ctx.throw(500, error)
+			console.error('Ошибка получения информации о платеже:', error)
+			return ctx.badRequest('Ошибка получения информации о платеже')
 		}
 	},
 
 	/**
-	 * Обработка вебхука от ЮKassa
-	 * @param {Object} ctx - Контекст Koa
+	 * Получение URL чека
 	 */
-	async webhook(ctx) {
-		const { body } = ctx.request
-		const { event, object: yookassaPayment } = body
-
+	async getReceiptUrl(ctx) {
 		try {
-			strapi.log.debug(`Received YooKassa webhook: ${event}`, {
-				payment_id: yookassaPayment.id,
-				status: yookassaPayment.status,
-			})
+			const { id } = ctx.params
+			const user = ctx.state.user
 
-			// Находим платеж по yookassa_id
-			const payment = await strapi.db.query('api::payment.payment').findOne({
-				where: { yookassa_id: yookassaPayment.id },
-				populate: ['order'],
-			})
+			if (!user) {
+				return ctx.unauthorized('Необходима авторизация')
+			}
+
+			const payment = await strapi.entityService.findOne(
+				'api::payment.payment',
+				id,
+				{
+					populate: ['user'],
+				}
+			)
 
 			if (!payment) {
-				strapi.log.error(`Payment not found: ${yookassaPayment.id}`)
-				return ctx.notFound('Payment not found')
+				return ctx.notFound('Платеж не найден')
 			}
 
-			// Обновляем статус платежа
-			await strapi.entityService.update('api::payment.payment', payment.id, {
-				data: {
-					payment_status: yookassaPayment.status,
-					metadata: {
-						...payment.metadata,
-						yookassa_response: yookassaPayment,
-					},
-				},
-			})
-
-			// Обрабатываем различные статусы платежа
-			switch (yookassaPayment.status) {
-				case 'succeeded':
-					// Платеж успешно завершен
-					await strapi.entityService.update(
-						'api::order.order',
-						payment.order.id,
-						{
-							data: {
-								order_status: 'paid',
-							},
-						}
-					)
-					strapi.log.info(`Payment succeeded: ${yookassaPayment.id}`)
-					break
-
-				case 'canceled':
-					// Платеж отменен
-					await strapi.entityService.update(
-						'api::order.order',
-						payment.order.id,
-						{
-							data: {
-								order_status: 'payment_failed',
-							},
-						}
-					)
-					strapi.log.info(`Payment canceled: ${yookassaPayment.id}`)
-					break
-
-				case 'waiting_for_capture':
-					// Платеж ожидает подтверждения
-					strapi.log.info(`Payment waiting for capture: ${yookassaPayment.id}`)
-					break
-
-				default:
-					strapi.log.info(
-						`Payment status updated to ${yookassaPayment.status}: ${yookassaPayment.id}`
-					)
+			if (payment.user.id !== user.id) {
+				return ctx.forbidden('Нет доступа к этому платежу')
 			}
 
-			// Всегда возвращаем 200 OK
-			return ctx.send({ success: true })
+			const receiptUrl = await strapi
+				.service('api::payment.payment')
+				.getReceiptUrl(payment.yookassa_id)
+
+			if (receiptUrl.error) {
+				return ctx.badRequest(receiptUrl.error)
+			}
+
+			return this.transformResponse({ receipt_url: receiptUrl })
 		} catch (error) {
-			strapi.log.error('Webhook processing error:', error)
-			// Всегда возвращаем 200 OK, даже при ошибке
-			return ctx.send({ success: true })
+			console.error('Ошибка получения URL чека:', error)
+			return ctx.badRequest('Ошибка получения URL чека')
 		}
+	},
+
+	/**
+	 * Создание возврата
+	 */
+	async createRefund(ctx) {
+		try {
+			const { id } = ctx.params
+			const { amount, reason } = ctx.request.body
+			const user = ctx.state.user
+
+			if (!user) {
+				return ctx.unauthorized('Необходима авторизация')
+			}
+
+			const payment = await strapi.entityService.findOne(
+				'api::payment.payment',
+				id,
+				{
+					populate: ['user'],
+				}
+			)
+
+			if (!payment) {
+				return ctx.notFound('Платеж не найден')
+			}
+
+			if (payment.user.id !== user.id) {
+				return ctx.forbidden('Нет доступа к этому платежу')
+			}
+
+			// Генерируем ключ идемпотентности
+			const idempotencyKey = crypto.randomUUID()
+
+			const refund = await strapi
+				.service('api::payment.payment')
+				.createRefund(payment.yookassa_id, amount, reason, idempotencyKey)
+
+			if (refund.error) {
+				return ctx.badRequest(refund.error)
+			}
+
+			// Создаем запись о возврате в БД
+			const refundRecord = await strapi.entityService.create(
+				'api::payment.payment',
+				{
+					data: {
+						yookassa_id: refund.id,
+						order: payment.order,
+						amount: -amount, // Отрицательная сумма для возврата
+						status: refund.status,
+						user: user.id,
+						refund_reason: reason,
+						refund_status: refund.status,
+						publishedAt: new Date(),
+					},
+				}
+			)
+
+			return this.transformResponse(refundRecord)
+		} catch (error) {
+			console.error('Ошибка создания возврата:', error)
+			return ctx.badRequest('Ошибка создания возврата')
+		}
+	},
+
+	/**
+	 * Обработка вебхуков от ЮKassa
+	 */
+	async webhook(ctx) {
+		try {
+			const signature = ctx.request.headers['x-webhook-signature']
+			const body = ctx.request.body
+
+			// // Проверяем подпись
+			// const isValid = await strapi
+			// 	.service('api::payment.payment')
+			// 	.verifyWebhookSignature(body, signature)
+
+			// if (!isValid) {
+			// 	return ctx.unauthorized('Неверная подпись')
+			// }
+
+			const { event, object } = body
+			console.log(`webhook event: ${event}`)
+			console.log(`webhook object: ${JSON.stringify(object)}`)
+
+			switch (event) {
+				case 'payment.succeeded':
+					// Находим платеж по yookassa_id
+					const payment = await strapi.entityService.findMany(
+						'api::payment.payment',
+						{
+							filters: { yookassa_id: object.id },
+						}
+					)
+
+					console.log(`payment: ${JSON.stringify(payment)}`)
+
+					if (payment.length > 0) {
+						console.log(`зашел в payment.succeeded length > 0`)
+						// Обновляем статус платежа через PUT запрос
+						await strapi
+							.service('api::payment.payment')
+							.update(payment[0].documentId, {
+								data: { payment_status: object.status },
+							})
+					}
+					break
+
+				case 'payment.canceled':
+					// Находим платеж по yookassa_id
+					const canceledPayment = await strapi.entityService.findMany(
+						'api::payment.payment',
+						{
+							filters: { yookassa_id: object.id },
+						}
+					)
+					console.log(`canceledPayment: ${JSON.stringify(canceledPayment)}`)
+
+					if (canceledPayment.length > 0) {
+						console.log(`зашел в payment.canceled length > 0`)
+						// Обновляем статус платежа через PUT запрос
+						await strapi
+							.service('api::payment.payment')
+							.update(canceledPayment[0].documentId, {
+								data: { payment_status: object.status },
+							})
+					}
+					break
+
+				case 'refund.succeeded':
+					// Находим платеж по yookassa_id
+					const refundPayment = await strapi.entityService.findMany(
+						'api::payment.payment',
+						{
+							filters: { yookassa_id: object.id },
+						}
+					)
+
+					console.log(`refundPayment: ${JSON.stringify(refundPayment)}`)
+
+					if (refundPayment.length > 0) {
+						console.log(`зашел в refund.succeeded length > 0`)
+						// Обновляем статус возврата через PUT запрос
+						await strapi
+							.service('api::payment.payment')
+							.update(refundPayment[0].documentId, {
+								data: { refund_status: object.status },
+							})
+					}
+					break
+			}
+
+			return this.transformResponse({ success: true })
+		} catch (error) {
+			console.error('Ошибка обработки вебхука:', error)
+			return ctx.badRequest('Ошибка обработки вебхука')
+		}
+	},
+
+	async asd(ctx) {
+		try {
+			const payment = await strapi.entityService.findMany(
+				'api::payment.payment',
+				{
+					filters: { yookassa_id: '2f94c3a0-000f-5000-b000-1cef4805fa64' },
+				}
+			)
+
+			console.log(`payment: ${JSON.stringify(payment)}`)
+
+			if (payment.length > 0) {
+				console.log(`зашел в payment.succeeded length > 0`)
+				console.log(`payment[0].id: ${payment[0].id}`)
+
+				// Обновляем статус платежа через PUT запрос
+				const paymentUpdate = await strapi
+					.service('api::payment.payment')
+					.update(payment[0].documentId, {
+						data: { payment_status: 'succeeded' },
+					})
+
+				console.log(`paymentUpdate: ${JSON.stringify(paymentUpdate)}`)
+			}
+		} catch (error) {
+			console.error('Ошибка обновления статуса:', error)
+			return ctx.badRequest('Ошибка обновления статуса')
+		}
+
+		return this.transformResponse({ testdata: 'asd' })
 	},
 }))

@@ -25,7 +25,7 @@ module.exports = createStrapi.createCoreService(
 		 */
 		async createYookassaPayment(paymentData, idempotencyKey) {
 			try {
-				strapi.log.debug('Creating YooKassa payment', {
+				console.log('Создание платежа в ЮKassa:', {
 					...paymentData,
 					idempotencyKey,
 				})
@@ -42,56 +42,103 @@ module.exports = createStrapi.createCoreService(
 							return_url: paymentData.return_url,
 						},
 						capture: true, // Автоматический захват платежа
-						description: `Оплата заказа #${paymentData.order_id}`,
+						description: `Оплата заказа #${paymentData.order}`,
 						metadata: {
-							order_id: paymentData.order_id,
+							order_id: paymentData.order,
 							user_id: paymentData.user_id,
 						},
+						// Добавляем срок действия платежа (24 часа)
+						expires_at: new Date(
+							Date.now() + 24 * 60 * 60 * 1000
+						).toISOString(),
 					},
 					idempotencyKey // Используем переданный ключ идемпотентности
 				)
 
-				strapi.log.debug('YooKassa payment created', {
-					payment_id: payment.id,
-					status: payment.status,
-				})
+				// console.log('Платеж создан:', {
+				// 	payment_id: payment.id,
+				// 	status: payment.status,
+				// })
+
+				console.log('Платеж создан:', payment)
 
 				return payment
 			} catch (error) {
-				strapi.log.error('YooKassa payment creation error:', error)
-				throw error
+				console.error('Ошибка создания платежа:', error)
+				return { error: error.message, details: error }
 			}
 		},
 
 		/**
-		 * Проверка подписи вебхука от ЮKassa
+		 * Получение URL чека из ЮKassa
+		 * @param {string} paymentId - ID платежа
 		 */
-		async verifyWebhookSignature(body, signature) {
-			if (!signature) {
-				return false
-			}
-
+		async getReceiptUrl(paymentId) {
 			try {
-				// Парсим сигнатуру
-				const [version, hash, salt] = signature.split(' ')
-
-				if (version !== 'v1') {
-					return false
-				}
-
-				// Формируем строку для проверки
-				const data = `${salt}.${JSON.stringify(body)}`
-
-				// Вычисляем HMAC
-				const calculatedHash = crypto
-					.createHmac('sha256', process.env.YOOKASSA_WEBHOOK_SECRET)
-					.update(data)
-					.digest('hex')
-
-				return hash === calculatedHash
+				const receipt = await this.yooKassa.getReceipt(paymentId)
+				return receipt.receipt_url
 			} catch (error) {
-				console.error('Webhook signature verification error:', error)
-				return false
+				console.error('Ошибка получения URL чека:', error)
+				return { error: error.message, details: error }
+			}
+		},
+
+		/**
+		 * Создание возврата платежа
+		 * @param {string} paymentId - ID платежа
+		 * @param {number} amount - Сумма возврата
+		 * @param {string} reason - Причина возврата
+		 * @param {string} idempotencyKey - Ключ идемпотентности
+		 */
+		async createRefund(paymentId, amount, reason, idempotencyKey) {
+			try {
+				const refund = await this.yooKassa.createRefund(
+					{
+						payment_id: paymentId,
+						amount: {
+							value: amount,
+							currency: 'RUB',
+						},
+						description: reason,
+					},
+					idempotencyKey
+				)
+
+				console.log('Возврат создан:', {
+					refund_id: refund.id,
+					status: refund.status,
+				})
+
+				return refund
+			} catch (error) {
+				console.error('Ошибка создания возврата:', error)
+				return { error: error.message, details: error }
+			}
+		},
+
+		/**
+		 * Получение информации о возврате
+		 * @param {string} refundId - ID возврата
+		 */
+		async getRefundInfo(refundId) {
+			try {
+				return await this.yooKassa.getRefund(refundId)
+			} catch (error) {
+				console.error('Ошибка получения информации о возврате:', error)
+				return { error: error.message, details: error }
+			}
+		},
+
+		/**
+		 * Получение чека из ЮKassa
+		 * @param {string} paymentId - ID платежа
+		 */
+		async getYookassaReceipt(paymentId) {
+			try {
+				return await this.yooKassa.getReceipt(paymentId)
+			} catch (error) {
+				console.error('Ошибка получения чека:', error)
+				return { error: error.message, details: error }
 			}
 		},
 
@@ -102,8 +149,8 @@ module.exports = createStrapi.createCoreService(
 			try {
 				return await this.yooKassa.getPayment(paymentId)
 			} catch (error) {
-				console.error('YooKassa payment info error:', error)
-				throw error
+				console.error('Ошибка получения информации о платеже:', error)
+				return { error: error.message, details: error }
 			}
 		},
 	})

@@ -23,8 +23,6 @@ module.exports = createCoreController('api::order.order', ({ strapi }) => ({
 		const { data } = ctx.request.body
 		const user = ctx.state.user
 
-		// console.log(`${JSON.stringify(data)}`)
-
 		if (!user) {
 			return ctx.unauthorized('User not authenticated')
 		}
@@ -64,7 +62,6 @@ module.exports = createCoreController('api::order.order', ({ strapi }) => ({
 		if (studyCards.length !== studyCardIds.length) {
 			return ctx.badRequest('Некоторые товары не найдены или недоступны')
 		}
-		console.log(`studyCards: ${JSON.stringify(studyCards)}`)
 
 		// Создаем карту для быстрого доступа к ценам и остаткам
 		const studyCardMap = studyCards.reduce((map, card) => {
@@ -204,8 +201,6 @@ module.exports = createCoreController('api::order.order', ({ strapi }) => ({
 			if (!order) {
 				return ctx.notFound('Order not found')
 			}
-
-			console.log(order)
 
 			return this.transformResponse(order)
 		}

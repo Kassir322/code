@@ -596,7 +596,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
       'api::address.address'
     >;
     shipping_method: Schema.Attribute.Enumeration<
-      ['courier', 'post', 'pickup']
+      ['courier', 'post', 'pickup', 'sdek']
     >;
     total_amount: Schema.Attribute.Decimal & Schema.Attribute.Required;
     tracking_number: Schema.Attribute.String;
@@ -638,6 +638,7 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'RUB'>;
     description: Schema.Attribute.Text;
+    expires_at: Schema.Attribute.DateTime;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -654,6 +655,13 @@ export interface ApiPaymentPayment extends Struct.CollectionTypeSchema {
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'pending'>;
     publishedAt: Schema.Attribute.DateTime;
+    receipt_url: Schema.Attribute.String;
+    refund_amount: Schema.Attribute.Decimal;
+    refund_reason: Schema.Attribute.String;
+    refund_status: Schema.Attribute.Enumeration<
+      ['none', 'pending', 'succeeded', 'failed']
+    > &
+      Schema.Attribute.DefaultTo<'none'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

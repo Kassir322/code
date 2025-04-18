@@ -4,21 +4,21 @@
 
 ### 1.1. Обновление модели Payment
 
-- [ ] Добавить поле `receipt_url` (string) для URL чека
-- [ ] Добавить поле `refund_status` (enum: none, pending, succeeded, failed) со значением по умолчанию "none"
-- [ ] Добавить поле `refund_amount` (decimal) - необязательное, для частичных возвратов
-- [ ] Добавить поле `refund_reason` (text) - необязательное
-- [ ] Добавить поле `expires_at` (datetime) - срок действия платежа
+- [✓] Добавить поле `receipt_url` (string) для URL чека
+- [✓] Добавить поле `refund_status` (enum: none, pending, succeeded, failed) со значением по умолчанию "none"
+- [✓] Добавить поле `refund_amount` (decimal) - необязательное, для частичных возвратов
+- [✓] Добавить поле `refund_reason` (text) - необязательное
+- [✓] Добавить поле `expires_at` (datetime) - срок действия платежа
 
 ## 2. Обновление сервисов (SERVICES)
 
 ### 2.1. Обновление payment.js
 
-- [ ] Добавить метод `getReceiptUrl(paymentId)` для получения URL чека из ЮKassa
-- [ ] Добавить метод `createRefund(paymentId, amount, reason)` для создания возврата
-- [ ] Добавить метод `getRefundInfo(refundId)` для получения информации о возврате
-- [ ] Обновить метод `createYookassaPayment` для установки срока действия платежа (expires_at)
-- [ ] Добавить метод `getYookassaReceipt(paymentId)` для получения чека
+- [✓] Добавить метод `getReceiptUrl(paymentId)` для получения URL чека из ЮKassa
+- [✓] Добавить метод `createRefund(paymentId, amount, reason)` для создания возврата
+- [✓] Добавить метод `getRefundInfo(refundId)` для получения информации о возврате
+- [✓] Обновить метод `createYookassaPayment` для установки срока действия платежа (expires_at)
+- [✓] Добавить метод `getYookassaReceipt(paymentId)` для получения чека
 
 ## 3. Обновление контроллеров (CONTROLLERS)
 

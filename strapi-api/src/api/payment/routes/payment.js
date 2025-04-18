@@ -8,13 +8,18 @@ const { createCoreRouter } = require('@strapi/strapi').factories
 
 module.exports = {
 	routes: [
+		// {
+		// 	method: 'GET',
+		// 	path: '/payments/asd',
+		// 	handler: 'payment.asd',
+		// },
 		// Создание платежа (только для авторизованных)
 		{
 			method: 'POST',
 			path: '/payments',
 			handler: 'payment.create',
 			config: {
-				policies: ['global::is-auth'],
+				policies: ['api::payment.is-auth'],
 				middlewares: ['api::payment.idempotency'],
 			},
 		},
@@ -24,7 +29,7 @@ module.exports = {
 			path: '/payments/:id',
 			handler: 'payment.findOne',
 			config: {
-				policies: ['global::is-auth'],
+				policies: ['api::payment.is-auth'],
 			},
 		},
 		// Вебхук от ЮKassa (с проверкой IP)
@@ -32,6 +37,15 @@ module.exports = {
 			method: 'POST',
 			path: '/payments/webhook',
 			handler: 'payment.webhook',
+			config: {
+				middlewares: ['api::payment.yookassa-ip-filter'],
+			},
+		},
+		// Обновление платежа (только для вебхука)
+		{
+			method: 'PUT',
+			path: '/payments/:id',
+			handler: 'payment.update',
 			config: {
 				middlewares: ['api::payment.yookassa-ip-filter'],
 			},

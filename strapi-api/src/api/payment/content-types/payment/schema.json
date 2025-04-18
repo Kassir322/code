@@ -69,6 +69,28 @@
       "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "payments"
+    },
+    "receipt_url": {
+      "type": "string"
+    },
+    "refund_status": {
+      "type": "enumeration",
+      "enum": [
+        "none",
+        "pending",
+        "succeeded",
+        "failed"
+      ],
+      "default": "none"
+    },
+    "refund_amount": {
+      "type": "decimal"
+    },
+    "refund_reason": {
+      "type": "string"
+    },
+    "expires_at": {
+      "type": "datetime"
     }
   }
 }

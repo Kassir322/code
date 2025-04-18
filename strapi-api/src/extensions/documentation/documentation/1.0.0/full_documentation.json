@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-04-18T14:39:31.045Z"
+    "x-generation-date": "2025-04-18T21:41:53.509Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -2729,6 +2729,96 @@
           }
         ],
         "operationId": "get/payments/{id}"
+      },
+      "put": {
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Payment"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "operationId": "put/payments/{id}",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          }
+        }
       }
     },
     "/payments/webhook": {
@@ -6060,6 +6150,29 @@
                                   }
                                 }
                               },
+                              "receipt_url": {
+                                "type": "string"
+                              },
+                              "refund_status": {
+                                "type": "string",
+                                "enum": [
+                                  "none",
+                                  "pending",
+                                  "succeeded",
+                                  "failed"
+                                ]
+                              },
+                              "refund_amount": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "refund_reason": {
+                                "type": "string"
+                              },
+                              "expires_at": {
+                                "type": "string",
+                                "format": "date-time"
+                              },
                               "createdAt": {
                                 "type": "string",
                                 "format": "date-time"
@@ -7024,7 +7137,8 @@
                             "enum": [
                               "courier",
                               "post",
-                              "pickup"
+                              "pickup",
+                              "sdek"
                             ]
                           },
                           "cancellation_reason": {
@@ -8707,6 +8821,29 @@
                                         }
                                       }
                                     },
+                                    "receipt_url": {
+                                      "type": "string"
+                                    },
+                                    "refund_status": {
+                                      "type": "string",
+                                      "enum": [
+                                        "none",
+                                        "pending",
+                                        "succeeded",
+                                        "failed"
+                                      ]
+                                    },
+                                    "refund_amount": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "refund_reason": {
+                                      "type": "string"
+                                    },
+                                    "expires_at": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
                                     "createdAt": {
                                       "type": "string",
                                       "format": "date-time"
@@ -8861,7 +8998,8 @@
                             "enum": [
                               "courier",
                               "post",
-                              "pickup"
+                              "pickup",
+                              "sdek"
                             ]
                           },
                           "cancellation_reason": {
@@ -10774,6 +10912,29 @@
                                         }
                                       }
                                     },
+                                    "receipt_url": {
+                                      "type": "string"
+                                    },
+                                    "refund_status": {
+                                      "type": "string",
+                                      "enum": [
+                                        "none",
+                                        "pending",
+                                        "succeeded",
+                                        "failed"
+                                      ]
+                                    },
+                                    "refund_amount": {
+                                      "type": "number",
+                                      "format": "float"
+                                    },
+                                    "refund_reason": {
+                                      "type": "string"
+                                    },
+                                    "expires_at": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
                                     "createdAt": {
                                       "type": "string",
                                       "format": "date-time"
@@ -10928,7 +11089,8 @@
                             "enum": [
                               "courier",
                               "post",
-                              "pickup"
+                              "pickup",
+                              "sdek"
                             ]
                           },
                           "cancellation_reason": {
@@ -11383,7 +11545,8 @@
                 "enum": [
                   "courier",
                   "post",
-                  "pickup"
+                  "pickup",
+                  "sdek"
                 ]
               },
               "cancellation_reason": {
@@ -12067,6 +12230,29 @@
                                     "type": "string"
                                   }
                                 }
+                              },
+                              "receipt_url": {
+                                "type": "string"
+                              },
+                              "refund_status": {
+                                "type": "string",
+                                "enum": [
+                                  "none",
+                                  "pending",
+                                  "succeeded",
+                                  "failed"
+                                ]
+                              },
+                              "refund_amount": {
+                                "type": "number",
+                                "format": "float"
+                              },
+                              "refund_reason": {
+                                "type": "string"
+                              },
+                              "expires_at": {
+                                "type": "string",
+                                "format": "date-time"
                               },
                               "createdAt": {
                                 "type": "string",
@@ -13032,7 +13218,8 @@
                             "enum": [
                               "courier",
                               "post",
-                              "pickup"
+                              "pickup",
+                              "sdek"
                             ]
                           },
                           "cancellation_reason": {
@@ -13260,7 +13447,8 @@
             "enum": [
               "courier",
               "post",
-              "pickup"
+              "pickup",
+              "sdek"
             ]
           },
           "cancellation_reason": {
@@ -14106,6 +14294,29 @@
                             }
                           }
                         },
+                        "receipt_url": {
+                          "type": "string"
+                        },
+                        "refund_status": {
+                          "type": "string",
+                          "enum": [
+                            "none",
+                            "pending",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "refund_amount": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "refund_reason": {
+                          "type": "string"
+                        },
+                        "expires_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
                         "createdAt": {
                           "type": "string",
                           "format": "date-time"
@@ -15135,7 +15346,8 @@
                 "enum": [
                   "courier",
                   "post",
-                  "pickup"
+                  "pickup",
+                  "sdek"
                 ]
               },
               "cancellation_reason": {
@@ -15341,6 +15553,29 @@
                   }
                 ],
                 "example": "string or id"
+              },
+              "receipt_url": {
+                "type": "string"
+              },
+              "refund_status": {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "pending",
+                  "succeeded",
+                  "failed"
+                ]
+              },
+              "refund_amount": {
+                "type": "number",
+                "format": "float"
+              },
+              "refund_reason": {
+                "type": "string"
+              },
+              "expires_at": {
+                "type": "string",
+                "format": "date-time"
               },
               "locale": {
                 "type": "string"
@@ -16072,6 +16307,29 @@
                             }
                           }
                         },
+                        "receipt_url": {
+                          "type": "string"
+                        },
+                        "refund_status": {
+                          "type": "string",
+                          "enum": [
+                            "none",
+                            "pending",
+                            "succeeded",
+                            "failed"
+                          ]
+                        },
+                        "refund_amount": {
+                          "type": "number",
+                          "format": "float"
+                        },
+                        "refund_reason": {
+                          "type": "string"
+                        },
+                        "expires_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
                         "createdAt": {
                           "type": "string",
                           "format": "date-time"
@@ -17101,7 +17359,8 @@
                 "enum": [
                   "courier",
                   "post",
-                  "pickup"
+                  "pickup",
+                  "sdek"
                 ]
               },
               "cancellation_reason": {
@@ -17170,6 +17429,29 @@
                 "type": "string"
               }
             }
+          },
+          "receipt_url": {
+            "type": "string"
+          },
+          "refund_status": {
+            "type": "string",
+            "enum": [
+              "none",
+              "pending",
+              "succeeded",
+              "failed"
+            ]
+          },
+          "refund_amount": {
+            "type": "number",
+            "format": "float"
+          },
+          "refund_reason": {
+            "type": "string"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
           },
           "createdAt": {
             "type": "string",
@@ -18631,6 +18913,29 @@
                                       }
                                     }
                                   },
+                                  "receipt_url": {
+                                    "type": "string"
+                                  },
+                                  "refund_status": {
+                                    "type": "string",
+                                    "enum": [
+                                      "none",
+                                      "pending",
+                                      "succeeded",
+                                      "failed"
+                                    ]
+                                  },
+                                  "refund_amount": {
+                                    "type": "number",
+                                    "format": "float"
+                                  },
+                                  "refund_reason": {
+                                    "type": "string"
+                                  },
+                                  "expires_at": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                  },
                                   "createdAt": {
                                     "type": "string",
                                     "format": "date-time"
@@ -18785,7 +19090,8 @@
                           "enum": [
                             "courier",
                             "post",
-                            "pickup"
+                            "pickup",
+                            "sdek"
                           ]
                         },
                         "cancellation_reason": {
@@ -20696,6 +21002,29 @@
                                             }
                                           }
                                         },
+                                        "receipt_url": {
+                                          "type": "string"
+                                        },
+                                        "refund_status": {
+                                          "type": "string",
+                                          "enum": [
+                                            "none",
+                                            "pending",
+                                            "succeeded",
+                                            "failed"
+                                          ]
+                                        },
+                                        "refund_amount": {
+                                          "type": "number",
+                                          "format": "float"
+                                        },
+                                        "refund_reason": {
+                                          "type": "string"
+                                        },
+                                        "expires_at": {
+                                          "type": "string",
+                                          "format": "date-time"
+                                        },
                                         "createdAt": {
                                           "type": "string",
                                           "format": "date-time"
@@ -20850,7 +21179,8 @@
                                 "enum": [
                                   "courier",
                                   "post",
-                                  "pickup"
+                                  "pickup",
+                                  "sdek"
                                 ]
                               },
                               "cancellation_reason": {

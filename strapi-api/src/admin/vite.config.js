@@ -14,7 +14,7 @@ module.exports = (config) => {
 				'*.ngrok-free.app',
 				'*.ngrok.io',
 				'*.ngrok.app',
-				'56cf-85-192-24-172.ngrok-free.app',
+				'ac6e-85-192-24-172.ngrok-free.app',
 			],
 			host: '0.0.0.0',
 			port: 1337,
