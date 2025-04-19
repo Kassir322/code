@@ -194,7 +194,16 @@ module.exports = createCoreController('api::order.order', ({ strapi }) => ({
 				'api::order.order',
 				numericId,
 				{
-					populate: ['user'],
+					populate: {
+						user: true,
+						order_items: {
+							populate: {
+								study_card: true,
+							},
+						},
+						shipping_address: true,
+						payment: true,
+					},
 				}
 			)
 
