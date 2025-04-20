@@ -1,5 +1,5 @@
 // src/components/Breadcrumbs.js
-import Link from 'next/link'
+import SmartLink from './SmartLink'
 import { ChevronRight } from 'lucide-react'
 import SchemaOrg from '@/components/SchemaOrg'
 
@@ -29,12 +29,12 @@ export default function Breadcrumbs({ items }) {
 							{index === items.length - 1 ? (
 								<span className="font-medium text-gray-900">{item.name}</span>
 							) : (
-								<Link
+								<SmartLink
 									href={item.url}
 									className="hover:text-primary transition-colors"
 								>
 									{item.name}
-								</Link>
+								</SmartLink>
 							)}
 						</li>
 					))}

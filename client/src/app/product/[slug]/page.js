@@ -17,7 +17,7 @@ import {
 } from '@/lib/schema'
 import PopularProducts from '@/components/product/PopularProducts'
 import { ArrowLeft } from 'lucide-react'
-import Link from 'next/link'
+import SmartLink from '@/components/SmartLink'
 
 export const revalidate = 20
 // Генерируем статические пути для всех товаров при сборке
@@ -114,17 +114,20 @@ export default async function ProductPage({ params }) {
 	const organizationSchema = generateOrganizationSchema()
 	const schemas = [productSchema, breadcrumbSchema, organizationSchema]
 
+	// Создаем уникальный ключ, который будет меняться при изменении важных данных товара
+	const productKey = `product-${product.id}-${product.price}`
+
 	return (
 		<main className="container mx-auto px-4 mt-24 mb-16">
 			<Breadcrumbs items={breadcrumbItems} />
 			<div className="flex justify-between items-center mb-4">
-				<Link
+				<SmartLink
 					href="/catalog/all"
 					className="flex items-center text-secondary-blue hover:underline"
 				>
 					<ArrowLeft className="h-4 w-4 mr-1" />
 					<span>Назад в каталог</span>
-				</Link>
+				</SmartLink>
 			</div>
 			<div className="bg-white rounded-lg shadow-sm p-6 my-8">
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -134,13 +137,13 @@ export default async function ProductPage({ params }) {
 						title={product.title}
 					/>
 					<div className="flex flex-col">
-						<ProductInfo product={product} />
-						<ProductActions product={product} />
+						<ProductInfo key={`info-${productKey}`} product={product} />
+						<ProductActions key={`actions-${productKey}`} product={product} />
 					</div>
 				</div>
 			</div>
 			<ProductTrustBlock />
-			<ProductTabs product={product} />
+			<ProductTabs key={`tabs-${product.id}`} product={product} />
 			<ProductFAQ />
 			<SimilarProducts
 				currentProductSlug={slug}

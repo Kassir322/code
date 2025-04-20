@@ -1,7 +1,7 @@
 'use client'
 // src/components/product/ProductActions.js
 import { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { addToCart, selectIsInCart } from '@/store/slices/cartSlice'
 import {
 	toggleWishlistItem,
@@ -37,11 +37,11 @@ export default function ProductActions({ product }) {
 	const [wishlistAnimation, setWishlistAnimation] = useState(false)
 
 	const router = useRouter()
-	const dispatch = useDispatch()
+	const dispatch = useAppDispatch()
 
 	// Селекторы Redux для проверки наличия товара в корзине и избранном
-	const productInCart = useSelector((state) => selectIsInCart(state, id))
-	const isInWishlist = useSelector((state) => selectIsInWishlist(state, id))
+	const productInCart = useAppSelector((state) => selectIsInCart(state, id))
+	const isInWishlist = useAppSelector((state) => selectIsInWishlist(state, id))
 
 	// Определяем, доступен ли товар
 	const isAvailable = quantity > 0

@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+import SmartLink from './SmartLink'
 import {
 	Star,
 	Heart,
@@ -13,7 +13,7 @@ import {
 	CheckCircle,
 	Clock,
 } from 'lucide-react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { addToCart } from '@/store/slices/cartSlice'
 import { selectIsInCart } from '@/store/slices/cartSlice'
 import {
@@ -49,10 +49,10 @@ export default function ProductCard({ product, variant = 'default' }) {
 	const [wishlistAnimation, setWishlistAnimation] = useState(false)
 	const router = useRouter()
 
-	// Используем Redux
-	const dispatch = useDispatch()
-	const productInCart = useSelector((state) => selectIsInCart(state, id))
-	const isInWishlist = useSelector((state) => selectIsInWishlist(state, id))
+	// Используем Redux с новыми хуками
+	const dispatch = useAppDispatch()
+	const productInCart = useAppSelector((state) => selectIsInCart(state, id))
+	const isInWishlist = useAppSelector((state) => selectIsInWishlist(state, id))
 
 	// Эффект для анимации при изменении статуса избранного
 	useEffect(() => {
@@ -181,9 +181,18 @@ export default function ProductCard({ product, variant = 'default' }) {
 		setShowWishlistNotification(false)
 	}
 
+	// Используем key для принудительной перерисовки при изменении данных
+	const cardKey = `card-${id}-${price}`
+
+	// URL продукта
+	const productUrl = `/product/${productSlug}`
+
 	return (
 		<>
-			<div className="mx-auto group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow flex flex-col aspect-[calc(993/1347)] max-h-[570px] min-h-[390px] max-w-[420px] w-full">
+			<div
+				key={cardKey}
+				className="mx-auto group relative bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-xl transition-shadow flex flex-col aspect-[calc(993/1347)] max-h-[570px] min-h-[390px] max-w-[420px] w-full"
+			>
 				{/* Лейбл (если есть) */}
 				{label && (
 					<div
@@ -224,8 +233,8 @@ export default function ProductCard({ product, variant = 'default' }) {
 
 				{/* Изображение товара */}
 				<div className="h-full flex">
-					<Link
-						href={`/product/${productSlug}`}
+					<SmartLink
+						href={productUrl}
 						className="flex h-full w-full overflow-hidden items-stretch bg-neutral-03 border-r-2 border-neutral-200 shadow-sm"
 					>
 						<div className="h-full w-full relative overflow-hidden">
@@ -236,12 +245,12 @@ export default function ProductCard({ product, variant = 'default' }) {
 								className="object-contain group-hover:scale-105 transition-transform duration-300"
 							/>
 						</div>
-					</Link>
+					</SmartLink>
 				</div>
 
 				{/* Информация о товаре */}
 				<div className="flex flex-col gap-1 pt-4 mx-1">
-					<Link href={`/product/${productSlug}`} className="block">
+					<SmartLink href={productUrl} className="block">
 						<h3
 							className={`${
 								variant == 'catalog' ? 'text-lg' : 'text-xl'
@@ -249,7 +258,7 @@ export default function ProductCard({ product, variant = 'default' }) {
 						>
 							{title || 'Название товара'}
 						</h3>
-					</Link>
+					</SmartLink>
 
 					{/* Цена и информация о наличии */}
 					<div className="flex flex-col items-center justify-center px-2 py-2 gap-1">

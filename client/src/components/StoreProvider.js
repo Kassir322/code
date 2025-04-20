@@ -1,24 +1,30 @@
 'use client'
 
 import { Provider } from 'react-redux'
-import { store } from '@/store'
-import { useEffect } from 'react'
+import { useRef } from 'react'
+import { makeStore } from '@/store'
 import { initCart } from '@/store/slices/cartSlice'
 import { initWishlist } from '@/store/slices/wishlistSlice'
 import { initSettings } from '@/store/slices/appSettingsSlice'
 
+/**
+ * Провайдер Redux для Next.js App Router
+ * Создает новый экземпляр хранилища для каждого запроса
+ * Это предотвращает проблемы с ISR и обновлением цен товаров
+ */
 export default function StoreProvider({ children }) {
-	// Инициализация данных при загрузке приложения
-	useEffect(() => {
-		// Инициализируем корзину
-		store.dispatch(initCart())
+	// Используем useRef для хранения экземпляра стора между рендерами
+	const storeRef = useRef(null)
 
-		// Инициализируем избранное
-		store.dispatch(initWishlist())
+	// Создаем хранилище только если оно еще не существует
+	if (!storeRef.current) {
+		storeRef.current = makeStore()
 
-		// Инициализируем настройки приложения
-		store.dispatch(initSettings())
-	}, [])
+		// Инициализируем данные для нового хранилища
+		storeRef.current.dispatch(initCart())
+		storeRef.current.dispatch(initWishlist())
+		storeRef.current.dispatch(initSettings())
+	}
 
-	return <Provider store={store}>{children}</Provider>
+	return <Provider store={storeRef.current}>{children}</Provider>
 }

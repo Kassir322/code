@@ -20,7 +20,7 @@ export async function getAllProductsServer() {
 		`${process.env.STRAPI_API_URL}/api/study-cards?populate=*`,
 		{
 			headers: getServerHeaders(),
-			cache: 'force-cache',
+			cache: 'no-cache',
 		}
 	)
 
@@ -46,6 +46,7 @@ export async function getProductBySlugServer(slug) {
 	const res = await fetch(fetchUrl, {
 		headers: getServerHeaders(),
 		// cache: 'force-cache',
+		cache: 'no-cache',
 	})
 
 	if (!res.ok) {
@@ -65,7 +66,8 @@ export async function getAllCategoriesServer() {
 		`${process.env.STRAPI_API_URL}/api/categories?populate=*`,
 		{
 			headers: getServerHeaders(),
-			cache: 'force-cache',
+			// cache: 'force-cache',
+			cache: 'no-cache',
 		}
 	)
 
