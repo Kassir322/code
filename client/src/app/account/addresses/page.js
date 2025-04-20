@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useGetUserQuery } from '@/store/services/authApi'
 import AddressList from '@/components/address/AddressList'
 import Breadcrumbs from '@/components/Breadcrumbs'
@@ -21,7 +20,6 @@ import { ArrowLeft } from 'lucide-react'
 // }
 
 export default function AddressesPage() {
-	const router = useRouter()
 	const { data: user, isLoading, isError } = useGetUserQuery()
 
 	console.log('AddressesPage render:', { user, isLoading, isError })
@@ -40,11 +38,11 @@ export default function AddressesPage() {
 	}
 
 	// Если пользователь не авторизован или произошла ошибка
-	if (isError || !user) {
-		console.log('Redirecting to login - error or no user:', { isError, user })
-		router.push('/account/login?redirect=/account/addresses')
-		return null // Middleware перенаправит на страницу входа
-	}
+	// if (isError || !user) {
+	// 	console.log('Redirecting to login - error or no user:', { isError, user })
+	// 	router.push('/account/login?redirect=/account/addresses')
+	// 	return null // Middleware перенаправит на страницу входа
+	// }
 
 	console.log('Rendering main content')
 	return (

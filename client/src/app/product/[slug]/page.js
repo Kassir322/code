@@ -19,12 +19,15 @@ import PopularProducts from '@/components/product/PopularProducts'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
+export const revalidate = 20
 // Генерируем статические пути для всех товаров при сборке
 export async function generateStaticParams() {
 	const products = await getAllProductsServer()
-	return products.map((product) => ({
+	const data = products.map((product) => ({
 		slug: product.slug,
 	}))
+	console.log(`data: ${JSON.stringify(data)}`)
+	return data
 }
 
 // Генерируем метаданные для страницы (SEO)
@@ -60,8 +63,10 @@ export async function generateMetadata({ params }) {
 // Серверная компонента для страницы товара
 export default async function ProductPage({ params }) {
 	const { slug } = await params
+	console.log(`Product/page.js slug: ${slug}`)
+
 	const product = await getProductBySlugServer(slug)
-	console.log('Product category:', JSON.stringify(product?.category, null, 2))
+	console.log(`product: ${JSON.stringify(product)}`)
 
 	if (!product) {
 		notFound()
@@ -70,7 +75,7 @@ export default async function ProductPage({ params }) {
 	// Формируем хлебные крошки
 	const breadcrumbItems = [
 		{ name: 'Главная', url: '/' },
-		{ name: 'Каталог', url: '/catalog' },
+		{ name: 'Каталог', url: '/catalog/all' },
 	]
 
 	// Добавляем категорию только если она существует
@@ -114,7 +119,7 @@ export default async function ProductPage({ params }) {
 			<Breadcrumbs items={breadcrumbItems} />
 			<div className="flex justify-between items-center mb-4">
 				<Link
-					href="/catalog"
+					href="/catalog/all"
 					className="flex items-center text-secondary-blue hover:underline"
 				>
 					<ArrowLeft className="h-4 w-4 mr-1" />

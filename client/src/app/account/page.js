@@ -291,7 +291,7 @@ export default function AccountPage() {
 								<Package className="h-12 w-12 mx-auto text-gray-300 mb-3" />
 								<p>У вас пока нет заказов</p>
 								<Link
-									href="/catalog"
+									href="/catalog/all"
 									className="mt-3 inline-block text-secondary-blue hover:underline"
 								>
 									Перейти в каталог
@@ -348,7 +348,7 @@ export default function AccountPage() {
 							<div className="text-center py-8 text-gray-500">
 								<p>Здесь будут отображаться недавно просмотренные товары</p>
 								<Link
-									href="/catalog"
+									href="/catalog/all"
 									className="mt-3 inline-block text-secondary-blue hover:underline"
 								>
 									Перейти в каталог

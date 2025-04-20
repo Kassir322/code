@@ -91,7 +91,7 @@ export default function AboutSection() {
 					{/* Кнопка призыва к действию */}
 					<div className="mt-12 text-center">
 						<Link
-							href="/catalog"
+							href="/catalog/all"
 							className="inline-flex items-center justify-center py-3 px-6 bg-dark rounded-md text-white font-medium hover:bg-hover transition-colors cursor-pointer"
 						>
 							Перейти к каталогу

@@ -1,41 +1,51 @@
-{
-	"id": "2f94d54e-000f-5000-b000-1dea26de92ca",
-	"status": "succeeded",
-	"amount": { "value": "481.00", "currency": "RUB" },
-	"income_amount": { "value": "464.16", "currency": "RUB" },
-	"description": "Оплата заказа #undefined",
-	"recipient": { "account_id": "1070204", "gateway_id": "2435169" },
-	"payment_method": {
-		"type": "bank_card",
-		"id": "2f94d54e-000f-5000-b000-1dea26de92ca",
-		"saved": false,
-		"status": "inactive",
-		"title": "Bank card *4477",
-		"card": {
-			"first6": "555555",
-			"last4": "4477",
-			"expiry_year": "2011",
-			"expiry_month": "11",
-			"card_type": "MasterCard",
-			"card_product": { "code": "E" },
-			"issuer_country": "US"
-		}
+[
+	{
+		"id": 2,
+		"name": "Математика",
+		"slug": "matematika",
+		"description": "Удобные карточки по математике",
+		"isActive": true
 	},
-	"captured_at": "2025-04-18T21:19:50.914Z",
-	"created_at": "2025-04-18T21:18:06.451Z",
-	"test": true,
-	"refunded_amount": { "value": "0.00", "currency": "RUB" },
-	"paid": true,
-	"refundable": true,
-	"metadata": { "user_id": "19" },
-	"authorization_details": {
-		"rrn": "269672935775223",
-		"auth_code": "686732",
-		"three_d_secure": {
-			"applied": true,
-			"protocol": "v1",
-			"method_completed": false,
-			"challenge_completed": true
-		}
+	{
+		"id": 4,
+		"name": "Русский язык",
+		"slug": "russkiy-yazik",
+		"description": "Удобные карточки по русскому языку",
+		"isActive": true
+	},
+	{
+		"id": 5,
+		"name": "Обществознание",
+		"slug": "obshhestvoznanie",
+		"description": null,
+		"isActive": true
+	},
+	{
+		"id": 6,
+		"name": "История",
+		"slug": "istoriya",
+		"description": "Карточки по истории для школьников",
+		"isActive": true
+	},
+	{
+		"id": 7,
+		"name": "Геометрия",
+		"slug": "geometriya",
+		"description": "Карточки по геометрии",
+		"isActive": true
+	},
+	{
+		"id": 8,
+		"name": "Биология",
+		"slug": "biologiya",
+		"description": "Карточки по биологии",
+		"isActive": true
+	},
+	{
+		"id": 9,
+		"name": "Химия",
+		"slug": "himiya",
+		"description": "Карточки по химии",
+		"isActive": true
 	}
-}
+]

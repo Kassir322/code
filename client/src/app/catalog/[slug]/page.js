@@ -1,4 +1,4 @@
-// src/app/catalog/[[...slug]]/page.js
+// src/app/catalog/[slug]/page.js
 import CatalogView from '@/components/catalog/CatalogView'
 import { getSeoTextForCategory } from '@/lib/seo-helpers'
 import {
@@ -7,10 +7,25 @@ import {
 	getAllCategories,
 } from '@/lib/api'
 import Breadcrumbs from '@/components/Breadcrumbs'
+import { getAllCategoriesServer } from '@/lib/next-api'
+
+export const revalidate = 20 // 10 минут
+export const dynamic = 'force-static'
+
+export async function generateStaticParams() {
+	const categories = await getAllCategoriesServer()
+	const data = categories.map((cat) => ({
+		slug: cat.slug,
+	}))
+	// Добавляем 'all' для главной страницы каталога
+	data.push({ slug: 'all' })
+	console.log(`data: ${JSON.stringify(data)}`)
+	return data
+}
 
 export async function generateMetadata({ params }) {
 	const { slug } = await params
-	const categorySlug = slug?.[0] || 'catalog'
+	const categorySlug = slug || 'all'
 	const seoText = getSeoTextForCategory(categorySlug)
 
 	return {
@@ -23,7 +38,7 @@ export default async function CatalogPage({ params, searchParams }) {
 	const { slug } = await params
 
 	// Получаем slug категории из URL или устанавливаем дефолтное значение
-	const categorySlug = slug?.[0] || 'catalog'
+	const categorySlug = slug || 'all'
 
 	const search_Params = await searchParams
 
@@ -33,7 +48,7 @@ export default async function CatalogPage({ params, searchParams }) {
 
 	// Получаем данные о категории и товарах
 	const products =
-		categorySlug === 'catalog'
+		categorySlug === 'all'
 			? await getAllProducts()
 			: await getProductsByCategory(categorySlug)
 
@@ -43,10 +58,10 @@ export default async function CatalogPage({ params, searchParams }) {
 	// Формируем хлебные крошки
 	const breadcrumbItems = [
 		{ name: 'Главная', url: '/' },
-		{ name: 'Каталог', url: '/catalog' },
+		{ name: 'Каталог', url: '/catalog/all' },
 	]
 
-	if (categorySlug !== 'catalog' && currentCategory) {
+	if (categorySlug !== 'all' && currentCategory) {
 		breadcrumbItems.push({
 			name: currentCategory.name,
 			url: `/catalog/${categorySlug}`,

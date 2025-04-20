@@ -67,7 +67,7 @@ export default function Header() {
 				{/* Навигация */}
 				<nav className="hidden md:flex lg:space-x-15 md:space-x-6 sm:space-x-4 space-x-2">
 					<NavLink href="/">Главная</NavLink>
-					<NavLink href="/catalog">Каталог</NavLink>
+					<NavLink href="/catalog/all">Каталог</NavLink>
 					<NavLink href="/contact">Контакты</NavLink>
 					<NavLink href="/about">О компании</NavLink>
 				</nav>
@@ -196,7 +196,7 @@ export default function Header() {
 							Главная
 						</Link>
 						<Link
-							href="/catalog"
+							href="/catalog/all"
 							className="py-2 hover:text-secondary-blue"
 							onClick={() => setIsMenuOpen(false)}
 						>

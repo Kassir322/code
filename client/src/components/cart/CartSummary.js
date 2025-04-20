@@ -72,7 +72,7 @@ export default function CartSummary() {
 
 			<div className="mt-4">
 				<Link
-					href="/catalog"
+					href="/catalog/all"
 					className="text-secondary-blue hover:underline text-sm"
 				>
 					Продолжить покупки

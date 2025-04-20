@@ -62,7 +62,7 @@ export default async function Home() {
 						</h2>
 						<ProductCards products={featuredProducts} />
 						<div className="text-center mt-8">
-							<LinkButton className="text-lg" href="/catalog">
+							<LinkButton className="text-lg" href="/catalog/all">
 								Посмотреть все товары
 							</LinkButton>
 						</div>

@@ -45,7 +45,7 @@ export default function WishlistPage() {
 				<div>
 					<div className="mb-6">
 						<Link
-							href="/catalog"
+							href="/catalog/all"
 							className="flex items-center text-secondary-blue hover:underline"
 						>
 							<ArrowLeft className="h-4 w-4 mr-1" />
@@ -112,7 +112,7 @@ export default function WishlistPage() {
 							позже.
 						</p>
 						<Link
-							href="/catalog"
+							href="/catalog/all"
 							className="bg-secondary-blue text-white rounded-md py-3 px-6 hover:bg-blue-700 transition-colors"
 						>
 							Перейти в каталог

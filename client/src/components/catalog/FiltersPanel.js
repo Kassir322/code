@@ -44,7 +44,7 @@ export default function FiltersPanel({
 }) {
 	// Преобразуем категории в формат для отображения
 	const subjects = [
-		{ name: 'Все предметы', slug: '' },
+		{ name: 'Все предметы', slug: '/all' },
 		...(categories?.map((category) => ({
 			name: category.name,
 			slug: category.slug,

@@ -51,7 +51,7 @@ export default function NotFound() {
 					</Link>
 
 					<Link
-						href="/catalog"
+						href="/catalog/all"
 						className="flex items-center justify-center bg-secondary-blue text-white rounded-md py-3 px-6 hover:bg-blue-700 transition-colors cursor-pointer"
 					>
 						<ShoppingCart className="mr-2 h-5 w-5" />

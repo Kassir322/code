@@ -39,13 +39,14 @@ export async function getAllProductsServer() {
  */
 export async function getProductBySlugServer(slug) {
 	// /api/study-cards?populate=*&filters[category][slug][$eq]=${categorySlug}
-	const res = await fetch(
-		`${process.env.STRAPI_API_URL}/api/study-cards?populate=*&filters[slug]=${slug}`,
-		{
-			headers: getServerHeaders(),
-			cache: 'force-cache',
-		}
-	)
+	console.log(`getProductBySlugServer slug: ${slug}`)
+	const fetchUrl = `${process.env.STRAPI_API_URL}/api/study-cards?populate=*&filters[slug]=${slug}`
+	console.log(`fetchUrl: ${fetchUrl}`)
+
+	const res = await fetch(fetchUrl, {
+		headers: getServerHeaders(),
+		// cache: 'force-cache',
+	})
 
 	if (!res.ok) {
 		throw new Error('Ошибка при получении товара')
@@ -73,6 +74,7 @@ export async function getAllCategoriesServer() {
 	}
 
 	const data = await res.json()
+
 	return data.data.map(transformCategoryResponse)
 }
 
@@ -139,8 +141,6 @@ function transformStrapiResponse(strapiItem) {
 				displayName: grade.display_name,
 			})) || [],
 	}
-
-	console.log(`obj: ${JSON.stringify(obj)}`)
 
 	return obj
 }

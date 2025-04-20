@@ -3,8 +3,6 @@
 import { Star, AlertCircle, CheckCircle, Clock, Info } from 'lucide-react'
 
 export default function ProductInfo({ product }) {
-	console.log(`productInfo: ${JSON.stringify(product)}`)
-
 	const {
 		title,
 		price,
