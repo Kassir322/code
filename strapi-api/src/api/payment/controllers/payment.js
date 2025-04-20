@@ -31,7 +31,7 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 					currency: 'RUB',
 				},
 				payment_method,
-				return_url: `${process.env.FRONTEND_URL}/orders/${order}/success`,
+				return_url: `${process.env.FRONTEND_URL}/orders/${order}`,
 				user_id: user.id,
 			}
 
