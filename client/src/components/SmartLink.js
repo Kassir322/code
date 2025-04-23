@@ -35,6 +35,8 @@ export default function SmartLink({
 		}
 	}
 
+	console.log(`SmartLink href: ${href}`)
+
 	return (
 		<Link href={href} onClick={handleClick} {...rest}>
 			{children}

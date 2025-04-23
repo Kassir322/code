@@ -231,10 +231,14 @@ module.exports = createCoreController('api::order.order', ({ strapi }) => ({
 				},
 				sort: { createdAt: 'desc' },
 				populate: {
+					user: true,
 					order_items: {
-						populate: ['study_card'],
+						populate: {
+							study_card: true,
+						},
 					},
 					shipping_address: true,
+					payment: true,
 				},
 			})
 

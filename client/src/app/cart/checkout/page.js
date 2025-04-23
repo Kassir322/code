@@ -334,7 +334,7 @@ export default function CheckoutPage() {
 							{cartItems.map((item) => (
 								<div key={item.id} className="flex justify-between">
 									<div>
-										<p className="font-medium">{item.name}</p>
+										<p className="font-medium">{item.title}</p>
 										<p className="text-sm text-gray-500">{item.quantity} шт.</p>
 									</div>
 									<p className="font-medium">{item.price * item.quantity} ₽</p>

@@ -1,5 +1,6 @@
 // src/lib/api.js
-import { cookies } from 'next/headers'
+
+import cookiesService from '@/services/cookies'
 
 /**
  * Получает заголовки для запросов к API
@@ -10,9 +11,7 @@ async function getHeaders() {
 		'Content-Type': 'application/json',
 	}
 
-	const cookieStore = await cookies()
-
-	const token = cookieStore.get('token')?.value
+	const token = cookiesService.getAuthToken()
 
 	if (token) {
 		headers.Authorization = `Bearer ${token}`
@@ -218,5 +217,75 @@ function transformCategoryResponse(categoryItem) {
 		slug,
 		description,
 		isActive: is_active,
+	}
+}
+
+/**
+ * Получает заказы пользователя
+ * @param {string} userId - ID пользователя
+ * @returns {Promise<Array>} Массив заказов
+ */
+export async function getUserOrders(userId) {
+	const res = await fetch(
+		`${process.env.NEXT_PUBLIC_API_URL}/api/orders/me?populate=*`,
+		{
+			headers: await getHeaders(),
+			cache: 'no-store',
+		}
+	)
+
+	if (!res.ok) {
+		throw new Error('Ошибка при получении заказов')
+	}
+
+	const data = await res.json()
+	return data.data.map(transformOrderResponse)
+}
+
+/**
+ * Трансформирует ответ заказа от Strapi
+ * @param {Object} orderItem - Элемент заказа из ответа Strapi
+ * @returns {Object} Трансформированный объект заказа
+ */
+function transformOrderResponse(orderItem) {
+	const {
+		id,
+		total_amount,
+		order_status,
+		payment_method,
+		shipping_method,
+		tracking_number,
+		notes,
+		createdAt,
+		updatedAt,
+		order_items,
+		shipping_address,
+		payment,
+	} = orderItem
+
+	return {
+		id,
+		totalAmount: Number(total_amount),
+		orderStatus: order_status,
+		paymentMethod: payment_method,
+		shippingMethod: shipping_method,
+		trackingNumber: tracking_number,
+		notes,
+		createdAt,
+		updatedAt,
+		orderItems:
+			order_items?.map((item) => ({
+				id: item.id,
+				quantity: item.quantity,
+				price: Number(item.price),
+				title: item.study_card.title,
+			})) || [],
+		shippingAddress: shipping_address,
+		payment: payment?.data
+			? {
+					id: payment.data.id,
+					...payment.data.attributes,
+			  }
+			: null,
 	}
 }

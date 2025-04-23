@@ -50,8 +50,6 @@ export default function OrderPage({ params }) {
 		skip: !orderId,
 	})
 
-	console.log(orderId)
-
 	// При загрузке страницы очищаем корзину, если заказ успешно оформлен
 	useEffect(() => {
 		if (orderData && !isOrderLoading) {
@@ -149,6 +147,8 @@ export default function OrderPage({ params }) {
 			},
 		}
 	}
+
+	console.log(`orderData`, orderData)
 
 	// Отображаем загрузку
 	if (isOrderLoading || isUserLoading) {
