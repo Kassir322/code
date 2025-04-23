@@ -127,6 +127,7 @@ function transformStrapiResponse(strapiItem) {
 		slug,
 		image,
 		category,
+		grades,
 	} = strapiItem
 
 	return {
@@ -151,6 +152,10 @@ function transformStrapiResponse(strapiItem) {
 					...category.data.attributes,
 			  }
 			: null,
+		grades:
+			grades?.map((grade) => ({
+				displayName: grade.display_name,
+			})) || [],
 	}
 }
 
@@ -173,6 +178,8 @@ export async function getFeaturedProducts() {
 	}
 
 	const data = await res.json()
+	console.log(`api.js getFeaturedProducts data: ${JSON.stringify(data)}`)
+
 	return data.data.map(transformStrapiResponse)
 }
 

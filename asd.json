@@ -1,38 +1,148 @@
 {
-	"data": {
-		"id": 30,
-		"documentId": "l2dgovniqhi7br9hml4nj45q",
-		"title": "Химия Сборник Химических Элементов",
-		"description": "Полный сборник химических элементов для учебы",
-		"price": 11111,
-		"quantity": 1000,
-		"number_of_cards": null,
-		"card_type": "Вопрос-ответ",
-		"is_active": true,
-		"createdAt": "2025-04-17T00:30:43.081Z",
-		"updatedAt": "2025-04-23T16:08:56.956Z",
-		"publishedAt": "2025-04-23T16:08:56.946Z",
-		"locale": null,
-		"slug": "himiya-himicheskie-elementy",
-		"meta_title": null,
-		"meta_description": null,
-		"meta_keywords": null,
-		"old_price": null,
-		"category": {
-			"id": 9,
-			"documentId": "j1wx47yhjqvq38uttbh09jqc",
-			"name": "Химия",
-			"slug": "himiya",
-			"description": "Карточки по химии",
+	"data": [
+		{
+			"id": 29,
+			"documentId": "me6wyji97uuapnwdz2bswkwf",
+			"title": "Биология Термины 5 класс",
+			"description": "Карточки-термины по биологии для 5 класса",
+			"price": 111,
+			"quantity": 998,
+			"number_of_cards": 96,
+			"card_type": "Вопрос-ответ",
 			"is_active": true,
-			"createdAt": "2025-04-17T00:30:15.356Z",
-			"updatedAt": "2025-04-17T00:30:15.356Z",
-			"publishedAt": "2025-04-17T00:30:15.354Z",
-			"locale": null,
+			"createdAt": "2025-04-17T00:26:03.126Z",
+			"updatedAt": "2025-04-23T18:58:16.144Z",
+			"publishedAt": "2025-04-23T18:58:16.131Z",
+			"slug": "biologiya-terminy-5-klass",
 			"meta_title": null,
 			"meta_description": null,
-			"meta_keywords": null
+			"meta_keywords": null,
+			"old_price": null,
+			"image": null,
+			"category": null,
+			"order_items": [
+				{
+					"id": 82,
+					"documentId": "ipa86t6wju36jdf8jaa71stv",
+					"quantity": 2,
+					"price": 111,
+					"createdAt": "2025-04-22T13:34:04.473Z",
+					"updatedAt": "2025-04-22T13:34:04.473Z",
+					"publishedAt": "2025-04-22T13:34:04.470Z"
+				}
+			],
+			"grades": [
+				{
+					"id": 5,
+					"documentId": "p60bztgr9egj58hnjc3uge2m",
+					"name": "grade_9",
+					"display_name": "9",
+					"order": 5,
+					"createdAt": "2025-04-17T15:37:18.963Z",
+					"updatedAt": "2025-04-17T15:37:18.963Z",
+					"publishedAt": "2025-04-17T15:37:18.960Z"
+				}
+			],
+			"related_cards": [],
+			"study_cards": []
+		},
+		{
+			"id": 38,
+			"documentId": "lcxjwzt76r3akmwlevhe9pl4",
+			"title": "Тренажер 3 класс",
+			"description": "Учебный тренажер по математике для 3 класса",
+			"price": 403,
+			"quantity": 998,
+			"number_of_cards": null,
+			"card_type": "Вопрос-ответ",
+			"is_active": true,
+			"createdAt": "2025-04-17T00:34:30.588Z",
+			"updatedAt": "2025-04-19T08:08:41.117Z",
+			"publishedAt": "2025-04-19T08:08:41.114Z",
+			"slug": "trenazher-3-klass",
+			"meta_title": null,
+			"meta_description": null,
+			"meta_keywords": null,
+			"old_price": null,
+			"image": null,
+			"category": {
+				"id": 2,
+				"documentId": "wh3nj2sqkzpemzy7zz8dd9dq",
+				"name": "Математика",
+				"slug": "matematika",
+				"description": "Удобные карточки по математике",
+				"is_active": true,
+				"createdAt": "2025-04-02T11:59:55.407Z",
+				"updatedAt": "2025-04-02T11:59:55.407Z",
+				"publishedAt": "2025-04-02T11:59:55.416Z",
+				"meta_title": null,
+				"meta_description": null,
+				"meta_keywords": null
+			},
+			"order_items": [
+				{
+					"id": 62,
+					"documentId": "dd6s6pev0fze8d3e7z4ogg0z",
+					"quantity": 1,
+					"price": 403,
+					"createdAt": "2025-04-17T00:47:09.341Z",
+					"updatedAt": "2025-04-17T00:47:09.341Z",
+					"publishedAt": "2025-04-17T00:47:09.339Z"
+				},
+				{
+					"id": 76,
+					"documentId": "bs912d00liff7jbxy02wski4",
+					"quantity": 1,
+					"price": 403,
+					"createdAt": "2025-04-19T08:08:41.092Z",
+					"updatedAt": "2025-04-19T08:08:41.092Z",
+					"publishedAt": "2025-04-19T08:08:41.086Z"
+				}
+			],
+			"grades": [],
+			"related_cards": [],
+			"study_cards": []
+		},
+		{
+			"id": 33,
+			"documentId": "p6g479h9h4fd0xwvgss5r4vm",
+			"title": "Математика 5 класс",
+			"description": "Учебные карточки по математике для 5 класса",
+			"price": 443,
+			"quantity": 1000,
+			"number_of_cards": null,
+			"card_type": "Вопрос-ответ",
+			"is_active": true,
+			"createdAt": "2025-04-17T00:31:18.441Z",
+			"updatedAt": "2025-04-17T01:08:15.414Z",
+			"publishedAt": "2025-04-17T01:08:15.408Z",
+			"slug": "matematika-5-klass",
+			"meta_title": null,
+			"meta_description": null,
+			"meta_keywords": null,
+			"old_price": null,
+			"image": null,
+			"category": {
+				"id": 2,
+				"documentId": "wh3nj2sqkzpemzy7zz8dd9dq",
+				"name": "Математика",
+				"slug": "matematika",
+				"description": "Удобные карточки по математике",
+				"is_active": true,
+				"createdAt": "2025-04-02T11:59:55.407Z",
+				"updatedAt": "2025-04-02T11:59:55.407Z",
+				"publishedAt": "2025-04-02T11:59:55.416Z",
+				"meta_title": null,
+				"meta_description": null,
+				"meta_keywords": null
+			},
+			"order_items": [],
+			"grades": [],
+			"related_cards": [],
+			"study_cards": []
 		}
-	},
-	"meta": {}
+	],
+	"meta": {
+		"pagination": { "page": 1, "pageSize": 3, "pageCount": 7, "total": 19 }
+	}
 }

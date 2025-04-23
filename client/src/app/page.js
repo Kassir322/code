@@ -10,13 +10,6 @@ import LinkButton from '@/components/ui/LinkButton'
 import productMockData from '@/lib/mock-data'
 import { getFeaturedProducts } from '@/lib/api'
 
-// Обновленные примеры товаров для главной страницы с добавлением slug
-const featuredProducts = [
-	productMockData[0],
-	productMockData[1],
-	productMockData[2],
-]
-
 // Примеры отзывов для слайдера
 const testimonials = [
 	{
@@ -44,6 +37,9 @@ const testimonials = [
 
 export default async function Home() {
 	const featuredProducts = await getFeaturedProducts()
+	console.log(
+		`app/page.js featuredProducts: ${JSON.stringify(featuredProducts)}`
+	)
 
 	return (
 		<div className="flex flex-col min-h-screen">

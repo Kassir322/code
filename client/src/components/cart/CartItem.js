@@ -17,6 +17,8 @@ export default function CartItem({ item }) {
 		dispatch(removeFromCart(item.id))
 	}
 
+	console.log(`CartItem item: ${JSON.stringify(item)}`)
+
 	return (
 		<div className="flex flex-col sm:flex-row justify-between items-center py-4 border-b border-gray-200">
 			{/* Изображение и название */}
@@ -34,14 +36,15 @@ export default function CartItem({ item }) {
 
 				<div className="ml-4 flex-grow">
 					<Link href={`/product/${item.id}`}>
-						<h3 className="font-medium text-lg hover:text-secondary-blue transition-colors">
-							{item.name}
+						<h3 className="font-medium text-md hover:text-secondary-blue transition-colors">
+							{item.title}
 						</h3>
 					</Link>
 
-					{item.cardType && item.grade && (
+					{item.cardType && item.grades && (
 						<p className="text-gray-600 text-sm">
-							{item.cardType} | {item.grade}
+							{item.cardType} |{' '}
+							{item.grades.map((grade) => grade.displayName).join(', ')}
 						</p>
 					)}
 				</div>
