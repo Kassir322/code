@@ -89,6 +89,7 @@ export default function ProductActions({ product }) {
 		const productToAdd = {
 			...product,
 			quantity: productQuantity, // Это важно - используем productQuantity вместо значения по умолчанию
+			slug: product.slug || product.id.toString(), // Добавляем slug, если его нет, используем id как fallback
 		}
 
 		// Добавляем товар в корзину через Redux с указанным количеством
@@ -114,6 +115,7 @@ export default function ProductActions({ product }) {
 			const productToAdd = {
 				...product,
 				quantity: productQuantity, // Используем выбранное пользователем количество
+				slug: product.slug || product.id.toString(), // Добавляем slug, если его нет, используем id как fallback
 			}
 			dispatch(addToCart(productToAdd))
 		}

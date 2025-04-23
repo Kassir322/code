@@ -24,7 +24,7 @@ export default function CartItem({ item }) {
 			{/* Изображение и название */}
 			<div className="flex flex-row items-center flex-grow mb-4 sm:mb-0">
 				<div className="relative h-24 w-24 rounded bg-neutral-03">
-					<Link href={`/product/${item.id}`}>
+					<Link href={`/product/${item.slug || item.id}`}>
 						<Image
 							src="/images/products/card_example2.png"
 							alt={item.title}
@@ -35,7 +35,7 @@ export default function CartItem({ item }) {
 				</div>
 
 				<div className="ml-4 flex-grow">
-					<Link href={`/product/${item.id}`}>
+					<Link href={`/product/${item.slug || item.id}`}>
 						<h3 className="font-medium text-md hover:text-secondary-blue transition-colors">
 							{item.title}
 						</h3>

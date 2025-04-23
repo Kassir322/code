@@ -54,10 +54,11 @@
     "shipping_method": {
       "type": "enumeration",
       "enum": [
-        "courier",
         "post",
         "pickup",
-        "sdek"
+        "sdek",
+        "post5",
+        "boxberry"
       ]
     },
     "cancellation_reason": {

@@ -27,7 +27,7 @@ async function getHeaders() {
  */
 export async function getAllProducts() {
 	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards`,
+		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards?populate=*`,
 		{
 			headers: await getHeaders(),
 			cache: 'force-cache',

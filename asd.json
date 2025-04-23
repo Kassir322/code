@@ -11,8 +11,8 @@
 			"card_type": "Вопрос-ответ",
 			"is_active": true,
 			"createdAt": "2025-04-17T00:26:03.126Z",
-			"updatedAt": "2025-04-23T18:58:16.144Z",
-			"publishedAt": "2025-04-23T18:58:16.131Z",
+			"updatedAt": "2025-04-23T19:08:30.673Z",
+			"publishedAt": "2025-04-23T19:08:30.660Z",
 			"slug": "biologiya-terminy-5-klass",
 			"meta_title": null,
 			"meta_description": null,
@@ -20,29 +20,6 @@
 			"old_price": null,
 			"image": null,
 			"category": null,
-			"order_items": [
-				{
-					"id": 82,
-					"documentId": "ipa86t6wju36jdf8jaa71stv",
-					"quantity": 2,
-					"price": 111,
-					"createdAt": "2025-04-22T13:34:04.473Z",
-					"updatedAt": "2025-04-22T13:34:04.473Z",
-					"publishedAt": "2025-04-22T13:34:04.470Z"
-				}
-			],
-			"grades": [
-				{
-					"id": 5,
-					"documentId": "p60bztgr9egj58hnjc3uge2m",
-					"name": "grade_9",
-					"display_name": "9",
-					"order": 5,
-					"createdAt": "2025-04-17T15:37:18.963Z",
-					"updatedAt": "2025-04-17T15:37:18.963Z",
-					"publishedAt": "2025-04-17T15:37:18.960Z"
-				}
-			],
 			"related_cards": [],
 			"study_cards": []
 		},
@@ -79,27 +56,6 @@
 				"meta_description": null,
 				"meta_keywords": null
 			},
-			"order_items": [
-				{
-					"id": 62,
-					"documentId": "dd6s6pev0fze8d3e7z4ogg0z",
-					"quantity": 1,
-					"price": 403,
-					"createdAt": "2025-04-17T00:47:09.341Z",
-					"updatedAt": "2025-04-17T00:47:09.341Z",
-					"publishedAt": "2025-04-17T00:47:09.339Z"
-				},
-				{
-					"id": 76,
-					"documentId": "bs912d00liff7jbxy02wski4",
-					"quantity": 1,
-					"price": 403,
-					"createdAt": "2025-04-19T08:08:41.092Z",
-					"updatedAt": "2025-04-19T08:08:41.092Z",
-					"publishedAt": "2025-04-19T08:08:41.086Z"
-				}
-			],
-			"grades": [],
 			"related_cards": [],
 			"study_cards": []
 		},
@@ -136,8 +92,6 @@
 				"meta_description": null,
 				"meta_keywords": null
 			},
-			"order_items": [],
-			"grades": [],
 			"related_cards": [],
 			"study_cards": []
 		}

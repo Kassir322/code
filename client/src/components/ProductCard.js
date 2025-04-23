@@ -133,7 +133,13 @@ export default function ProductCard({ product, variant = 'default' }) {
 		setIsAddingToCart(true)
 
 		// Добавляем товар в корзину через Redux с явным указанием количества
-		dispatch(addToCart({ ...product, quantity: 1 }))
+		dispatch(
+			addToCart({
+				...product,
+				quantity: 1,
+				slug: product.slug || product.id.toString(), // Добавляем slug, если его нет, используем id как fallback
+			})
+		)
 
 		// Показываем уведомление о добавлении
 		setShowCartNotification(true)
@@ -150,7 +156,13 @@ export default function ProductCard({ product, variant = 'default' }) {
 
 		// Если товар не в корзине, добавляем его
 		if (!productInCart) {
-			dispatch(addToCart({ ...product, quantity: 1 }))
+			dispatch(
+				addToCart({
+					...product,
+					quantity: 1,
+					slug: product.slug || product.id.toString(), // Добавляем slug, если его нет, используем id как fallback
+				})
+			)
 		}
 
 		// Переходим к оформлению заказа
@@ -260,7 +272,10 @@ export default function ProductCard({ product, variant = 'default' }) {
 								variant == 'catalog' ? 'text-lg' : 'text-xl'
 							} mx-auto text-center font-medium text-gray-900 hover:text-primary transition-colors mb-1 line-clamp-2 h-14 w-fit max-w-[290px]`}
 						>
-							{title || 'Название товара'}
+							{/* ${
+								grades?.length > 0 ? `КЛАСС ` + grades[0]?.displayName : ''
+							} */}
+							{`${title}` || 'Название товара'}
 						</h3>
 					</SmartLink>
 
@@ -289,7 +304,7 @@ export default function ProductCard({ product, variant = 'default' }) {
 						</div>
 
 						{/* Рейтинг */}
-						<div className="mb-2">{renderRating(rating)}</div>
+						{/* <div className="mb-2">{renderRating(rating)}</div> */}
 					</div>
 				</div>
 

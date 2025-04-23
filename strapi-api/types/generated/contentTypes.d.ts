@@ -596,7 +596,7 @@ export interface ApiOrderOrder extends Struct.CollectionTypeSchema {
       'api::address.address'
     >;
     shipping_method: Schema.Attribute.Enumeration<
-      ['courier', 'post', 'pickup', 'sdek']
+      ['post', 'pickup', 'sdek', 'post5', 'boxberry']
     >;
     total_amount: Schema.Attribute.Decimal & Schema.Attribute.Required;
     tracking_number: Schema.Attribute.String;

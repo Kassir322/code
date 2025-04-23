@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2025-04-23T15:55:53.777Z"
+    "x-generation-date": "2025-04-23T21:58:46.565Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -7139,10 +7139,11 @@
                           "shipping_method": {
                             "type": "string",
                             "enum": [
-                              "courier",
                               "post",
                               "pickup",
-                              "sdek"
+                              "sdek",
+                              "post5",
+                              "boxberry"
                             ]
                           },
                           "cancellation_reason": {
@@ -9000,10 +9001,11 @@
                           "shipping_method": {
                             "type": "string",
                             "enum": [
-                              "courier",
                               "post",
                               "pickup",
-                              "sdek"
+                              "sdek",
+                              "post5",
+                              "boxberry"
                             ]
                           },
                           "cancellation_reason": {
@@ -11095,10 +11097,11 @@
                           "shipping_method": {
                             "type": "string",
                             "enum": [
-                              "courier",
                               "post",
                               "pickup",
-                              "sdek"
+                              "sdek",
+                              "post5",
+                              "boxberry"
                             ]
                           },
                           "cancellation_reason": {
@@ -11555,10 +11558,11 @@
               "shipping_method": {
                 "type": "string",
                 "enum": [
-                  "courier",
                   "post",
                   "pickup",
-                  "sdek"
+                  "sdek",
+                  "post5",
+                  "boxberry"
                 ]
               },
               "cancellation_reason": {
@@ -13232,10 +13236,11 @@
                           "shipping_method": {
                             "type": "string",
                             "enum": [
-                              "courier",
                               "post",
                               "pickup",
-                              "sdek"
+                              "sdek",
+                              "post5",
+                              "boxberry"
                             ]
                           },
                           "cancellation_reason": {
@@ -13461,10 +13466,11 @@
           "shipping_method": {
             "type": "string",
             "enum": [
-              "courier",
               "post",
               "pickup",
-              "sdek"
+              "sdek",
+              "post5",
+              "boxberry"
             ]
           },
           "cancellation_reason": {
@@ -15364,10 +15370,11 @@
               "shipping_method": {
                 "type": "string",
                 "enum": [
-                  "courier",
                   "post",
                   "pickup",
-                  "sdek"
+                  "sdek",
+                  "post5",
+                  "boxberry"
                 ]
               },
               "cancellation_reason": {
@@ -17381,10 +17388,11 @@
               "shipping_method": {
                 "type": "string",
                 "enum": [
-                  "courier",
                   "post",
                   "pickup",
-                  "sdek"
+                  "sdek",
+                  "post5",
+                  "boxberry"
                 ]
               },
               "cancellation_reason": {
@@ -19112,10 +19120,11 @@
                         "shipping_method": {
                           "type": "string",
                           "enum": [
-                            "courier",
                             "post",
                             "pickup",
-                            "sdek"
+                            "sdek",
+                            "post5",
+                            "boxberry"
                           ]
                         },
                         "cancellation_reason": {
@@ -21209,10 +21218,11 @@
                               "shipping_method": {
                                 "type": "string",
                                 "enum": [
-                                  "courier",
                                   "post",
                                   "pickup",
-                                  "sdek"
+                                  "sdek",
+                                  "post5",
+                                  "boxberry"
                                 ]
                               },
                               "cancellation_reason": {

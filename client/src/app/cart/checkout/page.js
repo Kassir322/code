@@ -64,10 +64,17 @@ export default function CheckoutPage() {
 			icon: <Truck className="h-5 w-5" />,
 		},
 		{
-			id: '5post',
+			id: 'post5',
 			name: '5Post',
 			price: 270,
 			days: '2-5',
+			icon: <Truck className="h-5 w-5" />,
+		},
+		{
+			id: 'pickup',
+			name: 'Самовывоз',
+			price: 0,
+			days: '0',
 			icon: <Truck className="h-5 w-5" />,
 		},
 	]

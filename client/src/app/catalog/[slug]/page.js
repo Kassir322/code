@@ -52,6 +52,8 @@ export default async function CatalogPage({ params, searchParams }) {
 			? await getAllProducts()
 			: await getProductsByCategory(categorySlug)
 
+	console.log(`catalog/[slug]/page.js products: ${JSON.stringify(products)}`)
+
 	// Получаем SEO текст для данной категории
 	const seoText = getSeoTextForCategory(categorySlug)
 
