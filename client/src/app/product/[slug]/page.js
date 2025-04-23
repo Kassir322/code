@@ -18,6 +18,7 @@ import {
 import PopularProducts from '@/components/product/PopularProducts'
 import { ArrowLeft } from 'lucide-react'
 import SmartLink from '@/components/SmartLink'
+import ProductPrice from '@/components/product/ProductPrice'
 
 export const revalidate = 20
 // Генерируем статические пути для всех товаров при сборке
@@ -138,6 +139,7 @@ export default async function ProductPage({ params }) {
 					/>
 					<div className="flex flex-col">
 						<ProductInfo key={`info-${productKey}`} product={product} />
+
 						<ProductActions key={`actions-${productKey}`} product={product} />
 					</div>
 				</div>

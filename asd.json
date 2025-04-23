@@ -1,51 +1,38 @@
-[
-	{
-		"id": 2,
-		"name": "Математика",
-		"slug": "matematika",
-		"description": "Удобные карточки по математике",
-		"isActive": true
+{
+	"data": {
+		"id": 30,
+		"documentId": "l2dgovniqhi7br9hml4nj45q",
+		"title": "Химия Сборник Химических Элементов",
+		"description": "Полный сборник химических элементов для учебы",
+		"price": 11111,
+		"quantity": 1000,
+		"number_of_cards": null,
+		"card_type": "Вопрос-ответ",
+		"is_active": true,
+		"createdAt": "2025-04-17T00:30:43.081Z",
+		"updatedAt": "2025-04-23T16:08:56.956Z",
+		"publishedAt": "2025-04-23T16:08:56.946Z",
+		"locale": null,
+		"slug": "himiya-himicheskie-elementy",
+		"meta_title": null,
+		"meta_description": null,
+		"meta_keywords": null,
+		"old_price": null,
+		"category": {
+			"id": 9,
+			"documentId": "j1wx47yhjqvq38uttbh09jqc",
+			"name": "Химия",
+			"slug": "himiya",
+			"description": "Карточки по химии",
+			"is_active": true,
+			"createdAt": "2025-04-17T00:30:15.356Z",
+			"updatedAt": "2025-04-17T00:30:15.356Z",
+			"publishedAt": "2025-04-17T00:30:15.354Z",
+			"locale": null,
+			"meta_title": null,
+			"meta_description": null,
+			"meta_keywords": null
+		}
 	},
-	{
-		"id": 4,
-		"name": "Русский язык",
-		"slug": "russkiy-yazik",
-		"description": "Удобные карточки по русскому языку",
-		"isActive": true
-	},
-	{
-		"id": 5,
-		"name": "Обществознание",
-		"slug": "obshhestvoznanie",
-		"description": null,
-		"isActive": true
-	},
-	{
-		"id": 6,
-		"name": "История",
-		"slug": "istoriya",
-		"description": "Карточки по истории для школьников",
-		"isActive": true
-	},
-	{
-		"id": 7,
-		"name": "Геометрия",
-		"slug": "geometriya",
-		"description": "Карточки по геометрии",
-		"isActive": true
-	},
-	{
-		"id": 8,
-		"name": "Биология",
-		"slug": "biologiya",
-		"description": "Карточки по биологии",
-		"isActive": true
-	},
-	{
-		"id": 9,
-		"name": "Химия",
-		"slug": "himiya",
-		"description": "Карточки по химии",
-		"isActive": true
-	}
-]
+	"meta": {}
+}

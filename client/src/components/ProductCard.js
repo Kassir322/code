@@ -23,6 +23,7 @@ import {
 import { useRouter } from 'next/navigation'
 import CartNotification from './ui/CartNotification'
 import WishlistNotification from './ui/WishlistNotification'
+import ProductPrice from './product/ProductPrice'
 
 export default function ProductCard({ product, variant = 'default' }) {
 	const {
@@ -260,24 +261,20 @@ export default function ProductCard({ product, variant = 'default' }) {
 						</h3>
 					</SmartLink>
 
-					{/* Цена и информация о наличии */}
-					<div className="flex flex-col items-center justify-center px-2 py-2 gap-1">
+					{/* Цена товара, Статус наличия и Рейтинг*/}
+					<div className="flex flex-col items-center justify-center py-2 ">
 						{/* Цена */}
-						<div
-							className={`${
-								variant == 'catalog' ? 'text-base' : 'text-2xl'
-							} flex items-center gap-1`}
-						>
-							{oldPrice ? (
-								<>
-									<span className="font-bold text-gray-900">{price} ₽</span>
-									<span className="ml-2 text-sm text-gray-500 line-through">
-										{oldPrice} ₽
-									</span>
-								</>
-							) : (
-								<span className="font-bold text-gray-900">{price} ₽</span>
-							)}
+						<div className={`text-2xl flex items-center gap-1`}>
+							<div className="pb-1">
+								<ProductPrice
+									productId={id}
+									initialPrice={price}
+									initialOldPrice={oldPrice}
+									size="default"
+									showOldPrice={!!oldPrice}
+									className="font-bold text-gray-900"
+								/>
+							</div>
 						</div>
 
 						{/* Статус наличия */}
@@ -291,67 +288,67 @@ export default function ProductCard({ product, variant = 'default' }) {
 						{/* Рейтинг */}
 						<div className="mb-2">{renderRating(rating)}</div>
 					</div>
+				</div>
 
-					{/* Кнопки действий */}
-					<div className="flex justify-center gap-2 mt-2 xl:flex-row flex-col mb-4">
-						<button
-							onClick={handleAddToCart}
-							disabled={!stockStatus.available || isAddingToCart}
-							className={`cursor-pointer w-fit mx-auto ${
-								variant == 'catalog' ? 'text-sm' : 'text-base'
-							} px-4 rounded-md inline-flex items-center justify-center py-2 text-center font-medium transition-colors ${
-								!stockStatus.available
-									? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-									: isAddingToCart
-									? 'bg-green-600 text-white'
-									: productInCart
-									? 'bg-secondary-blue text-white'
-									: 'bg-dark text-white hover:bg-hover'
-							}`}
-							title={productInCart ? 'Перейти в корзину' : 'Добавить в корзину'}
-						>
-							{isAddingToCart ? (
-								<>
-									<CheckCircle className="h-4 w-4 mr-1" />
-									Добавлено
-								</>
-							) : productInCart ? (
-								<>
-									<CheckCircle className="h-4 w-4 mr-1" />В корзине
-								</>
-							) : (
-								<>
-									<ShoppingCart className="h-4 w-4 mr-1" />В корзину
-								</>
-							)}
-						</button>
+				{/* Кнопки действий */}
+				<div className="flex justify-center gap-2 mt-2 xl:flex-row flex-col mb-4">
+					<button
+						onClick={handleAddToCart}
+						disabled={!stockStatus.available || isAddingToCart}
+						className={`cursor-pointer w-fit mx-auto ${
+							variant == 'catalog' ? 'text-sm' : 'text-base'
+						} px-4 rounded-md inline-flex items-center justify-center py-2 text-center font-medium transition-colors ${
+							!stockStatus.available
+								? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+								: isAddingToCart
+								? 'bg-green-600 text-white'
+								: productInCart
+								? 'bg-secondary-blue text-white'
+								: 'bg-dark text-white hover:bg-hover'
+						}`}
+						title={productInCart ? 'Перейти в корзину' : 'Добавить в корзину'}
+					>
+						{isAddingToCart ? (
+							<>
+								<CheckCircle className="h-4 w-4 mr-1" />
+								Добавлено
+							</>
+						) : productInCart ? (
+							<>
+								<CheckCircle className="h-4 w-4 mr-1" />В корзине
+							</>
+						) : (
+							<>
+								<ShoppingCart className="h-4 w-4 mr-1" />В корзину
+							</>
+						)}
+					</button>
 
-						<button
-							onClick={handleQuickBuy}
-							disabled={!stockStatus.available || isQuickBuying}
-							className={`cursor-pointer w-fit mx-auto ${
-								variant == 'catalog' ? 'text-sm' : 'text-base'
-							} px-4 rounded-md inline-flex items-center justify-center py-2 text-center font-medium transition-colors ${
-								!stockStatus.available
-									? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-									: isQuickBuying
-									? 'bg-green-600 text-white'
-									: 'bg-secondary-blue text-white hover:bg-blue-700'
-							}`}
-						>
-							{isQuickBuying ? (
-								<>
-									<CheckCircle className="h-4 w-4 mr-1" />
-									Оформляется...
-								</>
-							) : (
-								<>
-									<Zap className="h-4 w-4 mr-1" />
-									Купить сейчас
-								</>
-							)}
-						</button>
-					</div>
+					<button
+						onClick={handleQuickBuy}
+						disabled={!stockStatus.available || isQuickBuying}
+						className={`cursor-pointer w-fit mx-auto ${
+							variant == 'catalog' ? 'text-sm' : 'text-base'
+						} px-4 rounded-md inline-flex items-center justify-center py-2 text-center font-medium transition-colors ${
+							!stockStatus.available
+								? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+								: isQuickBuying
+								? 'bg-green-600 text-white'
+								: 'bg-secondary-blue text-white hover:bg-blue-700'
+						}`}
+					>
+						{isQuickBuying ? (
+							<>
+								<CheckCircle className="h-4 w-4 mr-1" />
+								Оформляется...
+							</>
+						) : (
+							<>
+								<Zap className="h-4 w-4 mr-1" />
+								Купить сейчас
+							</>
+						)}
+					</button>
 				</div>
 			</div>
 

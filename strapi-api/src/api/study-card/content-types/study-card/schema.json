@@ -97,6 +97,9 @@
       "relation": "manyToMany",
       "target": "api::study-card.study-card",
       "mappedBy": "related_cards"
+    },
+    "old_price": {
+      "type": "decimal"
     }
   }
 }

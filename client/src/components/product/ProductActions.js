@@ -19,12 +19,10 @@ import {
 } from 'lucide-react'
 import CartNotification from '@/components/ui/CartNotification'
 import WishlistNotification from '@/components/ui/WishlistNotification'
+import ProductPrice from './ProductPrice'
 
 export default function ProductActions({ product }) {
-	const {
-		id,
-		quantity = 5, // По умолчанию считаем, что есть 5 штук в наличии
-	} = product
+	const { id, quantity, price } = product
 
 	// Состояния UI
 	const [productQuantity, setProductQuantity] = useState(1)
@@ -35,6 +33,7 @@ export default function ProductActions({ product }) {
 		useState(false)
 	const [isWishlistActionAdd, setIsWishlistActionAdd] = useState(true)
 	const [wishlistAnimation, setWishlistAnimation] = useState(false)
+	const [totalPrice, setTotalPrice] = useState(price)
 
 	const router = useRouter()
 	const dispatch = useAppDispatch()
@@ -65,6 +64,7 @@ export default function ProductActions({ product }) {
 	// Управление количеством товара
 	const increaseQuantity = () => {
 		setProductQuantity((prev) => prev + 1)
+		console.log(productQuantity * price)
 	}
 
 	const decreaseQuantity = () => {
@@ -150,35 +150,49 @@ export default function ProductActions({ product }) {
 
 	return (
 		<>
-			{/* Выбор количества */}
-			<div className="flex items-center mb-6">
-				<span className="text-gray-700 mr-4">Количество:</span>
-				<div className="flex items-center border border-gray-300 rounded-md">
-					<button
-						onClick={decreaseQuantity}
-						disabled={productQuantity <= 1}
-						className={`cursor-pointer p-2 ${
-							productQuantity <= 1
-								? 'text-gray-300'
-								: 'text-gray-600 hover:bg-gray-100'
-						}`}
-						aria-label="Уменьшить количество"
-					>
-						<Minus className="h-5 w-5" />
-					</button>
+			<div className="flex flex-col items-center gap-2">
+				{/* Цена */}
+				<div className="mt-4">
+					<ProductPrice
+						productId={product.id}
+						initialPrice={product.price}
+						initialOldPrice={product.old_price}
+						size="large"
+						showOldPrice={!!product.old_price}
+						className="text-3xl font-bold mr-3"
+						multiply={productQuantity}
+					/>
+				</div>
 
-					<span className="w-12 text-center text-lg">{productQuantity}</span>
+				{/* Выбор количества */}
+				<div className="flex items-center mb-6">
+					<span className="text-gray-700 mr-4">Количество:</span>
+					<div className="flex items-center border border-gray-300 rounded-md">
+						<button
+							onClick={decreaseQuantity}
+							disabled={productQuantity <= 1}
+							className={`cursor-pointer p-2 ${
+								productQuantity <= 1
+									? 'text-gray-300'
+									: 'text-gray-600 hover:bg-gray-100'
+							}`}
+							aria-label="Уменьшить количество"
+						>
+							<Minus className="h-5 w-5" />
+						</button>
 
-					<button
-						onClick={increaseQuantity}
-						className="cursor-pointer p-2 text-gray-600 hover:bg-gray-100"
-						aria-label="Увеличить количество"
-					>
-						<Plus className="h-5 w-5" />
-					</button>
+						<span className="w-12 text-center text-lg">{productQuantity}</span>
+
+						<button
+							onClick={increaseQuantity}
+							className="cursor-pointer p-2 text-gray-600 hover:bg-gray-100"
+							aria-label="Увеличить количество"
+						>
+							<Plus className="h-5 w-5" />
+						</button>
+					</div>
 				</div>
 			</div>
-
 			{/* Кнопки действий */}
 			<div className="flex flex-col sm:flex-row gap-4 mb-6">
 				<button

@@ -15,6 +15,6 @@ module.exports.settings = {
 	rateLimit: {
 		enabled: true,
 		interval: 60000,
-		max: 100, // максимум 100 запросов в минуту
+		max: 1000, // максимум 100 запросов в минуту
 	},
 }

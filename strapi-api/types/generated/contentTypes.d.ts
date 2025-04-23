@@ -764,6 +764,7 @@ export interface ApiStudyCardStudyCard extends Struct.CollectionTypeSchema {
         maxLength: 60;
       }>;
     number_of_cards: Schema.Attribute.Integer;
+    old_price: Schema.Attribute.Decimal;
     order_items: Schema.Attribute.Relation<
       'oneToMany',
       'api::order-item.order-item'

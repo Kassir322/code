@@ -8,14 +8,6 @@ const fetchPopularProducts = async (currentProductSlug) => {
 	// В реальном приложении здесь будет запрос к API
 	// const response = await fetch(`/api/products/popular?exclude=${currentProductSlug}`);
 	// return await response.json();
-
-	// Импортируем моковые данные из общего файла
-	const productMockData = (await import('@/lib/mock-data')).default
-
-	// Фильтруем, чтобы исключить текущий товар по slug
-	return productMockData
-		.filter((product) => product.slug !== currentProductSlug)
-		.slice(0, 4) // Только первые 4 товара для популярных
 }
 
 export default function PopularProducts({ currentProductSlug }) {
@@ -31,7 +23,7 @@ export default function PopularProducts({ currentProductSlug }) {
 			} catch (error) {
 				console.error('Ошибка при загрузке популярных товаров:', error)
 			} finally {
-				setLoading(false)
+				// setLoading(false)
 			}
 		}
 

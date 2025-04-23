@@ -82,6 +82,28 @@ export async function getAllCategoriesServer() {
 	return data.data.map(transformCategoryResponse)
 }
 
+export async function getProductPrice(productId) {
+	const response = await fetch(
+		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards/${productId}?fields[0]=price&fields[1]=old_price`,
+		{
+			headers: getServerHeaders(),
+		}
+	)
+
+	const data = await response.json()
+	console.log(`data: ${JSON.stringify(data)}`)
+
+	if (!response.ok) {
+		throw new Error(JSON.stringify(data.error) || 'Failed to fetch price')
+	}
+
+	return {
+		price: data.data.price,
+		old_price: data.data.old_price,
+		timestamp: new Date().toISOString(),
+	}
+}
+
 /**
  * Трансформирует ответ от Strapi в формат, ожидаемый фронтендом
  */
