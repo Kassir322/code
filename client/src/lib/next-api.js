@@ -46,7 +46,9 @@ export async function getProductBySlugServer(slug) {
 	const res = await fetch(fetchUrl, {
 		headers: getServerHeaders(),
 		// cache: 'force-cache',
-		cache: 'force-cache',
+		next: {
+			revalidate: 20,
+		},
 	})
 
 	if (!res.ok) {

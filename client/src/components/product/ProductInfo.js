@@ -15,6 +15,7 @@ export default function ProductInfo({ product }) {
 		numberOfCards,
 		grades,
 	} = product
+	console.log(`productInfo: ${JSON.stringify(product)}`)
 
 	// Определение статуса наличия товара
 	const getStockStatus = (quantity) => {
@@ -90,21 +91,20 @@ export default function ProductInfo({ product }) {
 					<span className="font-medium">{category?.name || 'Не указан'}</span>
 				</div>
 
-				{/* <div className="flex items-center">
-					<span className="text-gray-500 mr-2">Класс:</span>
-					<span className="font-medium">{product.grade || 'Не указан'}</span>
-				</div> */}
-
 				<div className="flex items-center">
 					<span className="text-gray-500 mr-2">Класс:</span>
-					{grades.map((grade, i) => (
-						<span
-							key={i}
-							className="font-medium text-white bg-secondary-blue rounded-md m-0.5 p-1 px-2"
-						>
-							{grade.displayName || 'Не указан'}
-						</span>
-					))}
+					{grades.length > 0 ? (
+						grades.map((grade, i) => (
+							<span
+								key={i}
+								className="font-medium text-white bg-secondary-blue rounded-md m-0.5 p-1 px-2"
+							>
+								{grade.displayName || 'Не указан'}
+							</span>
+						))
+					) : (
+						<span className="font-medium text-gray-500">Не указан</span>
+					)}
 				</div>
 
 				<div className="flex items-center">
