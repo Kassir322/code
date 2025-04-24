@@ -36,8 +36,6 @@ const cookiesService = {
 	 */
 	get: (name) => {
 		if (typeof window === 'undefined') {
-			console.log('ssr')
-
 			return undefined // В SSR cookies недоступны
 		}
 
@@ -80,7 +78,6 @@ const cookiesService = {
 				sameSite: 'Lax',
 			})
 
-			console.log('Токен успешно установлен в куки')
 			return true
 		} catch (error) {
 			console.error('Ошибка при установке токена в куки:', error)

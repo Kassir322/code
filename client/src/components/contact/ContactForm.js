@@ -58,13 +58,6 @@ export default function ContactForm() {
 	// Обработчик отправки формы
 	const onSubmit = async (data) => {
 		// Отладочная инфа
-		console.log('Form data:', data)
-		console.log(
-			'Privacy value type:',
-			typeof data.privacy,
-			'Value:',
-			data.privacy
-		)
 		setIsSubmitting(true)
 		setSubmitSuccess(false)
 		setSubmitError(false)

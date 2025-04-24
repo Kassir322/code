@@ -61,7 +61,6 @@ export default function OrderPage({ params }) {
 	useEffect(() => {
 		if (orderData && currentUser && !isOrderLoading && !isUserLoading) {
 			// Проверяем, совпадает ли ID пользователя в заказе с ID текущего пользователя
-			console.log(orderData, currentUser.id)
 
 			if (orderData.user?.id !== currentUser.id) {
 				setOrderAccessDenied(true)
@@ -92,7 +91,6 @@ export default function OrderPage({ params }) {
 				orderId: orderId,
 				paymentMethod: 'yookassa_redirect', // По умолчанию используем переадресацию на страницу ЮKassa
 			}
-			console.log(`PAYMENT DATA: ${JSON.stringify(paymentData)}`)
 
 			// Используем сервис для инициации платежа через Redux
 			const result = await initiatePayment(paymentData)
@@ -147,8 +145,6 @@ export default function OrderPage({ params }) {
 			},
 		}
 	}
-
-	console.log(`orderData`, orderData)
 
 	// Отображаем загрузку
 	if (isOrderLoading || isUserLoading) {

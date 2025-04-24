@@ -27,7 +27,6 @@ export async function generateStaticParams() {
 	const data = products.map((product) => ({
 		slug: product.slug,
 	}))
-	console.log(`data: ${JSON.stringify(data)}`)
 	return data
 }
 
@@ -64,10 +63,8 @@ export async function generateMetadata({ params }) {
 // Серверная компонента для страницы товара
 export default async function ProductPage({ params }) {
 	const { slug } = await params
-	console.log(`Product/page.js slug: ${slug}`)
 
 	const product = await getProductBySlugServer(slug)
-	console.log(`product: ${JSON.stringify(product)}`)
 
 	if (!product) {
 		notFound()

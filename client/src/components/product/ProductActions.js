@@ -64,7 +64,6 @@ export default function ProductActions({ product }) {
 	// Управление количеством товара
 	const increaseQuantity = () => {
 		setProductQuantity((prev) => prev + 1)
-		console.log(productQuantity * price)
 	}
 
 	const decreaseQuantity = () => {

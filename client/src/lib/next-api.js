@@ -39,10 +39,7 @@ export async function getAllProductsServer() {
  */
 export async function getProductBySlugServer(slug) {
 	// /api/study-cards?populate=*&filters[category][slug][$eq]=${categorySlug}
-	console.log(`getProductBySlugServer slug: ${slug}`)
 	const fetchUrl = `${process.env.STRAPI_API_URL}/api/study-cards?populate=*&filters[slug]=${slug}`
-	console.log(`fetchUrl: ${fetchUrl}`)
-
 	const res = await fetch(fetchUrl, {
 		headers: getServerHeaders(),
 		// cache: 'force-cache',
@@ -91,7 +88,6 @@ export async function getProductPrice(productId) {
 	)
 
 	const data = await response.json()
-	console.log(`data: ${JSON.stringify(data)}`)
 
 	if (!response.ok) {
 		throw new Error(JSON.stringify(data.error) || 'Failed to fetch price')
@@ -124,21 +120,6 @@ function transformStrapiResponse(strapiItem) {
 		grades,
 	} = strapiItem
 
-	// console.log('strapiItem', {
-	// 	id,
-	// 	title,
-	// 	description,
-	// 	price,
-	// 	quantity,
-	// 	number_of_cards,
-	// 	subject,
-	// 	card_type,
-	// 	is_active,
-	// 	slug,
-	// 	image,
-	// 	category,
-	// 	grades,
-	// })
 	const obj = {
 		id,
 		title,

@@ -28,9 +28,6 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
 	'auth/login',
 	async (credentials, { rejectWithValue }) => {
-		console.log(
-			`authSlice.js loginUser credentials ${JSON.stringify(credentials)}`
-		)
 		try {
 			const response = await authService.loginUser(credentials)
 			return response

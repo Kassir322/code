@@ -17,8 +17,6 @@ export default function CartItem({ item }) {
 		dispatch(removeFromCart(item.id))
 	}
 
-	console.log(`CartItem item: ${JSON.stringify(item)}`)
-
 	return (
 		<div className="flex flex-col sm:flex-row justify-between items-center py-4 border-b border-gray-200">
 			{/* Изображение и название */}

@@ -177,8 +177,6 @@ export async function getFeaturedProducts() {
 	}
 
 	const data = await res.json()
-	console.log(`api.js getFeaturedProducts data: ${JSON.stringify(data)}`)
-
 	return data.data.map(transformStrapiResponse)
 }
 

@@ -28,8 +28,6 @@ export default function Header() {
 
 	// Получаем данные о пользователе
 	const { user, isAuthenticated, logout } = useAuth()
-	console.log(`user ${user}, isAuthenticated ${isAuthenticated}`)
-
 	// При изменении количества товаров запускаем анимацию корзины
 	useEffect(() => {
 		if (cartItemCount !== 0 && cartItemCount !== itemsCount) {

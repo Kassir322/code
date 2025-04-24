@@ -22,11 +22,8 @@ import { ArrowLeft } from 'lucide-react'
 export default function AddressesPage() {
 	const { data: user, isLoading, isError } = useGetUserQuery()
 
-	console.log('AddressesPage render:', { user, isLoading, isError })
-
 	// Перенаправляем неавторизованных пользователей на страницу входа
 	if (isLoading) {
-		console.log('Showing loading state')
 		return (
 			<div className="container mx-auto px-4 py-10">
 				{/* <Breadcrumbs items={breadcrumbItems} /> */}
@@ -44,7 +41,6 @@ export default function AddressesPage() {
 	// 	return null // Middleware перенаправит на страницу входа
 	// }
 
-	console.log('Rendering main content')
 	return (
 		<div className="container mx-auto px-4 py-10">
 			{/* Хлебные крошки для SEO и навигации */}

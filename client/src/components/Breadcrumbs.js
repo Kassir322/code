@@ -16,8 +16,6 @@ export default function Breadcrumbs({ items }) {
 		})),
 	}
 
-	console.log(`Breadcrumbs items: ${JSON.stringify(items)}`)
-
 	return (
 		<>
 			<nav

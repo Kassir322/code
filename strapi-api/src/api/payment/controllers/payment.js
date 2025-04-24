@@ -12,8 +12,6 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 	 */
 	async create(ctx) {
 		try {
-			console.log('create payment data: ', ctx.request.body)
-
 			const { order, amount, payment_method } = ctx.request.body.data
 			const user = ctx.state.user
 
@@ -40,8 +38,6 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 				.createYookassaPayment(paymentData, idempotencyKey)
 
 			if (result.error) {
-				console.log(`ошибочка вот тут 1`)
-
 				return ctx.badRequest(result.error)
 			}
 
@@ -255,8 +251,6 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 			// }
 
 			const { event, object } = body
-			console.log(`webhook event: ${event}`)
-			console.log(`webhook object: ${JSON.stringify(object)}`)
 
 			switch (event) {
 				case 'payment.succeeded':
@@ -268,10 +262,7 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 						}
 					)
 
-					console.log(`payment: ${JSON.stringify(payment)}`)
-
 					if (payment.length > 0) {
-						console.log(`зашел в payment.succeeded length > 0`)
 						// Обновляем статус платежа через PUT запрос
 						await strapi
 							.service('api::payment.payment')
@@ -289,10 +280,8 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 							filters: { yookassa_id: object.id },
 						}
 					)
-					console.log(`canceledPayment: ${JSON.stringify(canceledPayment)}`)
 
 					if (canceledPayment.length > 0) {
-						console.log(`зашел в payment.canceled length > 0`)
 						// Обновляем статус платежа через PUT запрос
 						await strapi
 							.service('api::payment.payment')
@@ -311,10 +300,7 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 						}
 					)
 
-					console.log(`refundPayment: ${JSON.stringify(refundPayment)}`)
-
 					if (refundPayment.length > 0) {
-						console.log(`зашел в refund.succeeded length > 0`)
 						// Обновляем статус возврата через PUT запрос
 						await strapi
 							.service('api::payment.payment')
@@ -341,20 +327,13 @@ module.exports = createCoreController('api::payment.payment', ({ strapi }) => ({
 				}
 			)
 
-			console.log(`payment: ${JSON.stringify(payment)}`)
-
 			if (payment.length > 0) {
-				console.log(`зашел в payment.succeeded length > 0`)
-				console.log(`payment[0].id: ${payment[0].id}`)
-
 				// Обновляем статус платежа через PUT запрос
 				const paymentUpdate = await strapi
 					.service('api::payment.payment')
 					.update(payment[0].documentId, {
 						data: { payment_status: 'succeeded' },
 					})
-
-				console.log(`paymentUpdate: ${JSON.stringify(paymentUpdate)}`)
 			}
 		} catch (error) {
 			console.error('Ошибка обновления статуса:', error)

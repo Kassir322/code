@@ -39,8 +39,6 @@ export default function ProductCard({ product, variant = 'default' }) {
 		grades,
 	} = product
 
-	console.log(`productCard: ${JSON.stringify(product)}`)
-
 	// Используем slug для построения URL
 	const productSlug = product.slug || id.toString()
 

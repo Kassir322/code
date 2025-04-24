@@ -79,10 +79,6 @@ export function useAuth() {
 	const login = useCallback(
 		async (credentials, redirectUrl = '/account') => {
 			try {
-				console.log(
-					`useAuth.js login credentials ${JSON.stringify(credentials)}`
-				)
-
 				setLocalLoading(true)
 				await dispatch(loginUser(credentials)).unwrap()
 				router.push(redirectUrl)

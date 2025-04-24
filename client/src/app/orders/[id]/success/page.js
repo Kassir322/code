@@ -50,8 +50,6 @@ export default function OrderSuccessPage({ params }) {
 		skip: !orderId,
 	})
 
-	console.log(orderId)
-
 	// При загрузке страницы очищаем корзину, если заказ успешно оформлен
 	useEffect(() => {
 		if (orderData && !isOrderLoading) {
@@ -63,7 +61,6 @@ export default function OrderSuccessPage({ params }) {
 	useEffect(() => {
 		if (orderData && currentUser && !isOrderLoading && !isUserLoading) {
 			// Проверяем, совпадает ли ID пользователя в заказе с ID текущего пользователя
-			console.log(orderData, currentUser.id)
 
 			if (orderData.user?.id !== currentUser.id) {
 				setOrderAccessDenied(true)
@@ -95,7 +92,6 @@ export default function OrderSuccessPage({ params }) {
 				orderId: orderId,
 				paymentMethod: 'yookassa_redirect', // По умолчанию используем переадресацию на страницу ЮKassa
 			}
-			console.log(`PAYMENT DATA: ${JSON.stringify(paymentData)}`)
 
 			// Используем сервис для инициации платежа через Redux
 			const result = await initiatePayment(paymentData)

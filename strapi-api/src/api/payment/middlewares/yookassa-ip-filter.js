@@ -43,7 +43,6 @@ const getClientIp = (ctx) => {
 module.exports = (config, { strapi }) => {
 	return async (ctx, next) => {
 		const clientIp = getClientIp(ctx)
-		console.log('clientIp', clientIp)
 
 		// Пропускаем в dev режиме
 		if (process.env.NODE_ENV === 'development') {

@@ -15,8 +15,6 @@ export default function ProductInfo({ product }) {
 		numberOfCards,
 		grades,
 	} = product
-	console.log(`productInfo: ${JSON.stringify(product)}`)
-
 	// Определение статуса наличия товара
 	const getStockStatus = (quantity) => {
 		if (quantity <= 0)

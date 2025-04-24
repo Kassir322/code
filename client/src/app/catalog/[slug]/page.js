@@ -19,7 +19,6 @@ export async function generateStaticParams() {
 	}))
 	// Добавляем 'all' для главной страницы каталога
 	data.push({ slug: 'all' })
-	console.log(`data: ${JSON.stringify(data)}`)
 	return data
 }
 
@@ -51,8 +50,6 @@ export default async function CatalogPage({ params, searchParams }) {
 		categorySlug === 'all'
 			? await getAllProducts()
 			: await getProductsByCategory(categorySlug)
-
-	console.log(`catalog/[slug]/page.js products: ${JSON.stringify(products)}`)
 
 	// Получаем SEO текст для данной категории
 	const seoText = getSeoTextForCategory(categorySlug)

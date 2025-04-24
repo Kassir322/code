@@ -10,8 +10,6 @@ export async function middleware(request) {
 			request.nextUrl.pathname.includes('/register') ||
 			request.nextUrl.pathname.includes('/forgot-password')
 		) {
-			console.log(`middleware.js скип`)
-
 			return NextResponse.next()
 		}
 
@@ -39,10 +37,7 @@ export async function middleware(request) {
 			if (!response.ok) {
 				throw new Error('Invalid token')
 			}
-			console.log(`middleware.js response ${JSON.stringify(response)}`)
 		} catch (error) {
-			console.log(`middleware.js error ${JSON.stringify(error)}`)
-
 			// Если токен невалидный, перенаправляем на страницу входа
 			const loginUrl = new URL('/account/login', request.url)
 			loginUrl.searchParams.set('redirect', request.nextUrl.pathname)

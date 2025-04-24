@@ -25,11 +25,6 @@ module.exports = createStrapi.createCoreService(
 		 */
 		async createYookassaPayment(paymentData, idempotencyKey) {
 			try {
-				console.log('Создание платежа в ЮKassa:', {
-					...paymentData,
-					idempotencyKey,
-				})
-
 				// Создаем платеж с ключом идемпотентности
 				const payment = await this.yooKassa.createPayment(
 					{
@@ -54,13 +49,6 @@ module.exports = createStrapi.createCoreService(
 					},
 					idempotencyKey // Используем переданный ключ идемпотентности
 				)
-
-				// console.log('Платеж создан:', {
-				// 	payment_id: payment.id,
-				// 	status: payment.status,
-				// })
-
-				console.log('Платеж создан:', payment)
 
 				return payment
 			} catch (error) {
@@ -103,11 +91,6 @@ module.exports = createStrapi.createCoreService(
 					},
 					idempotencyKey
 				)
-
-				console.log('Возврат создан:', {
-					refund_id: refund.id,
-					status: refund.status,
-				})
 
 				return refund
 			} catch (error) {

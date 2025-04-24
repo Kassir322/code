@@ -151,7 +151,6 @@ export default function CheckoutPage() {
 				// dispatch(clearCart())
 
 				// ИЗМЕНЕНО: Перенаправляем на новую страницу успешного оформления заказа
-				console.log('Перенаправление на:', `/orders/${result.orderId}`)
 				router.push(`/orders/${result.orderId}`)
 			} else {
 				console.error('Ошибка при создании заказа:', result.error)

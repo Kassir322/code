@@ -127,7 +127,6 @@ export default function AddressForm({
 	const onSubmit = async (data) => {
 		setIsSubmitting(true)
 		try {
-			console.log('Отправляемые данные:', data)
 			// Если редактируем существующий адрес
 			if (address) {
 				await updateAddress({ id: address.id, data: { data } })

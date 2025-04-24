@@ -37,9 +37,6 @@ const testimonials = [
 
 export default async function Home() {
 	const featuredProducts = await getFeaturedProducts()
-	console.log(
-		`app/page.js featuredProducts: ${JSON.stringify(featuredProducts)}`
-	)
 
 	return (
 		<div className="flex flex-col min-h-screen">
