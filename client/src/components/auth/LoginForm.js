@@ -68,27 +68,19 @@ function LoginFormContent() {
 				password: data.password,
 			})
 
-			// Проверяем, есть ли параметр redirect в URL
-			const redirect = searchParams.get('redirect') || '/account'
-
-			// Перенаправляем пользователя
-			if (typeof window !== 'undefined') {
-				router.replace(redirect)
-			}
+			// Делаем небольшую задержку для обеспечения синхронизации состояния
+			setTimeout(() => {
+				// Перенаправляем пользователя
+				if (typeof window !== 'undefined') {
+					window.location.href = '/account'
+				}
+			}, 300)
 		} catch (error) {
 			console.error('Ошибка при входе:', error)
 			setServerError(
 				error.message ||
 					'Неверные учетные данные. Пожалуйста, проверьте email и пароль.'
 			)
-		} finally {
-			// Проверяем, есть ли параметр redirect в URL
-			const redirect = searchParams.get('redirect') || '/account'
-
-			// Перенаправляем пользователя
-			if (typeof window !== 'undefined') {
-				router.replace(redirect)
-			}
 			setIsLoading(false)
 		}
 	}

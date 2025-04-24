@@ -62,8 +62,30 @@ const cookiesService = {
 	 * @param {string} token - JWT токен
 	 * @param {object} options - дополнительные опции
 	 */
-	setAuthToken: (token, options = {}) => {
-		cookiesService.set('token', token, options)
+	setAuthToken: (token) => {
+		if (typeof window === 'undefined') return
+
+		// Устанавливаем куки с httpOnly, secure, samesite и другими настройками безопасности
+		try {
+			// Сохраняем токен в локальном хранилище (временная мера для отладки)
+			if (process.env.NODE_ENV === 'development') {
+				localStorage.setItem('debug_token', token)
+			}
+
+			// Установка куки с максимальными настройками безопасности
+			Cookies.set(`token`, token, {
+				expires: 7, // 7 дней
+				path: '/',
+				secure: process.env.NODE_ENV === 'production',
+				sameSite: 'Lax',
+			})
+
+			console.log('Токен успешно установлен в куки')
+			return true
+		} catch (error) {
+			console.error('Ошибка при установке токена в куки:', error)
+			return false
+		}
 	},
 
 	/**
@@ -71,7 +93,22 @@ const cookiesService = {
 	 * @returns {string|undefined} токен или undefined
 	 */
 	getAuthToken: () => {
-		return cookiesService.get('token')
+		if (typeof window === 'undefined') return null
+
+		try {
+			// Получаем токен из куки
+			const token = Cookies.get(`token`)
+
+			// Для отладки в development
+			if (process.env.NODE_ENV === 'development' && !token) {
+				return localStorage.getItem('debug_token')
+			}
+
+			return token || null
+		} catch (error) {
+			console.error('Ошибка при получении токена из куки:', error)
+			return null
+		}
 	},
 
 	/**

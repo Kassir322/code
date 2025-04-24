@@ -29,25 +29,46 @@ export function useAuth() {
 
 	// Локальное состояние для обработки загрузки
 	const [localLoading, setLocalLoading] = useState(false)
+	const [initialized, setInitialized] = useState(false)
 
 	// Проверяем авторизацию при загрузке компонента
 	useEffect(() => {
 		const checkAuth = async () => {
 			try {
-				setLocalLoading(true)
-				await dispatch(fetchCurrentUser()).unwrap()
+				if (!initialized) {
+					setLocalLoading(true)
+					// Проверяем наличие пользователя в localStorage
+					const savedUser = localStorage.getItem('user')
+					const authToken = cookiesService.getAuthToken()
+
+					if (savedUser && authToken) {
+						// Синхронизируем Redux состояние
+						dispatch(
+							setAuth({
+								user: JSON.parse(savedUser),
+								token: authToken,
+							})
+						)
+					} else {
+						// Сбрасываем состояние, если нет данных
+						dispatch(clearAuth())
+					}
+
+					// После инициализации проверяем актуальность токена
+					await dispatch(fetchCurrentUser()).unwrap()
+					setInitialized(true)
+				}
 			} catch (error) {
 				console.error('Ошибка при проверке авторизации:', error)
+				dispatch(clearAuth())
 			} finally {
 				setLocalLoading(false)
 			}
 		}
 
-		// Проверяем авторизацию только если есть токен в cookies
-		if (cookiesService.hasAuthToken()) {
-			checkAuth()
-		}
-	}, [dispatch])
+		// Проверяем авторизацию
+		checkAuth()
+	}, [dispatch, initialized])
 
 	/**
 	 * Функция для входа пользователя
