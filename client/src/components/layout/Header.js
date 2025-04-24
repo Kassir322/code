@@ -6,7 +6,7 @@ import NavLink from '../ui/NavLink'
 import CartIcon from '../ui/CartIcon'
 import WishlistIcon from '../ui/WishlistIcon'
 import { Menu, User, Heart } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { selectCartItemsCount, selectCartItems } from '@/store/slices/cartSlice'
 import {
@@ -27,7 +27,8 @@ export default function Header() {
 	const wishlistItems = useSelector(selectWishlistItems)
 
 	// Получаем данные о пользователе
-	const { user, isAuthenticated } = useAuth()
+	const { user, isAuthenticated, logout } = useAuth()
+	console.log(`user ${user}, isAuthenticated ${isAuthenticated}`)
 
 	// При изменении количества товаров запускаем анимацию корзины
 	useEffect(() => {

@@ -39,13 +39,17 @@ export const registerUser = async (userData) => {
 export const loginUser = async (credentials) => {
 	try {
 		const apiUrl = `${baseUrl}/api/auth/local`
+		console.log(`auth.js credentials ${JSON.stringify(credentials)}`)
 
 		const response = await fetch(apiUrl, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
-			body: JSON.stringify(credentials),
+			body: JSON.stringify({
+				identifier: credentials.identifier,
+				password: credentials.password,
+			}),
 		})
 
 		const data = await response.json()

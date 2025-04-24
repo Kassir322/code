@@ -13,6 +13,8 @@ import {
 	registerUser,
 	fetchCurrentUser,
 	clearError,
+	setAuth,
+	clearAuth,
 } from '@/store/slices/authSlice'
 import cookiesService from '@/services/cookies'
 
@@ -23,12 +25,7 @@ import cookiesService from '@/services/cookies'
 export function useAuth() {
 	const dispatch = useDispatch()
 	const router = useRouter()
-
-	// Получаем данные из Redux
-	const isAuthenticated = useSelector(selectIsAuthenticated)
-	const user = useSelector(selectCurrentUser)
-	const isLoading = useSelector(selectIsLoading)
-	const error = useSelector(selectAuthError)
+	const { user, isAuthenticated, token } = useSelector((state) => state.auth)
 
 	// Локальное состояние для обработки загрузки
 	const [localLoading, setLocalLoading] = useState(false)
@@ -61,6 +58,10 @@ export function useAuth() {
 	const login = useCallback(
 		async (credentials, redirectUrl = '/account') => {
 			try {
+				console.log(
+					`useAuth.js login credentials ${JSON.stringify(credentials)}`
+				)
+
 				setLocalLoading(true)
 				await dispatch(loginUser(credentials)).unwrap()
 				router.push(redirectUrl)
@@ -124,8 +125,14 @@ export function useAuth() {
 	return {
 		user,
 		isAuthenticated,
-		isLoading: isLoading || localLoading,
-		error,
+		token,
+		isLoading: isAuthenticated === null || localLoading,
+		error:
+			isAuthenticated === null
+				? null
+				: isAuthenticated === false
+				? 'Ошибка авторизации'
+				: null,
 		login,
 		register,
 		logout,

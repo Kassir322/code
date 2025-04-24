@@ -28,6 +28,9 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
 	'auth/login',
 	async (credentials, { rejectWithValue }) => {
+		console.log(
+			`authSlice.js loginUser credentials ${JSON.stringify(credentials)}`
+		)
 		try {
 			const response = await authService.loginUser(credentials)
 			return response
@@ -88,6 +91,16 @@ const authSlice = createSlice({
 		setLoading: (state, action) => {
 			state.isLoading = action.payload
 		},
+		setAuth: (state, action) => {
+			state.user = action.payload.user
+			state.isAuthenticated = true
+			state.token = action.payload.token
+		},
+		clearAuth: (state) => {
+			state.user = null
+			state.isAuthenticated = false
+			state.token = null
+		},
 	},
 	extraReducers: (builder) => {
 		// Обработка входа
@@ -121,7 +134,7 @@ const authSlice = createSlice({
 })
 
 // Экспортируем действия
-export const { clearError, setLoading } = authSlice.actions
+export const { clearError, setLoading, setAuth, clearAuth } = authSlice.actions
 
 // Экспортируем селекторы
 export const selectCurrentUser = (state) => state.auth.user
