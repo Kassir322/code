@@ -3,17 +3,8 @@
 
 import { Filter, X } from 'lucide-react'
 import Link from 'next/link'
-
-// Классы
-const grades = [
-	'Все классы',
-	'5-6 класс',
-	'7-8 класс',
-	'8-9 класс',
-	'9 класс (ОГЭ)',
-	'10-11 класс',
-	'11 класс (ЕГЭ)',
-]
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 // Типы карточек
 const cardTypes = ['Все типы', 'Вопрос-ответ', 'Шпаргалки', 'Комбинированный']
@@ -21,17 +12,17 @@ const cardTypes = ['Все типы', 'Вопрос-ответ', 'Шпаргал
 // Ценовые диапазоны
 const priceRanges = [
 	{ id: 'all', label: 'Все цены', min: 0, max: Infinity },
-	{ id: 'range1', label: 'До 800 ₽', min: 0, max: 800 },
-	{ id: 'range2', label: '800 ₽ - 900 ₽', min: 800, max: 900 },
-	{ id: 'range3', label: '900 ₽ - 1000 ₽', min: 900, max: 1000 },
-	{ id: 'range4', label: 'Более 1000 ₽', min: 1000, max: Infinity },
+	{ id: 'range1', label: 'До 400 ₽', min: 0, max: 400 },
+	{ id: 'range2', label: '400 ₽ - 600 ₽', min: 400, max: 600 },
+	{ id: 'range3', label: '600 ₽ - 800 ₽', min: 600, max: 800 },
+	{ id: 'range4', label: 'Более 800 ₽', min: 800, max: Infinity },
 ]
 
 export default function FiltersPanel({
 	categories,
 	categorySlug,
-	selectedGrade,
-	setSelectedGrade,
+	selectedGrades,
+	setSelectedGrades,
 	selectedCardType,
 	setSelectedCardType,
 	selectedPriceRange,
@@ -41,7 +32,35 @@ export default function FiltersPanel({
 	resetFilters,
 	showMobileFilter,
 	setShowMobileFilter,
+	grades,
+	isLoading,
 }) {
+	const router = useRouter()
+	const searchParams = useSearchParams()
+
+	// Обновление URL при изменении выбранных классов
+	const handleGradeChange = (gradeId) => {
+		let newSelectedGrades
+
+		if (gradeId === 'all') {
+			// Если выбрали "Все классы", снимаем выбор с остальных
+			newSelectedGrades = ['all']
+		} else {
+			// Если выбрали конкретный класс
+			if (selectedGrades.includes('all')) {
+				// Если был выбран "Все классы", снимаем его и добавляем новый класс
+				newSelectedGrades = [gradeId]
+			} else {
+				// Иначе добавляем/удаляем класс из списка
+				newSelectedGrades = selectedGrades.includes(gradeId)
+					? selectedGrades.filter((id) => id !== gradeId)
+					: [...selectedGrades, gradeId]
+			}
+		}
+
+		setSelectedGrades(newSelectedGrades)
+	}
+
 	// Преобразуем категории в формат для отображения
 	const subjects = [
 		{ name: 'Все предметы', slug: '/all' },
@@ -51,13 +70,20 @@ export default function FiltersPanel({
 		})) || []),
 	]
 
-	// Находим активную категорию, используя пустую строку для "Все предметы"
+	// Находим активную категорию
 	const activeSubject =
 		subjects.find(
 			(item) =>
 				item.slug === categorySlug ||
 				(categorySlug === 'catalog' && item.slug === '')
 		) || subjects[0]
+
+	// Функция для создания ссылки с сохранением параметров фильтрации
+	const createCategoryLink = (slug) => {
+		const params = new URLSearchParams(searchParams)
+		const newPath = `/catalog${slug ? `/${slug}` : ''}`
+		return `${newPath}${params.toString() ? `?${params.toString()}` : ''}`
+	}
 
 	return (
 		<>
@@ -101,7 +127,11 @@ export default function FiltersPanel({
 								<li key={subject.name}>
 									<label className="flex items-center cursor-pointer">
 										<Link
-											href={`/catalog${subject.slug ? `/${subject.slug}` : ''}`}
+											href={createCategoryLink(subject.slug)}
+											onClick={(e) => {
+												e.preventDefault()
+												router.push(createCategoryLink(subject.slug))
+											}}
 										>
 											<span
 												className={`text-neutral-05 hover:text-secondary-blue ${
@@ -132,24 +162,46 @@ export default function FiltersPanel({
 					{/* Фильтр по классу */}
 					<div className="mb-6">
 						<h4 className="font-medium mb-2">Класс</h4>
-						<ul className="space-y-2">
-							{grades.map((grade) => (
-								<li key={grade}>
+						{isLoading ? (
+							<div className="animate-pulse space-y-2">
+								{[1, 2, 3, 4].map((i) => (
+									<div key={i} className="h-4 bg-gray-200 rounded"></div>
+								))}
+							</div>
+						) : (
+							<ul className="space-y-2">
+								{/* Опция "Все классы" */}
+								<li>
 									<label className="flex items-center cursor-pointer">
 										<input
-											type="radio"
-											name="grade"
-											checked={selectedGrade === grade}
-											onChange={() => setSelectedGrade(grade)}
+											type="checkbox"
+											checked={selectedGrades.includes('all')}
+											onChange={() => handleGradeChange('all')}
 											className="mr-2 accent-secondary-blue"
 										/>
 										<span className="text-neutral-05 hover:text-secondary-blue">
-											{grade}
+											Все классы
 										</span>
 									</label>
 								</li>
-							))}
-						</ul>
+								{/* Классы из API */}
+								{grades.map((grade) => (
+									<li key={grade.id}>
+										<label className="flex items-center cursor-pointer">
+											<input
+												type="checkbox"
+												checked={selectedGrades.includes(grade.display_name)}
+												onChange={() => handleGradeChange(grade.display_name)}
+												className="mr-2 accent-secondary-blue"
+											/>
+											<span className="text-neutral-05 hover:text-secondary-blue">
+												{`${grade.display_name} класс`}
+											</span>
+										</label>
+									</li>
+								))}
+							</ul>
+						)}
 					</div>
 
 					{/* Фильтр по типу карточек */}

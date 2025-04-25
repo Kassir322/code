@@ -287,3 +287,39 @@ function transformOrderResponse(orderItem) {
 			: null,
 	}
 }
+
+/**
+ * Получает список классов с сортировкой по полю order
+ * @returns {Promise<Array>} Список классов
+ */
+export async function getGrades() {
+	try {
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/api/grades?sort=order:asc`
+		)
+		const data = await response.json()
+		return data.data
+	} catch (error) {
+		console.error('Error fetching grades:', error)
+		return []
+	}
+}
+
+/**
+ * Получает список классов, которые имеют связь с карточками
+ * @returns {Promise<Array>} Список классов с карточками
+ */
+export async function getGradesWithCards() {
+	try {
+		const response = await fetch(
+			`${process.env.NEXT_PUBLIC_API_URL}/api/grades?populate=study_cards&sort=order:asc`
+		)
+		const data = await response.json()
+
+		// Фильтруем только те классы, у которых есть связанные карточки
+		return data.data.filter((grade) => grade.study_cards.length > 0)
+	} catch (error) {
+		console.error('Error fetching grades with cards:', error)
+		return []
+	}
+}
