@@ -26,53 +26,17 @@ const fetchSimilarProducts = async (currentProductSlug, category) => {
 	return filteredProducts.slice(0, 4)
 }
 
-export default function SimilarProducts({ currentProductSlug, category }) {
-	const [products, setProducts] = useState([])
-	const [loading, setLoading] = useState(true)
-
-	useEffect(() => {
-		const loadProducts = async () => {
-			setLoading(true)
-			try {
-				const data = await fetchSimilarProducts(currentProductSlug, category)
-				setProducts(data)
-			} catch (error) {
-				console.error('Ошибка при загрузке похожих товаров:', error)
-			} finally {
-				setLoading(false)
-			}
-		}
-
-		if (category) {
-			loadProducts()
-		}
-	}, [currentProductSlug, category])
-
-	if (loading) {
-		return (
-			<div className="bg-white rounded-lg shadow-sm p-6 my-8">
-				<h2 className="text-2xl font-bold mb-6">Похожие товары</h2>
-				<div className="flex justify-center py-8">
-					<div className="animate-spin rounded-full h-10 w-10 border-b-2 border-secondary-blue"></div>
-				</div>
-			</div>
-		)
-	}
-
-	// Если нет товаров или менее 2-х товаров, не показываем раздел
-	if (products.length < 2) {
-		return null
-	}
+export default function SimilarProducts({ products }) {
+	if (!products?.length) return null
 
 	return (
-		<div className="bg-white rounded-lg shadow-sm p-6 my-8">
-			<h2 className="text-2xl font-bold mb-6">Похожие товары</h2>
-
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+		<section className="my-16">
+			<h2 className="text-2xl font-bold mb-8">Похожие товары</h2>
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 				{products.map((product) => (
-					<ProductCard key={product.id} product={product} variant="catalog" />
+					<ProductCard key={product.id} product={product} />
 				))}
 			</div>
-		</div>
+		</section>
 	)
 }

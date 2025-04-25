@@ -19,6 +19,7 @@ import PopularProducts from '@/components/product/PopularProducts'
 import { ArrowLeft } from 'lucide-react'
 import SmartLink from '@/components/SmartLink'
 import ProductPrice from '@/components/product/ProductPrice'
+import { getSimilarProducts, getFeaturedProducts } from '@/lib/api'
 
 export const revalidate = 20
 // Генерируем статические пути для всех товаров при сборке
@@ -69,6 +70,14 @@ export default async function ProductPage({ params }) {
 	if (!product) {
 		notFound()
 	}
+
+	// Получаем похожие и популярные товары
+	const [similarProducts, popularProducts] = await Promise.all([
+		product.category
+			? getSimilarProducts(product.category.slug, slug, product.grades)
+			: [],
+		getFeaturedProducts(4),
+	])
 
 	// Формируем хлебные крошки
 	const breadcrumbItems = [
@@ -144,11 +153,14 @@ export default async function ProductPage({ params }) {
 			<ProductTrustBlock />
 			<ProductTabs key={`tabs-${product.id}`} product={product} />
 			<ProductFAQ />
-			<SimilarProducts
-				currentProductSlug={slug}
-				categorySlug={product.category?.slug}
-			/>
-			<PopularProducts currentProductSlug={slug} />
+			{similarProducts.length > 0 && (
+				<SimilarProducts
+					currentProductSlug={slug}
+					categorySlug={product.category?.slug}
+					products={similarProducts}
+				/>
+			)}
+			<PopularProducts currentProductSlug={slug} products={popularProducts} />
 			<SchemaOrg data={schemas} />
 		</main>
 	)

@@ -7,6 +7,8 @@ alwaysApply: true
 
 в контроллерах возвращай с помощью return this.transformResponse({})
 
+Не пиши data.attributes.title . У нас нет такого формата данных, если хочешь обратиться к полям, то пиши data.title
+
 Не используй attributes при трансформировании данных из бэка. У нас нет attributes в теле ответа! При написании функций для обращения к API используй данную функцию, как эталон для преобразования полученных данных:
 function transformCategoryResponse(categoryItem) {
 	const { id, name, slug, description, is_active } = categoryItem

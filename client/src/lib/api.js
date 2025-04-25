@@ -160,13 +160,13 @@ function transformStrapiResponse(strapiItem) {
 
 /**
  * Получает три самых дешёвых товара для featured секции
+ * @param {number} count - Количество товаров
  * @returns {Promise<Array>} Массив из трёх товаров
  */
-export async function getFeaturedProducts() {
+export async function getFeaturedProducts(count = 3) {
 	const res = await fetch(
-		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards?populate=*&sort=price:asc&pagination[pageSize]=3`,
+		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards?populate=*&sort=price:asc&pagination[pageSize]=${count}`,
 		{
-			headers: await getHeaders(),
 			cache: 'force-cache',
 			next: { revalidate: 3600 },
 		}
@@ -322,4 +322,77 @@ export async function getGradesWithCards() {
 		console.error('Error fetching grades with cards:', error)
 		return []
 	}
+}
+
+/**
+ * Получает похожие товары из той же категории или того же класса
+ * @param {string} categorySlug - Slug категории
+ * @param {string} currentProductSlug - Slug текущего товара
+ * @param {Array} grades - Массив классов текущего товара
+ * @param {number} count - Количество товаров
+ * @returns {Promise<Array>} Массив похожих товаров
+ */
+export async function getSimilarProducts(
+	categorySlug,
+	currentProductSlug,
+	grades = [],
+	count = 4
+) {
+	// Получаем товары из той же категории
+	const categoryRes = await fetch(
+		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards?populate=*&filters[category][slug][$eq]=${categorySlug}&filters[slug][$ne]=${currentProductSlug}&pagination[pageSize]=${count}`,
+		{
+			headers: await getHeaders(),
+			cache: 'force-cache',
+			next: { revalidate: 3600 },
+		}
+	)
+
+	if (!categoryRes.ok) {
+		throw new Error('Ошибка при получении похожих товаров')
+	}
+
+	const categoryData = await categoryRes.json()
+	const categoryProducts = categoryData.data.map(transformStrapiResponse)
+
+	// Если нашли достаточно товаров из той же категории, возвращаем их
+	if (categoryProducts.length >= count) {
+		return categoryProducts.slice(0, count)
+	}
+
+	// Если товаров из категории недостаточно, получаем товары из того же класса
+	const gradeSlugs = grades.map((grade) => grade.displayName)
+	const gradeFilter = gradeSlugs
+		.map((slug) => `filters[grades][display_name][$eq]=${slug}`)
+		.join('&')
+
+	const gradeRes = await fetch(
+		`${
+			process.env.NEXT_PUBLIC_API_URL
+		}/api/study-cards?populate=*&filters[slug][$ne]=${currentProductSlug}&${gradeFilter}&pagination[pageSize]=${
+			count - categoryProducts.length
+		}`,
+		{
+			headers: await getHeaders(),
+			cache: 'force-cache',
+			next: { revalidate: 3600 },
+		}
+	)
+
+	if (!gradeRes.ok) {
+		throw new Error('Ошибка при получении товаров из того же класса')
+	}
+
+	const gradeData = await gradeRes.json()
+	const gradeProducts = gradeData.data.map(transformStrapiResponse)
+
+	// Объединяем результаты, исключая дубликаты
+	const allProducts = [...categoryProducts]
+	gradeProducts.forEach((product) => {
+		if (!allProducts.find((p) => p.id === product.id)) {
+			allProducts.push(product)
+		}
+	})
+
+	return allProducts.slice(0, count)
 }
