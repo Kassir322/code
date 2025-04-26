@@ -37,25 +37,36 @@ export function useAuth() {
 			try {
 				if (!initialized) {
 					setLocalLoading(true)
-					// Проверяем наличие пользователя в localStorage
-					const savedUser = localStorage.getItem('user')
 					const authToken = cookiesService.getAuthToken()
 
-					if (savedUser && authToken) {
-						// Синхронизируем Redux состояние
-						dispatch(
-							setAuth({
-								user: JSON.parse(savedUser),
-								token: authToken,
-							})
-						)
+					if (authToken) {
+						// Получаем актуальные данные пользователя
+						const userData = await fetch(
+							`${process.env.NEXT_PUBLIC_API_URL}/api/users/me?populate=*`,
+							{
+								headers: {
+									Authorization: `Bearer ${authToken}`,
+								},
+							}
+						).then((res) => res.json())
+
+						if (userData) {
+							// Синхронизируем Redux состояние
+							dispatch(
+								setAuth({
+									user: userData,
+									token: authToken,
+								})
+							)
+						} else {
+							// Сбрасываем состояние, если нет данных
+							dispatch(clearAuth())
+						}
 					} else {
-						// Сбрасываем состояние, если нет данных
+						// Сбрасываем состояние, если нет токена
 						dispatch(clearAuth())
 					}
 
-					// После инициализации проверяем актуальность токена
-					await dispatch(fetchCurrentUser()).unwrap()
 					setInitialized(true)
 				}
 			} catch (error) {

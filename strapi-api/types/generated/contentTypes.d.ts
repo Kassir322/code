@@ -706,14 +706,14 @@ export interface ApiReviewReview extends Struct.CollectionTypeSchema {
         number
       >;
     study_card: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'api::study-card.study-card'
     >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     users_permissions_user: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
   };
@@ -776,6 +776,7 @@ export interface ApiStudyCardStudyCard extends Struct.CollectionTypeSchema {
       'manyToMany',
       'api::study-card.study-card'
     >;
+    reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
     slug: Schema.Attribute.UID<'title'> & Schema.Attribute.Required;
     study_cards: Schema.Attribute.Relation<
       'manyToMany',
@@ -1273,6 +1274,7 @@ export interface PluginUsersPermissionsUser
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
+    reviews: Schema.Attribute.Relation<'oneToMany', 'api::review.review'>;
     role: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.role'

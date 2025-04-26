@@ -82,36 +82,42 @@ export const validateToken = async () => {
 	try {
 		// Получаем токен через cookiesService
 		const token = cookiesService.getAuthToken()
+		if (!token) return false
 
-		if (!token) {
-			return false
-		}
-
-		const response = await fetch(`${baseUrl}/api/users/me`, {
-			method: 'GET',
+		const response = await fetch(`${baseUrl}/api/users/me?populate=*`, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
 		})
 
-		return response.ok
+		if (!response.ok) return false
+
+		const userData = await response.json()
+		localStorage.setItem('user', JSON.stringify(userData))
+		return true
 	} catch (error) {
 		console.error('Ошибка при валидации токена:', error)
 		return false
 	}
 }
 
-export const getCurrentUser = () => {
+export const getCurrentUser = async () => {
 	try {
-		// Проверяем наличие токена через cookiesService
 		const token = cookiesService.getAuthToken()
-		const user = localStorage.getItem('user')
+		if (!token) return null
 
-		if (!token || !user) {
-			return null
+		const response = await fetch(`${baseUrl}/api/users/me?populate=*`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
+
+		if (!response.ok) {
+			throw new Error('Ошибка при получении данных пользователя')
 		}
 
-		return JSON.parse(user)
+		const userData = await response.json()
+		return userData
 	} catch (error) {
 		console.error('Ошибка при получении данных пользователя:', error)
 		return null

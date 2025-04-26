@@ -127,6 +127,7 @@ function transformStrapiResponse(strapiItem) {
 		image,
 		category,
 		grades,
+		reviews,
 	} = strapiItem
 
 	return {
@@ -155,6 +156,7 @@ function transformStrapiResponse(strapiItem) {
 			grades?.map((grade) => ({
 				displayName: grade.display_name,
 			})) || [],
+		reviews: reviews?.data?.map(transformReviewResponse) || [],
 	}
 }
 
@@ -395,4 +397,75 @@ export async function getSimilarProducts(
 	})
 
 	return allProducts.slice(0, count)
+}
+
+/**
+ * Получает отзывы для товара
+ * @param {string} productId - ID товара
+ * @returns {Promise<Array>} Массив отзывов
+ */
+export async function getProductReviews(productId) {
+	const res = await fetch(
+		`${process.env.NEXT_PUBLIC_API_URL}/api/reviews?filters[study_card][id][$eq]=${productId}&populate=users_permissions_user`,
+		{
+			headers: await getHeaders(),
+		}
+	)
+
+	if (!res.ok) {
+		throw new Error('Ошибка при получении отзывов')
+	}
+
+	const data = await res.json()
+	return data.data.map(transformReviewResponse)
+}
+
+/**
+ * Добавляет отзыв к товару
+ * @param {Object} reviewData - Данные отзыва
+ * @param {number} reviewData.rating - Оценка (1-5)
+ * @param {string} reviewData.comment - Комментарий
+ * @param {string} reviewData.productId - ID товара
+ * @returns {Promise<Object>} Созданный отзыв
+ */
+export async function addProductReview(reviewData) {
+	const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reviews`, {
+		method: 'POST',
+		headers: await getHeaders(),
+		body: JSON.stringify({
+			data: {
+				rating: reviewData.rating,
+				comment: reviewData.comment,
+				study_card: reviewData.productId,
+			},
+		}),
+	})
+
+	if (!res.ok) {
+		throw new Error('Ошибка при добавлении отзыва')
+	}
+
+	const data = await res.json()
+	return transformReviewResponse(data.data)
+}
+
+/**
+ * Трансформирует ответ отзыва от Strapi
+ * @param {Object} reviewItem - Элемент отзыва из ответа Strapi
+ * @returns {Object} Трансформированный объект отзыва
+ */
+function transformReviewResponse(reviewItem) {
+	const { id, rating, comment, users_permissions_user, createdAt } = reviewItem
+	return {
+		id,
+		rating,
+		comment,
+		user: users_permissions_user?.data
+			? {
+					id: users_permissions_user.data.id,
+					username: users_permissions_user.data.attributes.username,
+			  }
+			: null,
+		createdAt,
+	}
 }

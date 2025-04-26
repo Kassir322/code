@@ -114,7 +114,6 @@ export default function CatalogView({
 		indexOfFirstProduct,
 		indexOfLastProduct
 	)
-	console.log(`currentProducts: ${JSON.stringify(currentProducts)}`)
 
 	// Сбросить фильтры
 	const resetFilters = () => {

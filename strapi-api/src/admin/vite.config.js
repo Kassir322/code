@@ -14,7 +14,7 @@ module.exports = (config) => {
 				'*.ngrok-free.app',
 				'*.ngrok.io',
 				'*.ngrok.app',
-				'dbmz85-85-192-24-172.ru.tuna.am',
+				'1arcfd-85-192-24-172.ru.tuna.am',
 			],
 			host: '0.0.0.0',
 			port: 1337,

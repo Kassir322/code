@@ -22,13 +22,15 @@
     },
     "study_card": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::study-card.study-card"
+      "relation": "manyToOne",
+      "target": "api::study-card.study-card",
+      "inversedBy": "reviews"
     },
     "users_permissions_user": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user"
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "reviews"
     }
   }
 }

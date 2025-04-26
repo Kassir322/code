@@ -240,7 +240,7 @@ export default function ProductTabs({ product }) {
 					</div>
 				)}
 
-				{activeTab === 'reviews' && <ProductReviews productId={product.id} />}
+				{activeTab === 'reviews' && <ProductReviews product={product} />}
 			</div>
 		</div>
 	)

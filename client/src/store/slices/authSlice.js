@@ -62,7 +62,7 @@ export const fetchCurrentUser = createAsyncThunk(
 				return null
 			}
 
-			const user = authService.getCurrentUser()
+			const user = await authService.getCurrentUser()
 			return user
 				? {
 						user,

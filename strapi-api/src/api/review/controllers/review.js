@@ -27,4 +27,27 @@ module.exports = createCoreController('api::review.review', ({ strapi }) => ({
 
 		return this.transformResponse(review)
 	},
+
+	async create(ctx) {
+		// Проверяем авторизацию
+		if (!ctx.state.user) {
+			return ctx.unauthorized('You must be logged in to create a review')
+		}
+
+		// Получаем данные из запроса
+		const { rating, comment, study_card } = ctx.request.body.data
+
+		// Создаем отзыв с автоматическим добавлением пользователя
+		const review = await strapi.entityService.create('api::review.review', {
+			data: {
+				rating,
+				comment,
+				study_card,
+				users_permissions_user: ctx.state.user.id,
+			},
+			populate: ['users_permissions_user', 'study_card'],
+		})
+
+		return this.transformResponse(review)
+	},
 }))

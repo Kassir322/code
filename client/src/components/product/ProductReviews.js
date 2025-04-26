@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react'
 import { Star, ThumbsUp, Reply } from 'lucide-react'
 import Image from 'next/image'
+import { addProductReview } from '@/lib/api'
+import { useAuth } from '@/hooks/useAuth'
+import { toast } from 'react-hot-toast'
 
 // Функция для получения отзывов (заглушка, в реальном приложении будет API-запрос)
 const fetchReviews = async (productId, page = 1, limit = 3) => {
@@ -92,207 +95,150 @@ const fetchReviews = async (productId, page = 1, limit = 3) => {
 	}
 }
 
-export default function ProductReviews({ productId }) {
-	const [reviews, setReviews] = useState([])
-	const [meta, setMeta] = useState({
-		currentPage: 1,
-		totalPages: 1,
-		totalItems: 0,
-	})
-	const [loading, setLoading] = useState(true)
-	const [currentPage, setCurrentPage] = useState(1)
-	const [sort, setSort] = useState('newest')
+export default function ProductReviews({ product, reviews, onReviewAdded }) {
+	const { user } = useAuth()
+	const [rating, setRating] = useState(0)
+	const [comment, setComment] = useState('')
+	const [isSubmitting, setIsSubmitting] = useState(false)
 
-	// Загрузка отзывов
-	useEffect(() => {
-		const loadReviews = async () => {
-			setLoading(true)
-			try {
-				const response = await fetchReviews(productId, currentPage, 3) // 3 отзыва на страницу
-				setReviews(response.data)
-				setMeta(response.meta)
-			} catch (error) {
-				console.error('Ошибка при загрузке отзывов:', error)
-			} finally {
-				setLoading(false)
-			}
+	const handleSubmit = async (e) => {
+		e.preventDefault()
+		if (!user) {
+			console.log(`!user`)
+			toast.error('Для добавления отзыва необходимо авторизоваться')
+			return
+		}
+		console.log(`user: ${JSON.stringify(user)}`)
+
+		if (rating === 0) {
+			console.log(`rating === 0`)
+			toast.error('Пожалуйста, выберите оценку')
+			return
 		}
 
-		loadReviews()
-	}, [productId, currentPage, sort])
-
-	// Рендер звездочек рейтинга
-	const renderRating = (rating) => {
-		return (
-			<div className="flex items-center">
-				{[...Array(5)].map((_, i) => (
-					<Star
-						key={i}
-						className={`w-4 h-4 ${
-							i < rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-						}`}
-					/>
-				))}
-			</div>
-		)
-	}
-
-	// Обработчик смены страницы
-	const handlePageChange = (newPage) => {
-		if (newPage >= 1 && newPage <= meta.totalPages) {
-			setCurrentPage(newPage)
+		setIsSubmitting(true)
+		try {
+			console.log(`addProductReview`)
+			await addProductReview({
+				rating,
+				comment,
+				productId: product.id,
+			})
+			console.log(`toast.success('Отзыв успешно добавлен')`)
+			toast.success('Отзыв успешно добавлен')
+			setRating(0)
+			setComment('')
+			onReviewAdded?.()
+		} catch (error) {
+			console.log(`error: ${error}`)
+			toast.error('Ошибка при добавлении отзыва')
+		} finally {
+			setIsSubmitting(false)
 		}
 	}
 
-	// Обработчик смены сортировки
-	const handleSortChange = (e) => {
-		setSort(e.target.value)
-		setCurrentPage(1) // Сбрасываем на первую страницу при изменении сортировки
-	}
+	const averageRating =
+		reviews?.reduce((acc, review) => acc + review.rating, 0) /
+			reviews?.length || 0
 
 	return (
-		<div>
-			<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-				<h3 className="text-xl font-semibold">
-					{meta.totalItems > 0
-						? `${meta.totalItems} ${getReviewsCountText(meta.totalItems)}`
-						: 'Отзывов пока нет'}
-				</h3>
-
-				<div className="mt-4 sm:mt-0 flex items-center">
-					<label htmlFor="sort-select" className="text-gray-600 mr-2">
-						Сортировать:
-					</label>
-					<select
-						id="sort-select"
-						value={sort}
-						onChange={handleSortChange}
-						className="border border-gray-300 rounded-md py-1 px-3"
-					>
-						<option value="newest">Сначала новые</option>
-						<option value="rating_desc">По рейтингу (убывание)</option>
-						<option value="rating_asc">По рейтингу (возрастание)</option>
-					</select>
-				</div>
-			</div>
-
-			{/* Список отзывов */}
-			{loading ? (
-				<div className="flex justify-center py-8">
-					<div className="animate-spin rounded-full h-10 w-10 border-b-2 border-secondary-blue"></div>
-				</div>
-			) : reviews.length > 0 ? (
-				<div className="space-y-6">
-					{reviews.map((review) => (
-						<div key={review.id} className="border-b border-gray-200 pb-6">
-							<div className="flex items-start">
-								<div className="mr-3">
-									<div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-200">
-										<Image
-											src="/images/products/avatar-placeholder.jpg"
-											alt={review.authorName}
-											fill
-											className="object-cover"
-										/>
-									</div>
-								</div>
-
-								<div className="flex-1">
-									<div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2">
-										<div>
-											<h4 className="font-medium">{review.authorName}</h4>
-											<div className="flex items-center mt-1">
-												{renderRating(review.rating)}
-												<span className="ml-2 text-gray-500 text-sm">
-													{review.date}
-												</span>
-											</div>
-										</div>
-									</div>
-
-									<p className="text-gray-700 mt-2">{review.comment}</p>
-
-									<div className="mt-3 flex space-x-4">
-										<button className="flex items-center text-sm text-gray-500 hover:text-gray-700">
-											<ThumbsUp className="h-4 w-4 mr-1" />
-											<span>Полезно</span>
-										</button>
-
-										<button className="flex items-center text-sm text-gray-500 hover:text-gray-700">
-											<Reply className="h-4 w-4 mr-1" />
-											<span>Ответить</span>
-										</button>
-									</div>
-								</div>
-							</div>
-						</div>
+		<div className="mt-8">
+			<h2 className="text-2xl font-semibold mb-4">Отзывы</h2>
+			<div className="flex items-center mb-6">
+				<div className="flex items-center">
+					{[1, 2, 3, 4, 5].map((star) => (
+						<Star
+							key={star}
+							className={`h-5 w-5 ${
+								star <= averageRating
+									? 'text-yellow-400 fill-yellow-400'
+									: 'text-gray-300'
+							}`}
+						/>
 					))}
 				</div>
-			) : (
-				<div className="bg-gray-50 p-6 rounded-lg text-center">
-					<p className="text-gray-600">
-						У этого товара пока нет отзывов. Будьте первым, кто оставит отзыв!
-					</p>
-					<button className="mt-4 bg-secondary-blue text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors">
-						Написать отзыв
+				<span className="ml-2 text-gray-600">
+					{reviews?.length} {reviews?.length === 1 ? 'отзыв' : 'отзывов'}
+				</span>
+			</div>
+
+			{user && (
+				<form onSubmit={handleSubmit} className="mb-8">
+					<div className="mb-4">
+						<label className="block text-sm font-medium text-gray-700 mb-2">
+							Ваша оценка
+						</label>
+						<div className="flex">
+							{[1, 2, 3, 4, 5].map((star) => (
+								<button
+									key={star}
+									type="button"
+									onClick={() => setRating(star)}
+									className="focus:outline-none"
+								>
+									<Star
+										className={`h-6 w-6 ${
+											star <= rating
+												? 'text-yellow-400 fill-yellow-400'
+												: 'text-gray-300'
+										} hover:text-yellow-400 hover:fill-yellow-400 transition-colors`}
+									/>
+								</button>
+							))}
+						</div>
+					</div>
+					<div className="mb-4">
+						<label
+							htmlFor="comment"
+							className="block text-sm font-medium text-gray-700 mb-2"
+						>
+							Ваш отзыв
+						</label>
+						<textarea
+							id="comment"
+							rows={4}
+							value={comment}
+							onChange={(e) => setComment(e.target.value)}
+							className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-secondary-blue focus:border-transparent"
+							placeholder="Поделитесь своим мнением о товаре..."
+						/>
+					</div>
+					<button
+						type="submit"
+						disabled={isSubmitting}
+						className="bg-secondary-blue text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+					>
+						{isSubmitting ? 'Отправка...' : 'Отправить отзыв'}
 					</button>
-				</div>
+				</form>
 			)}
 
-			{/* Пагинация */}
-			{meta.totalPages > 1 && (
-				<div className="flex justify-center mt-8">
-					<nav className="flex items-center" aria-label="Пагинация отзывов">
-						<button
-							onClick={() => handlePageChange(currentPage - 1)}
-							disabled={currentPage === 1}
-							className={`px-3 py-1 rounded-l-md border ${
-								currentPage === 1
-									? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-									: 'bg-white text-gray-700 hover:bg-gray-50'
-							}`}
-							aria-label="Предыдущая страница"
-						>
-							&laquo;
-						</button>
-
-						{[...Array(meta.totalPages)].map((_, i) => (
-							<button
-								key={i}
-								onClick={() => handlePageChange(i + 1)}
-								className={`px-3 py-1 border-t border-b ${
-									currentPage === i + 1
-										? 'bg-secondary-blue text-white'
-										: 'bg-white text-gray-700 hover:bg-gray-50'
-								}`}
-								aria-current={currentPage === i + 1 ? 'page' : undefined}
-								aria-label={`Страница ${i + 1}`}
-							>
-								{i + 1}
-							</button>
-						))}
-
-						<button
-							onClick={() => handlePageChange(currentPage + 1)}
-							disabled={currentPage === meta.totalPages}
-							className={`px-3 py-1 rounded-r-md border ${
-								currentPage === meta.totalPages
-									? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-									: 'bg-white text-gray-700 hover:bg-gray-50'
-							}`}
-							aria-label="Следующая страница"
-						>
-							&raquo;
-						</button>
-					</nav>
-				</div>
-			)}
-
-			{/* Кнопка "Написать отзыв" */}
-			<div className="mt-8 flex justify-center">
-				<button className="bg-dark text-white py-2 px-6 rounded-md hover:bg-hover transition-colors">
-					Написать отзыв
-				</button>
+			<div className="space-y-6">
+				{reviews?.map((review) => (
+					<div key={review.id} className="border-b border-gray-200 pb-6">
+						<div className="flex items-center mb-2">
+							<div className="flex">
+								{[1, 2, 3, 4, 5].map((star) => (
+									<Star
+										key={star}
+										className={`h-4 w-4 ${
+											star <= review.rating
+												? 'text-yellow-400 fill-yellow-400'
+												: 'text-gray-300'
+										}`}
+									/>
+								))}
+							</div>
+							<span className="ml-2 text-sm text-gray-600">
+								{review.user?.username || 'Анонимный пользователь'}
+							</span>
+							<span className="ml-2 text-sm text-gray-500">
+								{new Date(review.createdAt).toLocaleDateString('ru-RU')}
+							</span>
+						</div>
+						<p className="text-gray-700">{review.comment}</p>
+					</div>
+				))}
 			</div>
 		</div>
 	)
