@@ -731,6 +731,7 @@ export interface ApiStudyCardStudyCard extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    article: Schema.Attribute.String & Schema.Attribute.Unique;
     card_type: Schema.Attribute.Enumeration<
       [
         '\u0412\u043E\u043F\u0440\u043E\u0441-\u043E\u0442\u0432\u0435\u0442',

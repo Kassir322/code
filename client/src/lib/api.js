@@ -55,7 +55,11 @@ export async function getProductsByCategory(categorySlug) {
 		`${process.env.NEXT_PUBLIC_API_URL}/api/study-cards?populate=*&filters[category][slug][$eq]=${categorySlug}`,
 		{
 			headers: await getHeaders(),
-			cache: 'no-store',
+			cache: 'force-cache',
+			next: {
+				revalidate: 3600, // Кэшируем на 1 час
+				tags: ['products', `category-${categorySlug}`], // Добавляем теги для ревалидации
+			},
 		}
 	)
 
@@ -64,7 +68,6 @@ export async function getProductsByCategory(categorySlug) {
 	}
 
 	const data = await res.json()
-
 	return data.data.map(transformStrapiResponse)
 }
 
@@ -312,7 +315,15 @@ export async function getGrades() {
 export async function getGradesWithCards() {
 	try {
 		const response = await fetch(
-			`${process.env.NEXT_PUBLIC_API_URL}/api/grades?populate=study_cards&sort=order:asc`
+			`${process.env.NEXT_PUBLIC_API_URL}/api/grades?populate=study_cards&sort=order:asc`,
+			{
+				headers: await getHeaders(),
+				cache: 'force-cache',
+				next: {
+					revalidate: 20, // Кэшируем на 1 час
+					tags: ['grades'], // Добавляем тег для ревалидации
+				},
+			}
 		)
 		const data = await response.json()
 

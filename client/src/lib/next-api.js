@@ -53,6 +53,7 @@ export async function getProductBySlugServer(slug) {
 	}
 
 	const data = await res.json()
+	// console.log(`next-api data`, data)
 	return data.data[0] ? transformStrapiResponse(data.data[0]) : null
 }
 
@@ -65,8 +66,11 @@ export async function getAllCategoriesServer() {
 		`${process.env.STRAPI_API_URL}/api/categories?populate=*`,
 		{
 			headers: getServerHeaders(),
-			// cache: 'force-cache',
 			cache: 'force-cache',
+			next: {
+				revalidate: 20, // Кэшируем на 1 час
+				tags: ['categories'], // Добавляем тег для ревалидации
+			},
 		}
 	)
 
@@ -75,7 +79,6 @@ export async function getAllCategoriesServer() {
 	}
 
 	const data = await res.json()
-
 	return data.data.map(transformCategoryResponse)
 }
 
@@ -118,6 +121,7 @@ function transformStrapiResponse(strapiItem) {
 		image,
 		category,
 		grades,
+		article,
 	} = strapiItem
 
 	const obj = {
@@ -147,6 +151,7 @@ function transformStrapiResponse(strapiItem) {
 			grades?.map((grade) => ({
 				displayName: grade.display_name,
 			})) || [],
+		article: article,
 	}
 
 	return obj
@@ -165,4 +170,26 @@ function transformCategoryResponse(categoryItem) {
 		description,
 		isActive: is_active,
 	}
+}
+
+export async function getGradesWithCardsServer() {
+	const res = await fetch(
+		`${process.env.STRAPI_API_URL}/api/grades?populate=study_cards&sort=order:asc`,
+		{
+			headers: getServerHeaders(),
+			cache: 'force-cache',
+			next: {
+				revalidate: 20, // Кэшируем на 1 час
+				tags: ['grades'], // Добавляем тег для ревалидации
+			},
+		}
+	)
+
+	if (!res.ok) {
+		throw new Error('Ошибка при получении классов')
+	}
+
+	const data = await res.json()
+	// Фильтруем только те классы, у которых есть связанные карточки
+	return data.data.filter((grade) => grade.study_cards.length > 0)
 }

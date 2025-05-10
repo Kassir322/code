@@ -20,6 +20,7 @@ import { ArrowLeft } from 'lucide-react'
 import SmartLink from '@/components/SmartLink'
 import ProductPrice from '@/components/product/ProductPrice'
 import { getSimilarProducts, getFeaturedProducts } from '@/lib/api'
+import WildberriesButton from '@/components/product/WildberriesButton'
 
 export const revalidate = 20
 // Генерируем статические пути для всех товаров при сборке
@@ -66,7 +67,6 @@ export default async function ProductPage({ params }) {
 	const { slug } = await params
 
 	const product = await getProductBySlugServer(slug)
-
 	if (!product) {
 		notFound()
 	}
@@ -150,6 +150,14 @@ export default async function ProductPage({ params }) {
 					</div>
 				</div>
 			</div>
+			{product.article ? (
+				<WildberriesButton article={product.article} />
+			) : (
+				<div>
+					Здесь должна быть кнопка для покупки на Wildberries, но артикула нет в
+					бд
+				</div>
+			)}
 			<ProductTrustBlock />
 			<ProductTabs key={`tabs-${product.id}`} product={product} />
 			<ProductFAQ />

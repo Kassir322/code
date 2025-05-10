@@ -1,19 +1,30 @@
 // src/app/catalog/[slug]/page.js
 import CatalogView from '@/components/catalog/CatalogView'
 import { getSeoTextForCategory } from '@/lib/seo-helpers'
-import {
-	getProductsByCategory,
-	getAllProducts,
-	getAllCategories,
-} from '@/lib/api'
+import { getProductsByCategory, getAllProducts } from '@/lib/api'
 import Breadcrumbs from '@/components/Breadcrumbs'
-import { getAllCategoriesServer } from '@/lib/next-api'
+import {
+	getAllCategoriesServer,
+	getGradesWithCardsServer,
+} from '@/lib/next-api'
 
-export const revalidate = 20 // 10 минут
+export const revalidate = 3600 // 1 час
 export const dynamic = 'force-static'
 
-export async function generateStaticParams() {
+// Экспортируем данные категорий для использования в компоненте
+export async function getCategories() {
 	const categories = await getAllCategoriesServer()
+	return categories
+}
+
+// Экспортируем данные классов для использования в компоненте
+export async function getGrades() {
+	const grades = await getGradesWithCardsServer()
+	return grades
+}
+
+export async function generateStaticParams() {
+	const categories = await getCategories()
 	const data = categories.map((cat) => ({
 		slug: cat.slug,
 	}))
@@ -35,15 +46,15 @@ export async function generateMetadata({ params }) {
 
 export default async function CatalogPage({ params, searchParams }) {
 	const { slug } = await params
-
-	// Получаем slug категории из URL или устанавливаем дефолтное значение
 	const categorySlug = slug || 'all'
-
 	const search_Params = await searchParams
 
 	// Получаем все категории и находим текущую
-	const categories = await getAllCategories()
+	const categories = await getCategories()
 	const currentCategory = categories.find((cat) => cat.slug === categorySlug)
+
+	// Получаем все классы
+	const grades = await getGrades()
 
 	// Получаем данные о категории и товарах
 	const products =
@@ -66,7 +77,7 @@ export default async function CatalogPage({ params, searchParams }) {
 			url: `/catalog/${categorySlug}`,
 		})
 	}
-
+	console.log(`grades`, grades)
 	// Получаем параметры запроса для начальной фильтрации
 	const initialSort = search_Params.sort || 'popular'
 	const initialPage = parseInt(await search_Params.page) || 1
@@ -91,6 +102,7 @@ export default async function CatalogPage({ params, searchParams }) {
 				categorySlug={categorySlug}
 				initialSort={initialSort}
 				initialPage={initialPage}
+				grades={grades}
 			/>
 		</div>
 	)

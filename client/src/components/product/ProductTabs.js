@@ -2,7 +2,6 @@
 // src/components/product/ProductTabs.js (обновленный)
 import { useState } from 'react'
 import Tab from '@/components/product/Tab'
-import ProductReviews from '@/components/product/ProductReviews'
 
 export default function ProductTabs({ product }) {
 	const [activeTab, setActiveTab] = useState('description')
@@ -44,13 +43,13 @@ export default function ProductTabs({ product }) {
 						active={activeTab === 'delivery'}
 						onClick={() => handleTabClick('delivery')}
 					/>
-					<Tab
+					{/* <Tab
 						id="faq"
 						label="Вопросы и ответы"
 						active={activeTab === 'faq'}
 						onClick={() => handleTabClick('faq')}
-					/>
-					<Tab
+					/> */}
+					{/* <Tab
 						id="reviews"
 						label={
 							<span className="flex items-center">
@@ -64,7 +63,7 @@ export default function ProductTabs({ product }) {
 						}
 						active={activeTab === 'reviews'}
 						onClick={() => handleTabClick('reviews')}
-					/>
+					/> */}
 				</div>
 			</div>
 
@@ -180,8 +179,7 @@ export default function ProductTabs({ product }) {
 					</div>
 				)}
 
-				{/* Новая вкладка FAQ */}
-				{activeTab === 'faq' && (
+				{/* {activeTab === 'faq' && (
 					<div className="prose max-w-none">
 						<h3 className="text-xl font-semibold mb-4">
 							Часто задаваемые вопросы
@@ -238,9 +236,7 @@ export default function ProductTabs({ product }) {
 							</div>
 						</div>
 					</div>
-				)}
-
-				{activeTab === 'reviews' && <ProductReviews productId={product.id} />}
+				)} */}
 			</div>
 		</div>
 	)

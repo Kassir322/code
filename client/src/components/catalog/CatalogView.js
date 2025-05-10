@@ -18,6 +18,7 @@ export default function CatalogView({
 	categorySlug,
 	initialSort = 'popular',
 	initialPage = 1,
+	grades,
 }) {
 	const router = useRouter()
 	const pathname = usePathname()
@@ -32,25 +33,25 @@ export default function CatalogView({
 	const [currentPage, setCurrentPage] = useState(initialPage)
 	const [showMobileFilter, setShowMobileFilter] = useState(false)
 	const [viewMode, setViewMode] = useState('grid')
-	const [grades, setGrades] = useState([])
+	// const [grades, setGrades] = useState([])
 	const [isLoading, setIsLoading] = useState(true)
 
 	// Загрузка классов из API
-	useEffect(() => {
-		const loadGrades = async () => {
-			setIsLoading(true)
-			try {
-				const gradesData = await getGradesWithCards()
-				setGrades(gradesData)
-			} catch (error) {
-				console.error('Error loading grades:', error)
-			} finally {
-				setIsLoading(false)
-			}
-		}
+	// useEffect(() => {
+	// 	const loadGrades = async () => {
+	// 		setIsLoading(true)
+	// 		try {
+	// 			const gradesData = await getGradesWithCards()
+	// 			setGrades(gradesData)
+	// 		} catch (error) {
+	// 			console.error('Error loading grades:', error)
+	// 		} finally {
+	// 			setIsLoading(false)
+	// 		}
+	// 	}
 
-		loadGrades()
-	}, [])
+	// 	loadGrades()
+	// }, [])
 
 	// Количество продуктов на странице
 	const productsPerPage = viewMode === 'grid' ? 9 : 5
@@ -114,7 +115,6 @@ export default function CatalogView({
 		indexOfFirstProduct,
 		indexOfLastProduct
 	)
-	console.log(`currentProducts: ${JSON.stringify(currentProducts)}`)
 
 	// Сбросить фильтры
 	const resetFilters = () => {

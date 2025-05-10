@@ -162,46 +162,38 @@ export default function FiltersPanel({
 					{/* Фильтр по классу */}
 					<div className="mb-6">
 						<h4 className="font-medium mb-2">Класс</h4>
-						{isLoading ? (
-							<div className="animate-pulse space-y-2">
-								{[1, 2, 3, 4].map((i) => (
-									<div key={i} className="h-4 bg-gray-200 rounded"></div>
-								))}
-							</div>
-						) : (
-							<ul className="space-y-2">
-								{/* Опция "Все классы" */}
-								<li>
+						<ul className="space-y-2">
+							{/* Опция "Все классы" */}
+							<li>
+								<label className="flex items-center cursor-pointer">
+									<input
+										type="checkbox"
+										checked={selectedGrades.includes('all')}
+										onChange={() => handleGradeChange('all')}
+										className="mr-2 accent-secondary-blue"
+									/>
+									<span className="text-neutral-05 hover:text-secondary-blue">
+										Все классы
+									</span>
+								</label>
+							</li>
+							{/* Классы из API */}
+							{grades.map((grade) => (
+								<li key={grade.id}>
 									<label className="flex items-center cursor-pointer">
 										<input
 											type="checkbox"
-											checked={selectedGrades.includes('all')}
-											onChange={() => handleGradeChange('all')}
+											checked={selectedGrades.includes(grade.display_name)}
+											onChange={() => handleGradeChange(grade.display_name)}
 											className="mr-2 accent-secondary-blue"
 										/>
 										<span className="text-neutral-05 hover:text-secondary-blue">
-											Все классы
+											{`${grade.display_name} класс`}
 										</span>
 									</label>
 								</li>
-								{/* Классы из API */}
-								{grades.map((grade) => (
-									<li key={grade.id}>
-										<label className="flex items-center cursor-pointer">
-											<input
-												type="checkbox"
-												checked={selectedGrades.includes(grade.display_name)}
-												onChange={() => handleGradeChange(grade.display_name)}
-												className="mr-2 accent-secondary-blue"
-											/>
-											<span className="text-neutral-05 hover:text-secondary-blue">
-												{`${grade.display_name} класс`}
-											</span>
-										</label>
-									</li>
-								))}
-							</ul>
-						)}
+							))}
+						</ul>
 					</div>
 
 					{/* Фильтр по типу карточек */}
