@@ -7,4 +7,10 @@ module.exports = ({ env }) => ({
   webhooks: {
     populateRelations: env.bool('WEBHOOKS_POPULATE_RELATIONS', false),
   },
+  cors: {
+    origin: ['https://mat-focus-shop.ru', 'https://mat-focus.ru', 'http://localhost:3000'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    headers: '*',
+    credentials: true,
+  },
 });

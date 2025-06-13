@@ -8,6 +8,10 @@ services:
     container_name: nginx-service
     volumes:
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/ssl-dhparams.pem:/etc/nginx/ssl-dhparams.pem:ro
+      - ./docker/nginx/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf:ro
+      - ./docker/nginx/heydev/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt
     ports:
       - "80:80"
       - "443:443"

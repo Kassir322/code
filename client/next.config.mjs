@@ -16,6 +16,10 @@ const nextConfig = {
 				protocol: 'https',
 				hostname: '*.mat-focus.ru',
 			},
+			{
+				protocol: 'https',
+				hostname: '*.mat-focus-shop.ru',
+			},
 		],
 	},
 	env: {
