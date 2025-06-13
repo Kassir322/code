@@ -1,0 +1,29 @@
+name: Deploy Development CI
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set environment mode
+        run: echo "MODE=PRODUCTION" >> $GITHUB_ENV
+
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Run Makefile deploy
+        env:
+          MODE: PRODUCTION
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          BRANCH_NAME: master
+          DOCKER_COMPOSE_FILE: docker-compose.prod.yml
+        run: make deploy
