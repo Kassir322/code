@@ -10,7 +10,7 @@ ENV BACKEND_DIR=/home/backend
 #
 # ---------------------------------------------------------
 #
-FROM base as build
+FROM base AS builder
 
 WORKDIR $BACKEND_DIR
 
