@@ -1,0 +1,68 @@
+name: mat-focus-production
+
+version: '3'
+
+services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx-service
+    volumes:
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/nginx/ssl-dhparams.pem:/etc/nginx/ssl-dhparams.pem:ro
+      - ./docker/nginx/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf:ro
+      - ./docker/nginx/heydev/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      api:
+        condition: service_started
+    networks:
+      - frontend
+      - backend
+    restart: always
+
+  db:
+    extends:
+      file: ./docker-compose.base.yml
+      service: db
+    container_name: db-service
+    env_file:
+      - ./strapi-api/.env.production
+
+  api:
+    extends:
+      file: ./docker-compose.base.yml
+      service: api
+    build:
+      context: ./strapi-api
+      dockerfile: Dockerfile
+    container_name: api-service
+    environment:
+      ENV_MODE: production
+
+  client:
+    extends:
+      file: ./docker-compose.base.yml
+      service: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: client-service
+    environment:
+      ENV_MODE: production
+    depends_on:
+      api:
+        condition: service_healthy
+      nginx:
+        condition: service_started
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+volumes:
+  db_data:

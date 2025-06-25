@@ -25,7 +25,7 @@ export async function getAllProductsServer() {
 	)
 
 	if (!res.ok) {
-		throw new Error('Ошибка при получении товаров')
+		return []
 	}
 
 	const data = await res.json()
@@ -75,7 +75,7 @@ export async function getAllCategoriesServer() {
 	)
 
 	if (!res.ok) {
-		throw new Error('Ошибка при получении категорий')
+		return []
 	}
 
 	const data = await res.json()
@@ -186,7 +186,7 @@ export async function getGradesWithCardsServer() {
 	)
 
 	if (!res.ok) {
-		throw new Error('Ошибка при получении классов')
+		return []
 	}
 
 	const data = await res.json()
