@@ -34,7 +34,7 @@ export async function getAllProducts() {
 		}
 	)
 	if (!res.ok) {
-		throw new Error('Ошибка при получении товаров')
+		return []
 	}
 
 	const data = await res.json()
@@ -64,7 +64,7 @@ export async function getProductsByCategory(categorySlug) {
 	)
 
 	if (!res.ok) {
-		throw new Error('Ошибка при получении товаров категории')
+		return []
 	}
 
 	const data = await res.json()
@@ -103,7 +103,7 @@ export async function getProductBySlug(slug) {
 	)
 
 	if (!res.ok) {
-		throw new Error('Ошибка при получении товара')
+		return []
 	}
 
 	const data = await res.json()
@@ -175,8 +175,10 @@ export async function getFeaturedProducts(count = 3) {
 		}
 	)
 
+	console.log(res)
+
 	if (!res.ok) {
-		throw new Error('Ошибка при получении featured товаров')
+		return []
 	}
 
 	const data = await res.json()
@@ -198,7 +200,7 @@ export async function getAllCategories() {
 	)
 
 	if (!res.ok) {
-		throw new Error('Ошибка при получении категорий')
+		return []
 	}
 
 	const data = await res.json()
@@ -236,7 +238,7 @@ export async function getUserOrders(userId) {
 	)
 
 	if (!res.ok) {
-		throw new Error('Ошибка при получении заказов')
+		return []
 	}
 
 	const data = await res.json()
@@ -360,7 +362,7 @@ export async function getSimilarProducts(
 	)
 
 	if (!categoryRes.ok) {
-		throw new Error('Ошибка при получении похожих товаров')
+		return []
 	}
 
 	const categoryData = await categoryRes.json()
