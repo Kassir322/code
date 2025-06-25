@@ -22,6 +22,6 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 1337
+EXPOSE 5555
 
 CMD ["npm", "run", "strapi", "start"]
