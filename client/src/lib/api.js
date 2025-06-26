@@ -175,8 +175,6 @@ export async function getFeaturedProducts(count = 3) {
 		}
 	)
 
-	console.log(res)
-
 	if (!res.ok) {
 		return []
 	}

@@ -7,7 +7,7 @@ docker compose -f docker-compose.prod.yml build
 
 ```shell
 # Отключает текущий кластер
-docker compose -f docker-compose.prod.yml dow
+docker compose -f docker-compose.prod.yml down
 ```
 
 ```shell
